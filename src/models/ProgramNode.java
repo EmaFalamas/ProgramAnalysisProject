@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by Ema on 24/9/2016.
  */
-public class ProgramNode {
+public class ProgramNode extends Node {
     private ArrayList<DeclarationNode> declarations;
     private ArrayList<StatementNode> statements;
 
