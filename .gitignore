@@ -1,0 +1,6 @@
+.idea/
+MicroCProject/bin/
+MicroCProject/src/MicroC_language/parsing/MicroCBaseListener.java
+MicroCProject/src/MicroC_language/parsing/MicroCLexer.java
+MicroCProject/src/MicroC_language/parsing/MicroCListener.java
+MicroCProject/src/MicroC_language/parsing/MicroCParser.java

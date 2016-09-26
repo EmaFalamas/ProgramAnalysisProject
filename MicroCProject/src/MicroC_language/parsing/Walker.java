@@ -3,11 +3,14 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.io.PrintWriter;
 import java.io.File;
+import models.*;
 
 /**
  * Created by Ema on 26/9/2016.
  */
 public class Walker extends MicroCBaseListener {
+	Node currentNode;
+
 	/**
 	 * {@inheritDoc}
 	 *
@@ -222,7 +225,11 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProgram(MicroCParser.ProgramContext ctx) { }
+	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
+		//Create new node of node type
+		Node programNode = new ProgramNode(null);
+		currentNode = programNode;
+	}
 	/**
 	 * {@inheritDoc}
 	 *

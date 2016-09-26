@@ -9,6 +9,11 @@ public class ProgramNode extends Node {
     private ArrayList<DeclarationNode> declarations;
     private ArrayList<StatementNode> statements;
 
+	public ProgramNode(Node node)
+	{
+		super(node);
+	}
+
     public ArrayList<DeclarationNode> getDeclarations() {
         return declarations;
     }
