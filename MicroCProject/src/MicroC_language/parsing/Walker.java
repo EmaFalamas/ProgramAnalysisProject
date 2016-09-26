@@ -10,6 +10,7 @@ import models.*;
  */
 public class Walker extends MicroCBaseListener {
 	public Node currentNode;
+	public Node nextNode;
 
 	/**
 	 * {@inheritDoc}
@@ -93,7 +94,9 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterDecl(MicroCParser.DeclContext ctx) {
 		Node declarationNode = new DeclarationNode(currentNode);		
 		currentNode.addChild(declarationNode);
+		nextNode = (Node) currentNode.clone();
 		currentNode = (Node) declarationNode.clone();
+		
 		System.out.println("Enter Decl: "+declarationNode.getParent());
 
 	}
@@ -236,7 +239,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
 		//Create new node of node type
 		Node programNode = new ProgramNode(null);
-		currentNode = (Node) programNode.clone();
+		currentNode = programNode;
 		System.out.println("Current Node: "+currentNode.getParent());
 	}
 	/**
