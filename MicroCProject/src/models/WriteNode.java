@@ -6,6 +6,10 @@ package models;
 public class WriteNode extends StatementNode {
     private ExpressionNode expressionNode;
 
+	public WriteNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getExpressionNode() {
         return expressionNode;
     }

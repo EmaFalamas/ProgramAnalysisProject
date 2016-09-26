@@ -6,6 +6,10 @@ package models;
 public class OperatorNode extends Node {
     public String operator;
 
+	public OperatorNode(Node node) {
+		super(node);
+	}
+
     public String getOperator() {
         return operator;
     }

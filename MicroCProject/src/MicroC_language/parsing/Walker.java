@@ -9,7 +9,7 @@ import models.*;
  * Created by Ema on 26/9/2016.
  */
 public class Walker extends MicroCBaseListener {
-	Node currentNode;
+	public Node currentNode;
 
 	/**
 	 * {@inheritDoc}
@@ -17,7 +17,6 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterExpr(MicroCParser.ExprContext ctx) {
-		System.out.println("Enter expr:"+ctx);
 
  	}
 	/**
@@ -91,20 +90,29 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecl(MicroCParser.DeclContext ctx) { }
+	@Override public void enterDecl(MicroCParser.DeclContext ctx) {
+		Node declarationNode = new DeclarationNode(currentNode);		
+		currentNode.addChild(declarationNode);
+		currentNode = (Node) declarationNode.clone();
+		System.out.println("Enter Decl: "+declarationNode.getParent());
+
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecl(MicroCParser.DeclContext ctx) { }
+	@Override public void exitDecl(MicroCParser.DeclContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Decl: "+currentNode.getParent());
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterType(MicroCParser.TypeContext ctx) {
-		System.out.println("Type node");		
+		
  	}
 	/**
 	 * {@inheritDoc}
@@ -228,7 +236,8 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
 		//Create new node of node type
 		Node programNode = new ProgramNode(null);
-		currentNode = programNode;
+		currentNode = (Node) programNode.clone();
+		System.out.println("Current Node: "+currentNode.getParent());
 	}
 	/**
 	 * {@inheritDoc}

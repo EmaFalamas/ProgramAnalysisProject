@@ -18,6 +18,7 @@ public class MicroC {
 
 	    ParseTreeWalker walker = new ParseTreeWalker();
 		walker.walk( new Walker(), tree );
+		
 
        
 	}

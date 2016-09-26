@@ -8,6 +8,10 @@ public class IfElseNode extends StatementNode {
     private StatementNode ifBody;
     private StatementNode elseBody;
 
+	public IfElseNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getCondition() {
         return condition;
     }

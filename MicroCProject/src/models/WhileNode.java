@@ -7,6 +7,10 @@ public class WhileNode extends StatementNode {
     private ExpressionNode condition;
     private StatementNode body;
 
+	public WhileNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getCondition() {
         return condition;
     }

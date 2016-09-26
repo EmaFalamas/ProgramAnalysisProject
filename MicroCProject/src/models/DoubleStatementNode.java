@@ -7,6 +7,10 @@ public class DoubleStatementNode extends StatementNode {
     private StatementNode firstStatementNode;
     private StatementNode secondStatementNode;
 
+	public DoubleStatementNode(Node node) {
+		super(node);
+	}
+
     public StatementNode getFirstStatementNode() {
         return firstStatementNode;
     }

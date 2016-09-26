@@ -6,6 +6,10 @@ package models;
 public class ReadNode extends StatementNode {
     private ExpressionNode expressionNode;
 
+	public ReadNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getExpressionNode() {
         return expressionNode;
     }

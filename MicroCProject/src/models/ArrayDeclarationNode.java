@@ -7,6 +7,10 @@ public class ArrayDeclarationNode extends DeclarationNode {
     private TypeNode typeNode;
     private ArrayNode arrayNode;
 
+	public ArrayDeclarationNode(Node node) {
+		super(node);
+	}
+
     public TypeNode getTypeNode() {
         return typeNode;
     }

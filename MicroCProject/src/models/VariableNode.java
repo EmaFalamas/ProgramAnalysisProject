@@ -6,6 +6,10 @@ package models;
 public class VariableNode extends ExpressionNode {
     private String name;
 
+	public VariableNode(Node node) {
+		super(node);
+	}
+
     public String getName() {
         return name;
     }

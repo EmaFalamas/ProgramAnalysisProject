@@ -7,6 +7,10 @@ public class ArrayNode extends ExpressionNode {
     private String name;
     private ExpressionNode capacity;
 
+	public ArrayNode(Node node) {
+		super(node);
+	}
+
     public String getName() {
         return name;
     }

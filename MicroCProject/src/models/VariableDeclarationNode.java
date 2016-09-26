@@ -7,6 +7,10 @@ public class VariableDeclarationNode extends DeclarationNode {
     private TypeNode typeNode;
     private VariableNode variableNode;
 
+	public VariableDeclarationNode(Node node) {
+		super(node);
+	}
+
     public TypeNode getTypeNode() {
         return typeNode;
     }

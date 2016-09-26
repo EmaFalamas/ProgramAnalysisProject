@@ -7,6 +7,10 @@ public class UnaryExpressionNode extends ExpressionNode {
     private UnaryOperatorNode operatorNode;
     private ExpressionNode expressionNode;
 
+	public UnaryExpressionNode(Node node) {
+		super(node);
+	}
+
     public UnaryOperatorNode getOperatorNode() {
         return operatorNode;
     }

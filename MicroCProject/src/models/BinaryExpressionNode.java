@@ -8,6 +8,11 @@ public class BinaryExpressionNode extends ExpressionNode {
     private ExpressionNode secondExpressionNode;
     private BinaryOperatorNode operatorNode;
 
+
+	public BinaryExpressionNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getFirstExpressionNode() {
         return firstExpressionNode;
     }

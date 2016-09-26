@@ -7,6 +7,10 @@ public class AssignmentNode extends StatementNode {
     private ExpressionNode leftSideNode;
     private ExpressionNode rightSideNode;
 
+	public AssignmentNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getLeftSideNode() {
         return leftSideNode;
     }

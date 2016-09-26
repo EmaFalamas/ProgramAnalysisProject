@@ -5,4 +5,8 @@ package models;
  */
 public class DeclarationNode extends Node {
 
+	public DeclarationNode(Node node) {
+		super(node);
+	}
+
 }

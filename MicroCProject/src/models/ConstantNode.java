@@ -6,6 +6,10 @@ package models;
 public class ConstantNode extends ExpressionNode {
     private int number;
 
+	public ConstantNode(Node node) {
+		super(node);
+	}
+
     public int getNumber() {
         return number;
     }

@@ -7,6 +7,10 @@ public class IfNode extends StatementNode {
     private ExpressionNode condition;
     private StatementNode body;
 
+	public IfNode(Node node) {
+		super(node);
+	}
+
     public ExpressionNode getCondition() {
         return condition;
     }

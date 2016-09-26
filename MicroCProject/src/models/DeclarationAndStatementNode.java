@@ -7,6 +7,10 @@ public class DeclarationAndStatementNode extends StatementNode {
     private DeclarationNode declarationNode;
     private StatementNode statementNode;
 
+	public DeclarationAndStatementNode(Node node) {
+		super(node);
+	}
+
     public DeclarationNode getDeclarationNode() {
         return declarationNode;
     }

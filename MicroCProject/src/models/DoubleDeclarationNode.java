@@ -7,6 +7,10 @@ public class DoubleDeclarationNode extends DeclarationNode {
     private DeclarationNode firstDeclarationNode;
     private DeclarationNode secondDeclarationNode;
 
+	public DoubleDeclarationNode(Node node) {
+		super(node);
+	}
+
     public DeclarationNode getFirstDeclarationNode() {
         return firstDeclarationNode;
     }
