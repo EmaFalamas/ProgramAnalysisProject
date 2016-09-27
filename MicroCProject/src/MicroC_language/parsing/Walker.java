@@ -10,7 +10,6 @@ import models.*;
  */
 public class Walker extends MicroCBaseListener {
 	public Node currentNode;
-	public Node nextNode;
 
 	/**
 	 * {@inheritDoc}
@@ -18,74 +17,120 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterExpr(MicroCParser.ExprContext ctx) {
-
+		Node expressionNode = new ExpressionNode(currentNode);		
+		currentNode.addChild(expressionNode);
+		currentNode = (Node) expressionNode.clone();
+		System.out.println("Enter Expression Current Node: " + currentNode);
  	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(MicroCParser.ExprContext ctx) { }
+	@Override public void exitExpr(MicroCParser.ExprContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr1(MicroCParser.Expr1Context ctx) { }
+	@Override public void enterExpr1(MicroCParser.Expr1Context ctx) {
+		Node expressionNode = new ExpressionNode(currentNode);		
+		currentNode.addChild(expressionNode);
+		currentNode = (Node) expressionNode.clone();
+		System.out.println("Enter Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr1(MicroCParser.Expr1Context ctx) { }
+	@Override public void exitExpr1(MicroCParser.Expr1Context ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr2(MicroCParser.Expr2Context ctx) { }
+	@Override public void enterExpr2(MicroCParser.Expr2Context ctx) {
+		Node expressionNode = new ExpressionNode(currentNode);		
+		currentNode.addChild(expressionNode);
+		currentNode = (Node) expressionNode.clone();
+		System.out.println("Enter Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr2(MicroCParser.Expr2Context ctx) { }
+	@Override public void exitExpr2(MicroCParser.Expr2Context ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprnegate(MicroCParser.ExprnegateContext ctx) { }
+	@Override public void enterExprnegate(MicroCParser.ExprnegateContext ctx) {
+		Node unaryExpressionNode = new UnaryExpressionNode(currentNode);		
+		currentNode.addChild(unaryExpressionNode);
+		currentNode = (Node) unaryExpressionNode.clone();
+		System.out.println("Enter Unary Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprnegate(MicroCParser.ExprnegateContext ctx) { }
+	@Override public void exitExprnegate(MicroCParser.ExprnegateContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Unary Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr3(MicroCParser.Expr3Context ctx) { }
+	@Override public void enterExpr3(MicroCParser.Expr3Context ctx) {
+		Node expressionNode = new ExpressionNode(currentNode);		
+		currentNode.addChild(expressionNode);
+		currentNode = (Node) expressionNode.clone();
+		System.out.println("Enter Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr3(MicroCParser.Expr3Context ctx) { }
+	@Override public void exitExpr3(MicroCParser.Expr3Context ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Expression Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOpr(MicroCParser.OprContext ctx) { }
+	@Override public void enterOpr(MicroCParser.OprContext ctx) {
+		Node binaryOperatorNode = new BinaryOperatorNode(currentNode);		
+		currentNode.addChild(binaryOperatorNode);
+		currentNode = (Node) binaryOperatorNode.clone();
+		System.out.println("Enter Binary Operator Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOpr(MicroCParser.OprContext ctx) { }
+	@Override public void exitOpr(MicroCParser.OprContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Binary Operator Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -94,11 +139,8 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterDecl(MicroCParser.DeclContext ctx) {
 		Node declarationNode = new DeclarationNode(currentNode);		
 		currentNode.addChild(declarationNode);
-		nextNode = (Node) currentNode.clone();
 		currentNode = (Node) declarationNode.clone();
-		
-		System.out.println("Enter Decl: "+declarationNode.getParent());
-
+		System.out.println("Enter Declaration Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -107,7 +149,7 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitDecl(MicroCParser.DeclContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Decl: "+currentNode.getParent());
+		System.out.println("Exit Declaration Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -115,26 +157,40 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterType(MicroCParser.TypeContext ctx) {
-		
+		Node typeNode = new TypeNode(currentNode);		
+		currentNode.addChild(typeNode);
+		currentNode = (Node) typeNode.clone();
+		System.out.println("Enter Type Current Node: " + currentNode);
  	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(MicroCParser.TypeContext ctx) { }
+	@Override public void exitType(MicroCParser.TypeContext ctx) { 
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Type Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(MicroCParser.StmtContext ctx) { }
+	@Override public void enterStmt(MicroCParser.StmtContext ctx) { 
+		Node statementNode = new StatementNode(currentNode);		
+		currentNode.addChild(statementNode);
+		currentNode = (Node) statementNode.clone();
+		System.out.println("Enter Statement Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(MicroCParser.StmtContext ctx) { }
+	@Override public void exitStmt(MicroCParser.StmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Statement Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -237,17 +293,19 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
-		//Create new node of node type
 		Node programNode = new ProgramNode(null);
-		currentNode = programNode;
-		System.out.println("Current Node: "+currentNode.getParent());
+		currentNode = (Node) programNode.clone();
+		System.out.println("Enter Program Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProgram(MicroCParser.ProgramContext ctx) { }
+	@Override public void exitProgram(MicroCParser.ProgramContext ctx) {
+		// We shouldn't do anything here, as the current node holds the entire
+		// abstract syntax tree
+	}
 	/**
 	 * {@inheritDoc}
 	 *
