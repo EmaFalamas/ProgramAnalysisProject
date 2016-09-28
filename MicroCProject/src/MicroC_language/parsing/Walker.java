@@ -196,97 +196,162 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignStmt(MicroCParser.AssignStmtContext ctx) { }
+	@Override public void enterAssignStmt(MicroCParser.AssignStmtContext ctx) {
+		Node assignmentNode = new AssignmentNode(currentNode);
+		currentNode.addChild(assignmentNode);
+		currentNode = (Node) assignmentNode.clone();
+		System.out.println("Enter Assignment Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignStmt(MicroCParser.AssignStmtContext ctx) { }
+	@Override public void exitAssignStmt(MicroCParser.AssignStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Assignment Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterContinueStmt(MicroCParser.ContinueStmtContext ctx) { }
+	@Override public void enterContinueStmt(MicroCParser.ContinueStmtContext ctx) {
+		Node continueNode = new ContinueNode(currentNode);
+		currentNode.addChild(continueNode);
+		currentNode = (Node) continueNode.clone();
+		System.out.println("Enter Continue Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitContinueStmt(MicroCParser.ContinueStmtContext ctx) { }
+	@Override public void exitContinueStmt(MicroCParser.ContinueStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Continue Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReadStmt(MicroCParser.ReadStmtContext ctx) { }
+	@Override public void enterReadStmt(MicroCParser.ReadStmtContext ctx) {
+		Node readNode = new ReadNode(currentNode);
+		currentNode.addChild(readNode);
+		currentNode = (Node) readNode.clone();
+		System.out.println("Enter Read Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReadStmt(MicroCParser.ReadStmtContext ctx) { }
+	@Override public void exitReadStmt(MicroCParser.ReadStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Read Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBreakStmt(MicroCParser.BreakStmtContext ctx) { }
+	@Override public void enterBreakStmt(MicroCParser.BreakStmtContext ctx) {
+		Node breakNode = new BreakNode(currentNode);
+		currentNode.addChild(breakNode);
+		currentNode = (Node) breakNode.clone();
+		System.out.println("Enter Break Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBreakStmt(MicroCParser.BreakStmtContext ctx) { }
+	@Override public void exitBreakStmt(MicroCParser.BreakStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Break Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWriteStmt(MicroCParser.WriteStmtContext ctx) { }
+	@Override public void enterWriteStmt(MicroCParser.WriteStmtContext ctx) {
+		Node writeNode = new WriteNode(currentNode);
+		currentNode.addChild(writeNode);
+		currentNode = (Node) writeNode.clone();
+		System.out.println("Enter Write Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWriteStmt(MicroCParser.WriteStmtContext ctx) { }
+	@Override public void exitWriteStmt(MicroCParser.WriteStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Write Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfelseStmt(MicroCParser.IfelseStmtContext ctx) { }
+	@Override public void enterIfelseStmt(MicroCParser.IfelseStmtContext ctx) {
+		Node ifElseNode = new IfElseNode(currentNode);
+		currentNode.addChild(ifElseNode);
+		currentNode = (Node) ifElseNode.clone();
+		System.out.println("Enter IfElse Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIfelseStmt(MicroCParser.IfelseStmtContext ctx) { }
+	@Override public void exitIfelseStmt(MicroCParser.IfelseStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit IfElse Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhileStmt(MicroCParser.WhileStmtContext ctx) { }
+	@Override public void enterWhileStmt(MicroCParser.WhileStmtContext ctx) {
+		Node whileNode = new WhileNode(currentNode);
+		currentNode.addChild(whileNode);
+		currentNode = (Node) whileNode.clone();
+		System.out.println("Enter While Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhileStmt(MicroCParser.WhileStmtContext ctx) { }
+	@Override public void exitWhileStmt(MicroCParser.WhileStmtContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit While Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBlockStmt(MicroCParser.BlockStmtContext ctx) { }
+	@Override public void enterBlockStmt(MicroCParser.BlockStmtContext ctx) {
+		//TODO: Figure out: blockStmt : LBRACE decl* stmt+ RBRACE ;
+		//Node XXXNode = new xxxNode(currentNode);
+		//currentNode.addChild(XXXNode);
+		//currentNode = (Node) XXXNode.clone();
+		System.out.println("Enter Block Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBlockStmt(MicroCParser.BlockStmtContext ctx) { }
+	@Override public void exitBlockStmt(MicroCParser.BlockStmtContext ctx) {
+		//currentNode = currentNode.getParent();
+		System.out.println("Exit Block Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -311,25 +376,43 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIdentifier(MicroCParser.IdentifierContext ctx) { }
+	@Override public void enterIdentifier(MicroCParser.IdentifierContext ctx) {
+		//TODO: Check: IDENTIFIER : LETTER (LETTER|'0'..'9')* ; == Variable?
+		Node variableNode = new VariableNode(currentNode);
+		currentNode.addChild(variableNode);
+		currentNode = (Node) variableNode.clone();
+		System.out.println("Enter Variable Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIdentifier(MicroCParser.IdentifierContext ctx) { }
+	@Override public void exitIdentifier(MicroCParser.IdentifierContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Variable Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInteger(MicroCParser.IntegerContext ctx) { }
+	@Override public void enterInteger(MicroCParser.IntegerContext ctx) {
+		//TODO: Check: integer : INTEGER; == type?
+		Node typeNode = new TypeNode(currentNode);
+		currentNode.addChild(typeNode);
+		currentNode = (Node) typeNode.clone();
+		System.out.println("Enter Type Current Node: " + currentNode);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInteger(MicroCParser.IntegerContext ctx) { }
+	@Override public void exitInteger(MicroCParser.IntegerContext ctx) {
+		currentNode = currentNode.getParent();
+		System.out.println("Exit Type Current Node: " + currentNode);
+	}
 
 	/**
 	 * {@inheritDoc}
