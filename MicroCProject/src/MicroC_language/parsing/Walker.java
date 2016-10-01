@@ -77,7 +77,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterExprnegate(MicroCParser.ExprnegateContext ctx) {
-		Node unaryExpressionNode = new UnaryExpressionNode(currentNode);		
+		Node unaryExpressionNode = new UnaryExpressionNode(currentNode);
 		currentNode.addChild(unaryExpressionNode);
 		currentNode = (Node) unaryExpressionNode.clone();
 		System.out.println("Enter Unary Expression Current Node: " + currentNode);
@@ -117,10 +117,19 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterOpr(MicroCParser.OprContext ctx) {
-		Node binaryOperatorNode = new BinaryOperatorNode(currentNode);		
-		currentNode.addChild(binaryOperatorNode);
-		currentNode = (Node) binaryOperatorNode.clone();
-		System.out.println("Enter Binary Operator Current Node: " + currentNode);
+		if(currentNode.getParent() instanceof UnaryExpressionNode) {
+			Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
+			currentNode.addChild(unaryOperatorNode);
+			currentNode = (Node) unaryOperatorNode.clone();
+			System.out.println("Enter unary Operator Current Node: " + currentNode);
+		}
+		else {
+			Node binaryOperatorNode = new BinaryOperatorNode(currentNode);
+			currentNode.addChild(binaryOperatorNode);
+			currentNode = (Node) binaryOperatorNode.clone();
+			System.out.println("Enter Binary Operator Current Node: " + currentNode);
+		}
+
 	}
 	/**
 	 * {@inheritDoc}
@@ -128,7 +137,10 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOpr(MicroCParser.OprContext ctx) {
-		((BinaryOperatorNode) currentNode).setOp(ctx.getChild(0).getText());
+		if(currentNode instanceof UnaryOperatorNode)
+			((UnaryOperatorNode) currentNode).setOp(ctx.getChild(0).getText());
+		else
+			((BinaryOperatorNode) currentNode).setOp(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Binary Operator Current Node: " + currentNode);
 	}

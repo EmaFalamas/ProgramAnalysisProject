@@ -5,6 +5,8 @@ package models;
  */
 public class UnaryOperatorNode extends Node {
 
+    private operators op;
+
 	public UnaryOperatorNode(Node node) {
 		super(node);
 	}
@@ -12,5 +14,25 @@ public class UnaryOperatorNode extends Node {
     public enum operators {
         MINUS,
         NOT
+    }
+
+    public models.UnaryOperatorNode.operators getOp() {
+        return op;
+    }
+
+    public void setOp(models.UnaryOperatorNode.operators op) {
+        this.op = op;
+    }
+
+    public void setOp(String str) {
+        switch(str) {
+            case "-":
+                this.op = operators.MINUS;
+                break;
+            case "!":
+                this.op = operators.NOT;
+                break;
+        }
+
     }
 }
