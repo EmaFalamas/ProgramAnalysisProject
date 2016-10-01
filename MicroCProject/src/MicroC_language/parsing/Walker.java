@@ -128,6 +128,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOpr(MicroCParser.OprContext ctx) {
+		((BinaryOperatorNode) currentNode).setOp(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Binary Operator Current Node: " + currentNode);
 	}
@@ -157,7 +158,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterType(MicroCParser.TypeContext ctx) {
-		Node typeNode = new TypeNode(currentNode);		
+		Node typeNode = new TypeNode(currentNode);
 		currentNode.addChild(typeNode);
 		currentNode = (Node) typeNode.clone();
 		System.out.println("Enter Type Current Node: " + currentNode);
@@ -167,7 +168,8 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitType(MicroCParser.TypeContext ctx) { 
+	@Override public void exitType(MicroCParser.TypeContext ctx) {
+		((TypeNode) currentNode).setNodeType(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Type Current Node: " + currentNode);
 	}
@@ -337,10 +339,9 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterBlockStmt(MicroCParser.BlockStmtContext ctx) {
-		//TODO: Figure out: blockStmt : LBRACE decl* stmt+ RBRACE ;
-		//Node XXXNode = new xxxNode(currentNode);
-		//currentNode.addChild(XXXNode);
-		//currentNode = (Node) XXXNode.clone();
+		Node blockNode = new BlockNode(currentNode);
+		currentNode.addChild(blockNode);
+		currentNode = (Node) blockNode.clone();
 		System.out.println("Enter Block Current Node: " + currentNode);
 	}
 	/**
@@ -349,7 +350,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBlockStmt(MicroCParser.BlockStmtContext ctx) {
-		//currentNode = currentNode.getParent();
+		currentNode = currentNode.getParent();
 		System.out.println("Exit Block Current Node: " + currentNode);
 	}
 	/**
@@ -377,7 +378,6 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterIdentifier(MicroCParser.IdentifierContext ctx) {
-		//TODO: Check: IDENTIFIER : LETTER (LETTER|'0'..'9')* ; == Variable?
 		Node variableNode = new VariableNode(currentNode);
 		currentNode.addChild(variableNode);
 		currentNode = (Node) variableNode.clone();
@@ -389,6 +389,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIdentifier(MicroCParser.IdentifierContext ctx) {
+		((VariableNode) currentNode).setName(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Variable Current Node: " + currentNode);
 	}
@@ -398,11 +399,10 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterInteger(MicroCParser.IntegerContext ctx) {
-		//TODO: Check: integer : INTEGER; == type?
-		Node typeNode = new TypeNode(currentNode);
-		currentNode.addChild(typeNode);
-		currentNode = (Node) typeNode.clone();
-		System.out.println("Enter Type Current Node: " + currentNode);
+		Node constantNode = new ConstantNode(currentNode);
+		currentNode.addChild(constantNode);
+		currentNode = (Node) constantNode.clone();
+		System.out.println("Enter Constant Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -410,8 +410,9 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInteger(MicroCParser.IntegerContext ctx) {
+		((ConstantNode) currentNode).setNumber(Integer.parseInt(ctx.getChild(0).getText()));
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Type Current Node: " + currentNode);
+		System.out.println("Exit Constant Current Node: " + currentNode);
 	}
 
 	/**
