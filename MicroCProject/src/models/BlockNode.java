@@ -7,6 +7,7 @@ public class BlockNode extends StatementNode {
 
     public BlockNode(Node node) {
         super(node);
+        setLabel("BlockNode");
     }
 
 }

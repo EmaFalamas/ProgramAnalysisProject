@@ -9,6 +9,7 @@ public class AssignmentNode extends StatementNode {
 
 	public AssignmentNode(Node node) {
 		super(node);
+        setLabel("AssignmentNode");
 	}
 
     public ExpressionNode getLeftSideNode() {

@@ -9,6 +9,7 @@ public class WhileNode extends StatementNode {
 
 	public WhileNode(Node node) {
 		super(node);
+        setLabel("WhileNode");
 	}
 
     public ExpressionNode getCondition() {

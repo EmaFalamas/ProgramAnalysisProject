@@ -11,6 +11,7 @@ public class ProgramNode extends Node {
 
 	public ProgramNode(Node node) {
 		super(node);
+        setLabel("ProgramNode");
 	}
 
     public ArrayList<DeclarationNode> getDeclarations() {

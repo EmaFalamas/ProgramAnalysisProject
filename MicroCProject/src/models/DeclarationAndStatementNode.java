@@ -9,6 +9,7 @@ public class DeclarationAndStatementNode extends StatementNode {
 
 	public DeclarationAndStatementNode(Node node) {
 		super(node);
+        setLabel("DeclarationAndStatementNode");
 	}
 
     public DeclarationNode getDeclarationNode() {

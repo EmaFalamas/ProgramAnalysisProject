@@ -9,6 +9,7 @@ public class IfNode extends StatementNode {
 
 	public IfNode(Node node) {
 		super(node);
+        setLabel("IfNode");
 	}
 
     public ExpressionNode getCondition() {

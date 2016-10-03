@@ -9,6 +9,7 @@ public class TypeNode extends Node {
 
     public TypeNode(Node node) {
         super(node);
+        setLabel("TypeNode");
 	}
 
     public enum types {

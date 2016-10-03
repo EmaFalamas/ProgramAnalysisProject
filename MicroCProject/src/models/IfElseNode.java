@@ -10,6 +10,7 @@ public class IfElseNode extends StatementNode {
 
 	public IfElseNode(Node node) {
 		super(node);
+        setLabel("IfElseNode");
 	}
 
     public ExpressionNode getCondition() {

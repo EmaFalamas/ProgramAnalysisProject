@@ -9,6 +9,7 @@ public class ArrayNode extends ExpressionNode {
 
 	public ArrayNode(Node node) {
 		super(node);
+        setLabel("ArrayNode");
 	}
 
     public String getName() {

@@ -8,6 +8,7 @@ public class ConstantNode extends ExpressionNode {
 
 	public ConstantNode(Node node) {
 		super(node);
+        setLabel("ConstantNode");
 	}
 
     public int getNumber() {

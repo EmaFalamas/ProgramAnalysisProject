@@ -9,6 +9,7 @@ public class BinaryOperatorNode extends Node {
 
 	public BinaryOperatorNode(Node node) {
 		super(node);
+        setLabel("BinaryOperatorNode");
 	}
 
     public enum operators {

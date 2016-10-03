@@ -9,6 +9,7 @@ public class DoubleDeclarationNode extends DeclarationNode {
 
 	public DoubleDeclarationNode(Node node) {
 		super(node);
+        setLabel("DoubleDeclarationNode");
 	}
 
     public DeclarationNode getFirstDeclarationNode() {

@@ -9,6 +9,7 @@ public class ArrayDeclarationNode extends DeclarationNode {
 
 	public ArrayDeclarationNode(Node node) {
 		super(node);
+        setLabel("ArrayDeclarationNode");
 	}
 
     public TypeNode getTypeNode() {

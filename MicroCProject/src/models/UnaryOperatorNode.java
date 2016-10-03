@@ -9,6 +9,7 @@ public class UnaryOperatorNode extends Node {
 
 	public UnaryOperatorNode(Node node) {
 		super(node);
+        setLabel("UnaryOperatorNode");
 	}
 
     public enum operators {

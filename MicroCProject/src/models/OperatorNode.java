@@ -8,6 +8,7 @@ public class OperatorNode extends Node {
 
 	public OperatorNode(Node node) {
 		super(node);
+        setLabel("OperatorNode");
 	}
 
     public String getOperator() {

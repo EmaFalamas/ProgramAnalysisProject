@@ -8,6 +8,7 @@ public class WriteNode extends StatementNode {
 
 	public WriteNode(Node node) {
 		super(node);
+        setLabel("WriteNode");
 	}
 
     public ExpressionNode getExpressionNode() {

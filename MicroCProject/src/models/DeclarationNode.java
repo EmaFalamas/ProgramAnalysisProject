@@ -7,6 +7,7 @@ public class DeclarationNode extends Node {
 
 	public DeclarationNode(Node node) {
 		super(node);
+		setLabel("DeclarationNode");
 	}
 
 }

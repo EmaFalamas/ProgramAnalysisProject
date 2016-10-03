@@ -7,6 +7,7 @@ public class ExpressionNode extends Node {
 
 	public ExpressionNode(Node node) {
 		super(node);
+		setLabel("ExpressionNode");
 	}
 
 }

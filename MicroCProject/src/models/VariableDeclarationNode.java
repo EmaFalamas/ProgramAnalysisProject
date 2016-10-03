@@ -9,6 +9,7 @@ public class VariableDeclarationNode extends DeclarationNode {
 
 	public VariableDeclarationNode(Node node) {
 		super(node);
+        setLabel("VariableDeclarationNode");
 	}
 
     public TypeNode getTypeNode() {

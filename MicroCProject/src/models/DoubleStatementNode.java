@@ -9,6 +9,7 @@ public class DoubleStatementNode extends StatementNode {
 
 	public DoubleStatementNode(Node node) {
 		super(node);
+        setLabel("DoubleStatementNode");
 	}
 
     public StatementNode getFirstStatementNode() {
