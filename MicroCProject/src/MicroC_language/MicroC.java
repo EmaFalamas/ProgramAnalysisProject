@@ -25,7 +25,7 @@ public class MicroC {
 		Node abstractSyntaxTree = w.currentNode;
 	}
 
-	public constructFlowGraph(Node abstractSyntaxTree)
+	public void constructFlowGraph(Node abstractSyntaxTree)
 	{
 		FlowGraph flowGraph = new FlowGraph();
 

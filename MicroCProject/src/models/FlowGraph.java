@@ -10,7 +10,7 @@ public class FlowGraph {
 
     public FlowGraph()
     {
-        blocks = new Arraylist<int>();
+        blocks = new ArrayList<Block>();
     }
 
     public ArrayList<Block> getBlocks() {
@@ -21,7 +21,7 @@ public class FlowGraph {
         this.blocks = blocks;
     }
 
-    public addBlock(Block block)
+    public void addBlock(Block block)
     {
         blocks.add(block);
     }

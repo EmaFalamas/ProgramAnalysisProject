@@ -7,13 +7,13 @@ import java.util.ArrayList;
  */
 public class Block {
     private int id;
-    private ArrrayList<int> inFlows;
-    private ArrayList<int> outFlows;
+    private ArrayList<Integer> inFlows;
+    private ArrayList<Integer> outFlows;
 
     public Block()
     {
-        this.inFlows = new ArrayList<int>();
-        this.outFlows = new ArrayList<int>();
+        this.inFlows = new ArrayList<Integer>();
+        this.outFlows = new ArrayList<Integer>();
     }
 
     public int getId() {
@@ -24,28 +24,28 @@ public class Block {
         this.id = id;
     }
 
-    public ArrrayList<int> getInFlows() {
+    public ArrayList<Integer> getInFlows() {
         return inFlows;
     }
 
-    public void setInFlows(ArrrayList<int> inFlows) {
+    public void setInFlows(ArrayList<Integer> inFlows) {
         this.inFlows = inFlows;
     }
 
-    public ArrayList<int> getOutFlows() {
+    public ArrayList<Integer> getOutFlows() {
         return outFlows;
     }
 
-    public void setOutFlows(ArrayList<int> outFlows) {
+    public void setOutFlows(ArrayList<Integer> outFlows) {
         this.outFlows = outFlows;
     }
 
-    public addInFlow(int id)
+    public void addInFlow(int id)
     {
         inFlows.add(id);
     }
 
-    public addOutFlow(int id)
+    public void addOutFlow(int id)
     {
         outFlows.add(id);
     }
