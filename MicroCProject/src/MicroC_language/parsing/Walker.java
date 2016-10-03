@@ -81,6 +81,12 @@ public class Walker extends MicroCBaseListener {
 		currentNode.addChild(unaryExpressionNode);
 		currentNode = (Node) unaryExpressionNode.clone();
 		System.out.println("Enter Unary Expression Current Node: " + currentNode);
+
+		System.out.println("Enter Unary operator Current Node: " + currentNode);
+		Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
+		((UnaryOperatorNode)unaryOperatorNode).setOp(ctx.getChild(0).getText());
+		currentNode.addChild(unaryOperatorNode);
+		System.out.println("Exit Unary operator Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
