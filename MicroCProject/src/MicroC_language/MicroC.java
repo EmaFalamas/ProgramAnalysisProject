@@ -65,6 +65,7 @@ public class MicroC {
 			switch(n.getLabel()){
 				case "ConstantNode":
 					text = Integer.toString(((ConstantNode) n).getNumber());
+					break;
 				case "":
 
 					break;
