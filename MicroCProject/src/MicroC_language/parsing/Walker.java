@@ -383,6 +383,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void exitProgram(MicroCParser.ProgramContext ctx) {
 		// We shouldn't do anything here, as the current node holds the entire
 		// abstract syntax tree
+
 	}
 	/**
 	 * {@inheritDoc}

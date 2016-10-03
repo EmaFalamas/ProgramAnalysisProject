@@ -3,6 +3,8 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import models.*;
+
 
 public class MicroC {
 
@@ -17,9 +19,16 @@ public class MicroC {
 		ParseTree tree = parser.program(); //This command parses the program.
 
 	    ParseTreeWalker walker = new ParseTreeWalker();
-		walker.walk( new Walker(), tree );
+		Walker w = new Walker();
+		walker.walk(w, tree);
 		
+		Node abstractSyntaxTree = w.currentNode;
+	}
 
-       
+	public constructFlowGraph(Node abstractSyntaxTree)
+	{
+		FlowGraph flowGraph = new FlowGraph();
+
+
 	}
 }
