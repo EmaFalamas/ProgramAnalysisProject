@@ -9,6 +9,7 @@ public class Block {
     private int id;
     private ArrayList<Integer> inFlows;
     private ArrayList<Integer> outFlows;
+    private String instruction;
 
     public Block()
     {
@@ -48,5 +49,13 @@ public class Block {
     public void addOutFlow(int id)
     {
         outFlows.add(id);
+    }
+
+    public String getInstruction() {
+        return instruction;
+    }
+
+    public void setInstruction(String instruction) {
+        this.instruction = instruction;
     }
 }
