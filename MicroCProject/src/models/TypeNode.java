@@ -36,4 +36,19 @@ public class TypeNode extends Node {
         }
     }
 
+    public String getNodeTypeStr() {
+        String text = null;
+        switch(this.nodeType) {
+            case INT:
+                text = "int";
+                break;
+            case VOID:
+                text = "void";
+                break;
+            default:
+                System.out.println("ERROR: getNodeTypeStr() default");
+        }
+        return text;
+    }
+
 }

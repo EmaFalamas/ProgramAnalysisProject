@@ -8,12 +8,17 @@ import java.lang.Cloneable;
  */
 public abstract class Node implements Cloneable {
     private String label;
+	private boolean isBlock;
+	private boolean visited;
     private ArrayList<Node> children;
+	private ArrayList<Block> blocks;
 	private Node parent;
     
     public Node(Node parent){
     	children = new ArrayList<Node>();
+		blocks = new ArrayList<Block>();
 		this.parent = parent;
+		this.isBlock = false;
     }
 
 	public Object clone() {
@@ -43,11 +48,32 @@ public abstract class Node implements Cloneable {
 		children.add(child);
 	}
 
+	public ArrayList<Block> getBlocks() { return blocks; }
+
+	public void addBlock(Block b) { blocks.add(b); }
+
 	public Node getParent() {
 		return parent;
 	}
 
 	public void setParent(Node parent) {
 		this.parent = parent;
+	}
+
+	public boolean isBlock() { return isBlock; }
+
+	public void isBlock(boolean block) { isBlock = block; }
+
+	public boolean isVisited() { return visited; }
+
+	public void isVisited(boolean visited) { this.visited = visited; }
+
+	public void removeChild(Node node) {
+		for (Node n : children) {
+			if (n.equals(node)) {
+				children.remove(node);
+				break;
+			}
+		}
 	}
 }

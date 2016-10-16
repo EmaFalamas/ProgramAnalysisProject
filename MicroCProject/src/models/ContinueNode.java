@@ -8,6 +8,7 @@ public class ContinueNode extends StatementNode {
 	public ContinueNode(Node node) {
 		super(node);
 		setLabel("ContinueNode");
+		isBlock(true);
 	}
 
 }

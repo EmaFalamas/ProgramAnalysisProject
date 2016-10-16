@@ -19,7 +19,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterExpr(MicroCParser.ExprContext ctx) {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
-		currentNode = (Node) expressionNode.clone();
+		currentNode = (Node) expressionNode;
 		System.out.println("Enter Expression Current Node: " + currentNode);
  	}
 	/**
@@ -28,6 +28,17 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(MicroCParser.ExprContext ctx) {
+		boolean hasBinaryOperator = false;
+		for (Node c : currentNode.getChildren()) {
+			if (c.getLabel().equals("BinaryOperatorNode")) {
+				hasBinaryOperator = true;
+				break;
+			}
+		}
+		if (hasBinaryOperator) {
+			currentNode.setLabel("BinaryExpressionNode");
+			currentNode.isBlock(true);
+		}
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
@@ -39,7 +50,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterExpr1(MicroCParser.Expr1Context ctx) {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
-		currentNode = (Node) expressionNode.clone();
+		currentNode = (Node) expressionNode;
 		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
@@ -48,6 +59,17 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr1(MicroCParser.Expr1Context ctx) {
+		boolean hasBinaryOperator = false;
+		for (Node c : currentNode.getChildren()) {
+			if (c.getLabel().equals("BinaryOperatorNode")) {
+				hasBinaryOperator = true;
+				break;
+			}
+		}
+		if (hasBinaryOperator) {
+			currentNode.setLabel("BinaryExpressionNode");
+			currentNode.isBlock(true);
+		}
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
@@ -59,7 +81,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterExpr2(MicroCParser.Expr2Context ctx) {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
-		currentNode = (Node) expressionNode.clone();
+		currentNode = (Node) expressionNode;
 		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
@@ -68,6 +90,17 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr2(MicroCParser.Expr2Context ctx) {
+		boolean hasBinaryOperator = false;
+		for (Node c : currentNode.getChildren()) {
+			if (c.getLabel().equals("BinaryOperatorNode")) {
+				hasBinaryOperator = true;
+				break;
+			}
+		}
+		if (hasBinaryOperator) {
+			currentNode.setLabel("BinaryExpressionNode");
+			currentNode.isBlock(true);
+		}
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
@@ -79,7 +112,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterExprnegate(MicroCParser.ExprnegateContext ctx) {
 		Node unaryExpressionNode = new UnaryExpressionNode(currentNode);
 		currentNode.addChild(unaryExpressionNode);
-		currentNode = (Node) unaryExpressionNode.clone();
+		currentNode = (Node) unaryExpressionNode;
 		System.out.println("Enter Unary Expression Current Node: " + currentNode);
 
 		System.out.println("Enter Unary operator Current Node: " + currentNode);
@@ -105,7 +138,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterExpr3(MicroCParser.Expr3Context ctx) {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
-		currentNode = (Node) expressionNode.clone();
+		currentNode = (Node) expressionNode;
 		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
@@ -126,13 +159,13 @@ public class Walker extends MicroCBaseListener {
 		if(currentNode.getParent() instanceof UnaryExpressionNode) {
 			Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
 			currentNode.addChild(unaryOperatorNode);
-			currentNode = (Node) unaryOperatorNode.clone();
+			currentNode = (Node) unaryOperatorNode;
 			System.out.println("Enter unary Operator Current Node: " + currentNode);
 		}
 		else {
 			Node binaryOperatorNode = new BinaryOperatorNode(currentNode);
 			currentNode.addChild(binaryOperatorNode);
-			currentNode = (Node) binaryOperatorNode.clone();
+			currentNode = (Node) binaryOperatorNode;
 			System.out.println("Enter Binary Operator Current Node: " + currentNode);
 		}
 
@@ -158,7 +191,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterDecl(MicroCParser.DeclContext ctx) {
 		Node declarationNode = new DeclarationNode(currentNode);		
 		currentNode.addChild(declarationNode);
-		currentNode = (Node) declarationNode.clone();
+		currentNode = (Node) declarationNode;
 		System.out.println("Enter Declaration Current Node: " + currentNode);
 	}
 	/**
@@ -178,7 +211,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterType(MicroCParser.TypeContext ctx) {
 		Node typeNode = new TypeNode(currentNode);
 		currentNode.addChild(typeNode);
-		currentNode = (Node) typeNode.clone();
+		currentNode = (Node) typeNode;
 		System.out.println("Enter Type Current Node: " + currentNode);
  	}
 	/**
@@ -187,6 +220,7 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(MicroCParser.TypeContext ctx) {
+		System.out.println("---WALKER--- exitType. NodeType = " + ctx.getChild(0).getText());
 		((TypeNode) currentNode).setNodeType(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Type Current Node: " + currentNode);
@@ -199,7 +233,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterStmt(MicroCParser.StmtContext ctx) { 
 		Node statementNode = new StatementNode(currentNode);		
 		currentNode.addChild(statementNode);
-		currentNode = (Node) statementNode.clone();
+		currentNode = (Node) statementNode;
 		System.out.println("Enter Statement Current Node: " + currentNode);
 	}
 	/**
@@ -219,7 +253,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterAssignStmt(MicroCParser.AssignStmtContext ctx) {
 		Node assignmentNode = new AssignmentNode(currentNode);
 		currentNode.addChild(assignmentNode);
-		currentNode = (Node) assignmentNode.clone();
+		currentNode = (Node) assignmentNode;
 		System.out.println("Enter Assignment Current Node: " + currentNode);
 	}
 	/**
@@ -239,7 +273,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterContinueStmt(MicroCParser.ContinueStmtContext ctx) {
 		Node continueNode = new ContinueNode(currentNode);
 		currentNode.addChild(continueNode);
-		currentNode = (Node) continueNode.clone();
+		currentNode = (Node) continueNode;
 		System.out.println("Enter Continue Current Node: " + currentNode);
 	}
 	/**
@@ -259,7 +293,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterReadStmt(MicroCParser.ReadStmtContext ctx) {
 		Node readNode = new ReadNode(currentNode);
 		currentNode.addChild(readNode);
-		currentNode = (Node) readNode.clone();
+		currentNode = (Node) readNode;
 		System.out.println("Enter Read Current Node: " + currentNode);
 	}
 	/**
@@ -279,7 +313,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterBreakStmt(MicroCParser.BreakStmtContext ctx) {
 		Node breakNode = new BreakNode(currentNode);
 		currentNode.addChild(breakNode);
-		currentNode = (Node) breakNode.clone();
+		currentNode = (Node) breakNode;
 		System.out.println("Enter Break Current Node: " + currentNode);
 	}
 	/**
@@ -299,7 +333,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterWriteStmt(MicroCParser.WriteStmtContext ctx) {
 		Node writeNode = new WriteNode(currentNode);
 		currentNode.addChild(writeNode);
-		currentNode = (Node) writeNode.clone();
+		currentNode = (Node) writeNode;
 		System.out.println("Enter Write Current Node: " + currentNode);
 	}
 	/**
@@ -319,7 +353,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterIfelseStmt(MicroCParser.IfelseStmtContext ctx) {
 		Node ifElseNode = new IfElseNode(currentNode);
 		currentNode.addChild(ifElseNode);
-		currentNode = (Node) ifElseNode.clone();
+		currentNode = (Node) ifElseNode;
 		System.out.println("Enter IfElse Current Node: " + currentNode);
 	}
 	/**
@@ -328,6 +362,16 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIfelseStmt(MicroCParser.IfelseStmtContext ctx) {
+		boolean hasElse = false;
+		for (Node c : currentNode.getChildren()) {
+			if (c.getLabel().equals("SymbolNode") && ((SymbolNode) c).getOp() == SymbolNode.operators.ELSE) {
+				hasElse = true;
+				break;
+			}
+		}
+		if (!hasElse) {
+			currentNode.setLabel("IfNode");
+		}
 		currentNode = currentNode.getParent();
 		System.out.println("Exit IfElse Current Node: " + currentNode);
 	}
@@ -339,7 +383,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterWhileStmt(MicroCParser.WhileStmtContext ctx) {
 		Node whileNode = new WhileNode(currentNode);
 		currentNode.addChild(whileNode);
-		currentNode = (Node) whileNode.clone();
+		currentNode = (Node) whileNode;
 		System.out.println("Enter While Current Node: " + currentNode);
 	}
 	/**
@@ -359,7 +403,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterBlockStmt(MicroCParser.BlockStmtContext ctx) {
 		Node blockNode = new BlockNode(currentNode);
 		currentNode.addChild(blockNode);
-		currentNode = (Node) blockNode.clone();
+		currentNode = (Node) blockNode;
 		System.out.println("Enter Block Current Node: " + currentNode);
 	}
 	/**
@@ -378,7 +422,7 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
 		Node programNode = new ProgramNode(null);
-		currentNode = (Node) programNode.clone();
+		currentNode = (Node) programNode;
 		System.out.println("Enter Program Current Node: " + currentNode);
 	}
 	/**
@@ -399,7 +443,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterIdentifier(MicroCParser.IdentifierContext ctx) {
 		Node variableNode = new VariableNode(currentNode);
 		currentNode.addChild(variableNode);
-		currentNode = (Node) variableNode.clone();
+		currentNode = (Node) variableNode;
 		System.out.println("Enter Variable Current Node: " + currentNode);
 	}
 	/**
@@ -420,7 +464,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterInteger(MicroCParser.IntegerContext ctx) {
 		Node constantNode = new ConstantNode(currentNode);
 		currentNode.addChild(constantNode);
-		currentNode = (Node) constantNode.clone();
+		currentNode = (Node) constantNode;
 		System.out.println("Enter Constant Current Node: " + currentNode);
 	}
 	/**
@@ -451,7 +495,26 @@ public class Walker extends MicroCBaseListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	@Override public void visitTerminal(TerminalNode node) {
+
+		//System.out.println("-------------- TerminalNODE: " + node.getText());
+
+		String text = node.getText();
+		if (text.equals("+") || text.equals("-") || text.equals("|") || text.equals("*") || text.equals("/") || text.equals("&")) {
+			Node operatorNode = new BinaryOperatorNode(currentNode);
+			((BinaryOperatorNode) operatorNode).setOp(text);
+			currentNode.addChild(operatorNode);
+		}
+
+		if (text.equals("[") || text.equals("]") || text.equals("=") || text.equals(";")
+				|| text.equals("break") || text.equals("continue") || text.equals("read") || text.equals("write")
+				|| text.equals("int") || text.equals("void") || text.equals("else")) {
+			Node symbolNode = new SymbolNode(currentNode);
+			((SymbolNode) symbolNode).setOp(text);
+			currentNode.addChild(symbolNode);
+		}
+
+	}
 	/**
 	 * {@inheritDoc}
 	 *

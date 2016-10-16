@@ -9,6 +9,7 @@ public class ReadNode extends StatementNode {
 	public ReadNode(Node node) {
 		super(node);
         setLabel("ReadNode");
+        isBlock(true);
 	}
 
     public ExpressionNode getExpressionNode() {

@@ -10,6 +10,7 @@ public class UnaryExpressionNode extends ExpressionNode {
 	public UnaryExpressionNode(Node node) {
 		super(node);
         setLabel("UnaryExpressionNode");
+        isBlock(true);
 	}
 
     public UnaryOperatorNode getOperatorNode() {

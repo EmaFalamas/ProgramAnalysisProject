@@ -9,6 +9,7 @@ public class WriteNode extends StatementNode {
 	public WriteNode(Node node) {
 		super(node);
         setLabel("WriteNode");
+        isBlock(true);
 	}
 
     public ExpressionNode getExpressionNode() {

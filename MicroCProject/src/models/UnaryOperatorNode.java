@@ -36,4 +36,18 @@ public class UnaryOperatorNode extends Node {
         }
 
     }
+
+    public String getOpStr(models.UnaryOperatorNode.operators op) {
+        String str = null;
+        switch(op) {
+            case MINUS:
+                str = "-";
+                break;
+            case NOT:
+                str = "!";
+                break;
+        }
+        return str;
+    }
+
 }

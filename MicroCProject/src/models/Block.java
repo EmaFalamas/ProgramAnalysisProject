@@ -51,6 +51,8 @@ public class Block {
         outFlows.add(id);
     }
 
+    public void addOutFlows(ArrayList<Integer> ids) { outFlows.addAll(ids); }
+
     public String getInstruction() {
         return instruction;
     }

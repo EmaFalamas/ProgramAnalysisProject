@@ -8,6 +8,7 @@ public class BreakNode extends StatementNode {
 	public BreakNode(Node node) {
 		super(node);
 		setLabel("BreakNode");
+        isBlock(true);
 	}
 
 }

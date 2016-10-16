@@ -12,6 +12,7 @@ public class BinaryExpressionNode extends ExpressionNode {
 	public BinaryExpressionNode(Node node) {
 		super(node);
         setLabel("BinaryExpressionNode");
+        isBlock(true);
 	}
 
     public ExpressionNode getFirstExpressionNode() {

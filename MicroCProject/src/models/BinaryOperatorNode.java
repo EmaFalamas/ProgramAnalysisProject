@@ -76,4 +76,48 @@ public class BinaryOperatorNode extends Node {
         }
 
     }
+
+    public String getOpStr(operators op) {
+        String str = null;
+        switch(op) {
+            case PLUS:
+                str = "+";
+                break;
+            case MINUS:
+                str = "-";
+                break;
+            case TIMES:
+                str = "*";
+                break;
+            case DIV:
+                str = "/";
+                break;
+            case LT:
+                str = "<";
+                break;
+            case GT:
+                str = ">";
+                break;
+            case LTE:
+                str = "<=";
+                break;
+            case GTE:
+                str = ">=";
+                break;
+            case EQ:
+                str = "==";
+                break;
+            case NEQ:
+                str = "!=";
+                break;
+            case AND:
+                str = "&";
+                break;
+            case OR:
+                str = "|";
+                break;
+        }
+        return str;
+    }
+
 }
