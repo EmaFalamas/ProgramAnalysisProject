@@ -140,7 +140,6 @@ public class MicroC {
 				case "IfElseNode":
 					exitIfElse = true;
 					exitStandardBlock = false;
-                   // conditionStack.pop();
 					break;
 			}
 
