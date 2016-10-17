@@ -84,6 +84,19 @@ public class MicroC {
 			case "IfElseNode":
 			    searchCondition = true;
                 searchElse = true;
+                for (Node c : currentNode.getChildren()) {
+                    System.out.println("IfElseNode - child = " + c.getLabel());
+                    if (c.getLabel().equals("SymbolNode")) {
+                        System.out.println("SymbolNode - str = " + ((SymbolNode) c).getOp().toString());
+                    }
+                }
+                break;
+            case "SymbolNode":
+                if (searchElse && ((SymbolNode) currentNode).getOp() == SymbolNode.operators.ELSE) {
+                    System.out.println("Found ELSE 2!");
+                    searchElse = false;
+                    foundElse = true;
+                }
 		}
 
 		if (!currentNode.isBlock()) {
@@ -112,6 +125,7 @@ public class MicroC {
 				case "IfNode":
 					exitSingleIf = true;
 					exitStandardBlock = false;
+                   // conditionStack.pop();
 					break;
 				case "WhileNode":
 					exitWhile = true;
@@ -122,13 +136,16 @@ public class MicroC {
 					ArrayList<Block> whileBlocks = currentNode.getBlocks();
 					int numWhileBlocks = whileBlocks.size();
                     System.out.println("numWhileBlocks = " + numWhileBlocks + "; last instruction = " + whileBlocks.get(numWhileBlocks-1).getInstruction());
-					if (numWhileBlocks > 1) {
+					System.out.println("Exiting while loop with " + flowGraph.getBlocks().size() + " flow graph blocks");
+                    System.out.println("First block = " + whileBlocks.get(0).getId() + "; Last block = " + whileBlocks.get(numWhileBlocks-1).getId());
+                    if (numWhileBlocks > 1) {
 						whileBlocks.get(0).addInFlow(whileBlocks.get(numWhileBlocks-1).getId());
 					}
 					break;
 				case "IfElseNode":
 					exitIfElse = true;
 					exitStandardBlock = false;
+                   // conditionStack.pop();
 					break;
 				case "BreakNode":
 					exitBreak = true;
@@ -149,10 +166,8 @@ public class MicroC {
 				lastBreakBlock = null;
 				exitBreak = false;
 			}
-			if (b.getId() == 17) {
-                System.out.println("Condition stack is " + (conditionStack.empty()?"":"not") + " empty");
-            }
 			if ((exitSingleIf || exitWhile) && !conditionStack.empty()) {
+                System.out.println("Exit while - condition stack flow = " + conditionStack.peek().getId());
 				b.addInFlow(conditionStack.pop().getId());
 				exitSingleIf = false;
 				exitWhile = false;
@@ -161,13 +176,16 @@ public class MicroC {
 
                 exitIfElse = false;
             }
+			currentBlockId++;
+			b.setId(currentBlockId);
             if (foundElse) {
                 b.addInFlow(conditionStack.pop().getId());
                 System.out.println("Found else - current block = " + b.getId());
                 foundElse = false;
             }
-			currentBlockId++;
-			b.setId(currentBlockId);
+            if (b.getId() == 17) {
+                System.out.println("Condition stack is " + (conditionStack.empty()?"":"not") + " empty");
+            }
 			String instruction = getText(currentNode);
 			b.setInstruction(instruction);
 			flowGraph.addBlock(b);
@@ -235,7 +253,10 @@ public class MicroC {
 				case "SymbolNode":
 				    System.out.println("SymbolNode = " + ((SymbolNode) currentNode).getOp().toString());
 					txt += ((SymbolNode) currentNode).getOpStr(((SymbolNode) currentNode).getOp());
-                    if (searchElse && ((SymbolNode) currentNode).getOp() == SymbolNode.operators.ELSE) {
+                    System.out.println("SearchElse = " + (searchElse?"true":"false"));
+                    System.out.println("Operator = " + ((SymbolNode) currentNode).getOp().toString());
+                    if (((SymbolNode) currentNode).getOp() == SymbolNode.operators.ELSE) {
+                        System.out.println("Found ELSE!");
                         foundElse = true;
                         searchElse = false;
                     }
@@ -246,9 +267,6 @@ public class MicroC {
 				case "VariableNode":
 					txt += ((VariableNode) currentNode).getName();
 					break;
-				default:
-					System.out.println("getText2() - DEFAULT. Label = " + label);
-					txt += "df";
 			}
 		}
 		return txt;
