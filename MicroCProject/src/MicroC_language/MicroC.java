@@ -17,7 +17,9 @@ public class MicroC {
 	static Hashtable<Integer, ArrayList<Integer>> outFlows;
 	static Stack<Block> conditionStack;
 	static Stack<Node> whileStack;
-	static Block lastBreakBlock = null;
+    static Stack<Block> ifLastBlockStack;
+	static Block lastBreakContinueBlock = null;
+    static Block lastBlockCreated = null;
 
 	static boolean searchCondition;
     static boolean searchElse;
@@ -26,7 +28,9 @@ public class MicroC {
 	static boolean exitIfElse;
 	static boolean exitWhile;
 	static boolean exitBreak;
+    static boolean exitContinue;
 	static boolean exitStandardBlock;
+    static boolean exitIfBlockIfElse;
 
 	public static void main(String args[]) throws Exception {
 		if (args.length == 0) {
@@ -47,6 +51,7 @@ public class MicroC {
 		nodeBlocks = new Hashtable<Node, Block>();
 		conditionStack = new Stack<Block>();
 		whileStack = new Stack<Node>();
+        ifLastBlockStack = new Stack<Block>();
 		outFlows = new Hashtable<Integer, ArrayList<Integer>>();
 		searchCondition = false;
         searchElse = false;
@@ -55,6 +60,8 @@ public class MicroC {
 		exitWhile = false;
 		exitStandardBlock = false;
 		exitBreak = false;
+        exitContinue = false;
+        exitIfBlockIfElse = false;
 		constructFlowGraph2(abstractSyntaxTree);
 
 	}
@@ -73,8 +80,6 @@ public class MicroC {
 		String label = currentNode.getLabel();
 		ArrayList<Node> children = currentNode.getChildren();
 
-		//System.out.println("label = " + label + "; exitStandardBlock = " + (new Boolean(exitStandardBlock)).toString());
-
 		switch (label) {
 			case "IfNode":
 			case "WhileNode":
@@ -84,18 +89,14 @@ public class MicroC {
 			case "IfElseNode":
 			    searchCondition = true;
                 searchElse = true;
-                for (Node c : currentNode.getChildren()) {
-                    System.out.println("IfElseNode - child = " + c.getLabel());
-                    if (c.getLabel().equals("SymbolNode")) {
-                        System.out.println("SymbolNode - str = " + ((SymbolNode) c).getOp().toString());
-                    }
-                }
                 break;
             case "SymbolNode":
                 if (searchElse && ((SymbolNode) currentNode).getOp() == SymbolNode.operators.ELSE) {
-                    System.out.println("Found ELSE 2!");
                     searchElse = false;
                     foundElse = true;
+                    exitStandardBlock = false;
+                    exitIfBlockIfElse = true;
+                    ifLastBlockStack.push(lastBlockCreated);
                 }
 		}
 
@@ -119,13 +120,10 @@ public class MicroC {
 				}
 			}
 
-			System.out.println("Exiting node " + label);
-
 			switch (label) {
 				case "IfNode":
 					exitSingleIf = true;
 					exitStandardBlock = false;
-                   // conditionStack.pop();
 					break;
 				case "WhileNode":
 					exitWhile = true;
@@ -135,9 +133,6 @@ public class MicroC {
 					}
 					ArrayList<Block> whileBlocks = currentNode.getBlocks();
 					int numWhileBlocks = whileBlocks.size();
-                    System.out.println("numWhileBlocks = " + numWhileBlocks + "; last instruction = " + whileBlocks.get(numWhileBlocks-1).getInstruction());
-					System.out.println("Exiting while loop with " + flowGraph.getBlocks().size() + " flow graph blocks");
-                    System.out.println("First block = " + whileBlocks.get(0).getId() + "; Last block = " + whileBlocks.get(numWhileBlocks-1).getId());
                     if (numWhileBlocks > 1) {
 						whileBlocks.get(0).addInFlow(whileBlocks.get(numWhileBlocks-1).getId());
 					}
@@ -147,48 +142,44 @@ public class MicroC {
 					exitStandardBlock = false;
                    // conditionStack.pop();
 					break;
-				case "BreakNode":
-					exitBreak = true;
-					exitStandardBlock = false;
-					lastBreakBlock = nodeBlocks.get(currentNode);
-					break;
 			}
 
-			currentNode.isVisited(true);
+            currentNode.isVisited(true);
 		} else {
 			Block b = new Block();
 			if (exitStandardBlock) {
 				b.addInFlow(currentBlockId);
 				exitStandardBlock = false;
 			}
-			if (exitBreak && exitWhile && lastBreakBlock != null) {
-				b.addInFlow(lastBreakBlock.getId());
-				lastBreakBlock = null;
+            if (exitBreak && exitWhile && lastBreakContinueBlock != null) {
+				b.addInFlow(lastBreakContinueBlock.getId());
+				lastBreakContinueBlock = null;
 				exitBreak = false;
 			}
+			if (exitContinue && lastBreakContinueBlock != null && !whileStack.empty()) {
+                whileStack.peek().getBlocks().get(0).addInFlow(lastBreakContinueBlock.getId());
+                lastBreakContinueBlock = null;
+                exitContinue = false;
+            }
 			if ((exitSingleIf || exitWhile) && !conditionStack.empty()) {
-                System.out.println("Exit while - condition stack flow = " + conditionStack.peek().getId());
 				b.addInFlow(conditionStack.pop().getId());
 				exitSingleIf = false;
 				exitWhile = false;
 			}
-			if (!exitIfElse && !conditionStack.empty()) {
-
-                exitIfElse = false;
+            if (exitIfElse && exitIfBlockIfElse && !ifLastBlockStack.empty()) {
+                b.addInFlow(ifLastBlockStack.pop().getId());
+                exitIfBlockIfElse = false;
             }
 			currentBlockId++;
 			b.setId(currentBlockId);
             if (foundElse) {
                 b.addInFlow(conditionStack.pop().getId());
-                System.out.println("Found else - current block = " + b.getId());
                 foundElse = false;
-            }
-            if (b.getId() == 17) {
-                System.out.println("Condition stack is " + (conditionStack.empty()?"":"not") + " empty");
             }
 			String instruction = getText(currentNode);
 			b.setInstruction(instruction);
 			flowGraph.addBlock(b);
+            lastBlockCreated = b;
 			nodeBlocks.put(currentNode, b);
 			if (searchCondition) {
 				conditionStack.push(b);
@@ -196,13 +187,6 @@ public class MicroC {
 			}
 			if (!whileStack.empty()) {
 				whileStack.peek().addBlock(b);
-				System.out.println("Added block " + b.getId() + "; While blocks = " + whileStack.peek().getBlocks().size());
-			}
-
-			if ((!currentNode.getLabel().equals("BreakNode")) || (!currentNode.getLabel().equals("ContinueNode"))
-					) {
-				exitStandardBlock = true;
-
 			}
 
 			boolean blockFoundInNode = false;
@@ -216,7 +200,20 @@ public class MicroC {
 				currentNode.addBlock(b);
 			}
 
-			System.out.println("Block created " + b.getId());
+            switch (label) {
+                case "BreakNode":
+                    exitBreak = true;
+                    exitStandardBlock = false;
+                    lastBreakContinueBlock = lastBlockCreated;
+                    break;
+                case "ContinueNode":
+                    exitContinue = true;
+                    exitStandardBlock = false;
+                    lastBreakContinueBlock = lastBlockCreated;
+                    break;
+                default:
+                    exitStandardBlock = true;
+            }
 
 			currentNode.isVisited(true);
 		}
@@ -251,15 +248,7 @@ public class MicroC {
 					txt += Integer.toString(((ConstantNode) currentNode).getNumber());
 					break;
 				case "SymbolNode":
-				    System.out.println("SymbolNode = " + ((SymbolNode) currentNode).getOp().toString());
 					txt += ((SymbolNode) currentNode).getOpStr(((SymbolNode) currentNode).getOp());
-                    System.out.println("SearchElse = " + (searchElse?"true":"false"));
-                    System.out.println("Operator = " + ((SymbolNode) currentNode).getOp().toString());
-                    if (((SymbolNode) currentNode).getOp() == SymbolNode.operators.ELSE) {
-                        System.out.println("Found ELSE!");
-                        foundElse = true;
-                        searchElse = false;
-                    }
 					break;
 				case "UnaryOperatorNode":
 					txt += ((UnaryOperatorNode) currentNode).getOpStr(((UnaryOperatorNode) currentNode).getOp());

@@ -220,7 +220,6 @@ public class Walker extends MicroCBaseListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitType(MicroCParser.TypeContext ctx) {
-		System.out.println("---WALKER--- exitType. NodeType = " + ctx.getChild(0).getText());
 		((TypeNode) currentNode).setNodeType(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
 		System.out.println("Exit Type Current Node: " + currentNode);
@@ -373,7 +372,6 @@ public class Walker extends MicroCBaseListener {
 			currentNode.setLabel("IfNode");
 		}
 		currentNode = currentNode.getParent();
-		System.out.println("Exit IfElse Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -500,7 +498,6 @@ public class Walker extends MicroCBaseListener {
 		//System.out.println("-------------- TerminalNODE: " + node.getText());
 
 		String text = node.getText();
-        System.out.println("Terminal = " + text);
 		if (text.equals("+") || text.equals("-") || text.equals("|") || text.equals("*") || text.equals("/") || text.equals("&")) {
 			Node operatorNode = new BinaryOperatorNode(currentNode);
 			((BinaryOperatorNode) operatorNode).setOp(text);
@@ -510,9 +507,6 @@ public class Walker extends MicroCBaseListener {
 		if (text.equals("[") || text.equals("]") || text.equals("=") || text.equals(";")
 				|| text.equals("break") || text.equals("continue") || text.equals("read") || text.equals("write")
 				|| text.equals("int") || text.equals("void") || text.equals("else")) {
-            if (text.equals("else")) {
-                System.out.println("Current node label = " + currentNode.getLabel());
-            }
 			Node symbolNode = new SymbolNode(currentNode);
 			((SymbolNode) symbolNode).setOp(text);
 			currentNode.addChild(symbolNode);

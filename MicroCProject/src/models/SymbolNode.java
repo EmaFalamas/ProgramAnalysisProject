@@ -127,7 +127,6 @@ public class SymbolNode extends Node {
                 break;
             case "else":
                 this.op = operators.ELSE;
-                System.out.println("ELSE operator set");
                 break;
             case "while":
                 this.op = operators.WHILE;
