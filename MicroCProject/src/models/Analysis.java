@@ -8,7 +8,7 @@ public class Analysis {
     private ArrayList<String> kills;
     private ArrayList<String> gens;
 
-    public Analysis {
+    public Analysis() {
         this.analyses = new ArrayList<Analysis>();
         this.kills = new ArrayList<String>();
         this.gens = new ArrayList<String>();
