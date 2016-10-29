@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Stack;
 
 import models.*;
+import business.*;
 
 
 public class MicroC {
@@ -20,6 +21,7 @@ public class MicroC {
     static Stack<Block> ifLastBlockStack;
 	static Block lastBreakContinueBlock = null;
     static Block lastBlockCreated = null;
+	static EquationBuilder eqBuilder;
 
 	static boolean searchCondition;
     static boolean searchElse;
@@ -75,6 +77,8 @@ public class MicroC {
 		constructBlock(abstractSyntaxTree);
 		includeFlowGraphOutFlows();
 		printFlowGraph();
+		eqBuilder = new EquationBuilder(flowGraph);
+		eqBuilder.buildReachingDefinitionsEquations();
 	}
 
 	public static void constructBlock(Node currentNode) {
