@@ -10,11 +10,18 @@ public class Block {
     private ArrayList<Integer> inFlows;
     private ArrayList<Integer> outFlows;
     private String instruction;
+    private ArrayList<String> leftVar;
+    private ArrayList<String> rightVar;
+    private InstructionType it;
+
+    public enum InstructionType { ASSIGNMENT, READ, WRITE, CONDITION, CONTINUE, BREAK, DECLARATION }
 
     public Block()
     {
         this.inFlows = new ArrayList<Integer>();
         this.outFlows = new ArrayList<Integer>();
+        this.leftVar = new ArrayList<String>();
+        this.rightVar = new ArrayList<String>();
     }
 
     public int getId() {
@@ -60,4 +67,17 @@ public class Block {
     public void setInstruction(String instruction) {
         this.instruction = instruction;
     }
+
+    public void addLeftVar(String var) { this.leftVar.add(var); }
+
+    public void addRightVar(String var) { this.rightVar.add(var); }
+
+    public ArrayList<String> getLeftVar() { return leftVar; }
+
+    public ArrayList<String> getRightVar() { return rightVar; }
+
+    public void setInstructionType(InstructionType _it) { this.it = _it; }
+
+    public InstructionType getInstructionType() { return it; }
+
 }

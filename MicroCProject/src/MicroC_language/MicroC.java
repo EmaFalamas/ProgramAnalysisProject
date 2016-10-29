@@ -31,6 +31,7 @@ public class MicroC {
     static boolean exitContinue;
 	static boolean exitStandardBlock;
     static boolean exitIfBlockIfElse;
+	static boolean assignmentFound;
 
 	public static void main(String args[]) throws Exception {
 		if (args.length == 0) {
@@ -62,6 +63,7 @@ public class MicroC {
 		exitBreak = false;
         exitContinue = false;
         exitIfBlockIfElse = false;
+		assignmentFound = false;
 		constructFlowGraph2(abstractSyntaxTree);
 
 	}
@@ -146,6 +148,7 @@ public class MicroC {
             currentNode.isVisited(true);
 		} else {
 			Block b = new Block();
+			assignmentFound = false;
 			if (exitStandardBlock) {
 				b.addInFlow(currentBlockId);
 				exitStandardBlock = false;
@@ -175,7 +178,7 @@ public class MicroC {
                 b.addInFlow(conditionStack.pop().getId());
                 foundElse = false;
             }
-			String instruction = getText(currentNode);
+			String instruction = getText(b, currentNode);
 			b.setInstruction(instruction);
 			flowGraph.addBlock(b);
             lastBlockCreated = b;
@@ -204,12 +207,30 @@ public class MicroC {
                     exitBreak = true;
                     exitStandardBlock = false;
                     lastBreakContinueBlock = lastBlockCreated;
+					b.setInstructionType(Block.InstructionType.BREAK);
                     break;
                 case "ContinueNode":
                     exitContinue = true;
                     exitStandardBlock = false;
                     lastBreakContinueBlock = lastBlockCreated;
-                    break;
+					b.setInstructionType(Block.InstructionType.CONTINUE);
+					break;
+				case "AssignmentNode":
+					b.setInstructionType(Block.InstructionType.ASSIGNMENT);
+					break;
+				case "ReadNode":
+					b.setInstructionType(Block.InstructionType.READ);
+					break;
+				case "WriteNode":
+					b.setInstructionType(Block.InstructionType.WRITE);
+					break;
+				case "DeclarationNode":
+					b.setInstructionType(Block.InstructionType.DECLARATION);
+					break;
+				case "UnaryExpressionNode":
+				case "BinaryExpressionNode":
+					b.setInstructionType(Block.InstructionType.CONDITION);
+					break;
                 default:
                     exitStandardBlock = true;
             }
@@ -219,19 +240,22 @@ public class MicroC {
 
 	}
 
-	public static String getText(Node currentNode) {
+	public static String getText(Block b, Node currentNode) {
 		String label = currentNode.getLabel();
 		ArrayList<Node> children = currentNode.getChildren();
 		String txt = "";
 		if (children.size() > 0) {
 			for (Node c : children) {
-				txt += getText(c);
+				txt += getText(b, c);
 				switch (c.getLabel()) {
 					case "SymbolNode":
 						switch (((SymbolNode) c).getOp()) {
 							case READ:
 							case WRITE:
 								txt += " ";
+								break;
+							case ASSIGN:
+								assignmentFound = true;
 						}
 						break;
 					case "TypeNode":
@@ -254,6 +278,11 @@ public class MicroC {
 					break;
 				case "VariableNode":
 					txt += ((VariableNode) currentNode).getName();
+					if (!assignmentFound) {
+						b.addLeftVar(txt);
+					} else {
+						b.addRightVar(txt);
+					}
 					break;
 			}
 		}
@@ -290,6 +319,9 @@ public class MicroC {
             builder.append("; Out-flows = ");
             builder.append(b.getOutFlows().toString());
             builder.append("; Instruction = " + b.getInstruction());
+			builder.append("; Left variables = " + b.getLeftVar().toString());
+			builder.append("; Right Variables = " + b.getRightVar().toString());
+			builder.append("; Instruction Type = " + b.getInstructionType());
             System.out.println(builder.toString());
         }
     }
