@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Ema on 24/9/2016.
  */
 public class Block {
-    private int id;
+    private Integer id;
     private ArrayList<Integer> inFlows;
     private ArrayList<Integer> outFlows;
     private String instruction;
@@ -24,11 +24,11 @@ public class Block {
         this.rightVar = new ArrayList<String>();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

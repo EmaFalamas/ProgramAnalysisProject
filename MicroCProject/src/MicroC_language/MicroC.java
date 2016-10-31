@@ -66,19 +66,19 @@ public class MicroC {
         exitContinue = false;
         exitIfBlockIfElse = false;
 		assignmentFound = false;
-		constructFlowGraph2(abstractSyntaxTree);
+		constructFlowGraph(abstractSyntaxTree);
+		eqBuilder = new EquationBuilder(flowGraph);
+		eqBuilder.buildReachingDefinitionsEquations();
 
 	}
 
-	public static void constructFlowGraph2(Node abstractSyntaxTree) {
+	public static void constructFlowGraph(Node abstractSyntaxTree) {
 		System.out.println("_____________ Flow graph construction _____________");
 		flowGraph = new FlowGraph();
 		currentBlockId = 0;
 		constructBlock(abstractSyntaxTree);
 		includeFlowGraphOutFlows();
 		printFlowGraph();
-		eqBuilder = new EquationBuilder(flowGraph);
-		eqBuilder.buildReachingDefinitionsEquations();
 	}
 
 	public static void constructBlock(Node currentNode) {

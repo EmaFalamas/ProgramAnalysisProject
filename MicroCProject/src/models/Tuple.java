@@ -25,4 +25,9 @@ public class Tuple {
     public void setRightString(String rightString) {
         this.rightString = rightString;
     }
+
+    @Override
+    public String toString() {
+        return "(" + leftString + ", " + rightString + ")";
+    }
 }

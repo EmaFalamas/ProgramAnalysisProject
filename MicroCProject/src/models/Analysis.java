@@ -8,6 +8,8 @@ public class Analysis {
     private ArrayList<Tuple> kills;
     private ArrayList<Tuple> gens;
 
+
+
     public Analysis() {
         this.analyses = new ArrayList<Analysis>();
         this.kills = new ArrayList<Tuple>();
@@ -19,6 +21,8 @@ public class Analysis {
     public ArrayList<Analysis> getAnalyses() { return analyses; }
 
     public void addKill(Tuple kill) { this.kills.add(kill); }
+
+    public void addKills(ArrayList<Tuple> _kills) { this.kills.addAll(_kills); }
 
     public ArrayList<Tuple> getKills() { return kills; }
 
