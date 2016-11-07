@@ -1,0 +1,17 @@
+{
+	int a; 
+	int b; 
+	int c;
+	if (a > 30) {
+		if (b > 15) {
+			b = b+1;			
+		}
+		if (b == 10) {
+			a = 10;
+		}
+		else {
+			a = 5;
+		}
+	}
+	a = b + c;
+}

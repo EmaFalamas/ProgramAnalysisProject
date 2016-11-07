@@ -20,7 +20,6 @@ public class Walker extends MicroCBaseListener {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
 		currentNode = (Node) expressionNode;
-		System.out.println("Enter Expression Current Node: " + currentNode);
  	}
 	/**
 	 * {@inheritDoc}
@@ -40,7 +39,6 @@ public class Walker extends MicroCBaseListener {
 			currentNode.isBlock(true);
 		}
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -51,7 +49,6 @@ public class Walker extends MicroCBaseListener {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
 		currentNode = (Node) expressionNode;
-		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -71,7 +68,6 @@ public class Walker extends MicroCBaseListener {
 			currentNode.isBlock(true);
 		}
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -82,7 +78,6 @@ public class Walker extends MicroCBaseListener {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
 		currentNode = (Node) expressionNode;
-		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -102,7 +97,6 @@ public class Walker extends MicroCBaseListener {
 			currentNode.isBlock(true);
 		}
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -113,13 +107,10 @@ public class Walker extends MicroCBaseListener {
 		Node unaryExpressionNode = new UnaryExpressionNode(currentNode);
 		currentNode.addChild(unaryExpressionNode);
 		currentNode = (Node) unaryExpressionNode;
-		System.out.println("Enter Unary Expression Current Node: " + currentNode);
 
-		System.out.println("Enter Unary operator Current Node: " + currentNode);
 		Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
 		((UnaryOperatorNode)unaryOperatorNode).setOp(ctx.getChild(0).getText());
 		currentNode.addChild(unaryOperatorNode);
-		System.out.println("Exit Unary operator Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -128,7 +119,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitExprnegate(MicroCParser.ExprnegateContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Unary Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -139,7 +129,6 @@ public class Walker extends MicroCBaseListener {
 		Node expressionNode = new ExpressionNode(currentNode);		
 		currentNode.addChild(expressionNode);
 		currentNode = (Node) expressionNode;
-		System.out.println("Enter Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -148,7 +137,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitExpr3(MicroCParser.Expr3Context ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Expression Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -160,13 +148,11 @@ public class Walker extends MicroCBaseListener {
 			Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
 			currentNode.addChild(unaryOperatorNode);
 			currentNode = (Node) unaryOperatorNode;
-			System.out.println("Enter unary Operator Current Node: " + currentNode);
 		}
 		else {
 			Node binaryOperatorNode = new BinaryOperatorNode(currentNode);
 			currentNode.addChild(binaryOperatorNode);
 			currentNode = (Node) binaryOperatorNode;
-			System.out.println("Enter Binary Operator Current Node: " + currentNode);
 		}
 
 	}
@@ -181,7 +167,6 @@ public class Walker extends MicroCBaseListener {
 		else
 			((BinaryOperatorNode) currentNode).setOp(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Binary Operator Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -192,7 +177,6 @@ public class Walker extends MicroCBaseListener {
 		Node declarationNode = new DeclarationNode(currentNode);		
 		currentNode.addChild(declarationNode);
 		currentNode = (Node) declarationNode;
-		System.out.println("Enter Declaration Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -201,7 +185,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitDecl(MicroCParser.DeclContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Declaration Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -212,7 +195,6 @@ public class Walker extends MicroCBaseListener {
 		Node typeNode = new TypeNode(currentNode);
 		currentNode.addChild(typeNode);
 		currentNode = (Node) typeNode;
-		System.out.println("Enter Type Current Node: " + currentNode);
  	}
 	/**
 	 * {@inheritDoc}
@@ -222,7 +204,6 @@ public class Walker extends MicroCBaseListener {
 	@Override public void exitType(MicroCParser.TypeContext ctx) {
 		((TypeNode) currentNode).setNodeType(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Type Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -233,7 +214,6 @@ public class Walker extends MicroCBaseListener {
 		Node statementNode = new StatementNode(currentNode);		
 		currentNode.addChild(statementNode);
 		currentNode = (Node) statementNode;
-		System.out.println("Enter Statement Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -242,7 +222,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitStmt(MicroCParser.StmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Statement Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -253,7 +232,6 @@ public class Walker extends MicroCBaseListener {
 		Node assignmentNode = new AssignmentNode(currentNode);
 		currentNode.addChild(assignmentNode);
 		currentNode = (Node) assignmentNode;
-		System.out.println("Enter Assignment Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -262,7 +240,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitAssignStmt(MicroCParser.AssignStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Assignment Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -273,7 +250,6 @@ public class Walker extends MicroCBaseListener {
 		Node continueNode = new ContinueNode(currentNode);
 		currentNode.addChild(continueNode);
 		currentNode = (Node) continueNode;
-		System.out.println("Enter Continue Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -282,7 +258,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitContinueStmt(MicroCParser.ContinueStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Continue Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -293,7 +268,6 @@ public class Walker extends MicroCBaseListener {
 		Node readNode = new ReadNode(currentNode);
 		currentNode.addChild(readNode);
 		currentNode = (Node) readNode;
-		System.out.println("Enter Read Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -302,7 +276,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitReadStmt(MicroCParser.ReadStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Read Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -313,7 +286,6 @@ public class Walker extends MicroCBaseListener {
 		Node breakNode = new BreakNode(currentNode);
 		currentNode.addChild(breakNode);
 		currentNode = (Node) breakNode;
-		System.out.println("Enter Break Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -322,7 +294,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitBreakStmt(MicroCParser.BreakStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Break Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -333,7 +304,6 @@ public class Walker extends MicroCBaseListener {
 		Node writeNode = new WriteNode(currentNode);
 		currentNode.addChild(writeNode);
 		currentNode = (Node) writeNode;
-		System.out.println("Enter Write Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -342,7 +312,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitWriteStmt(MicroCParser.WriteStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Write Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -353,7 +322,6 @@ public class Walker extends MicroCBaseListener {
 		Node ifElseNode = new IfElseNode(currentNode);
 		currentNode.addChild(ifElseNode);
 		currentNode = (Node) ifElseNode;
-		System.out.println("Enter IfElse Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -382,7 +350,6 @@ public class Walker extends MicroCBaseListener {
 		Node whileNode = new WhileNode(currentNode);
 		currentNode.addChild(whileNode);
 		currentNode = (Node) whileNode;
-		System.out.println("Enter While Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -391,7 +358,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitWhileStmt(MicroCParser.WhileStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit While Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -402,7 +368,6 @@ public class Walker extends MicroCBaseListener {
 		Node blockNode = new BlockNode(currentNode);
 		currentNode.addChild(blockNode);
 		currentNode = (Node) blockNode;
-		System.out.println("Enter Block Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -411,7 +376,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void exitBlockStmt(MicroCParser.BlockStmtContext ctx) {
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Block Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -421,7 +385,6 @@ public class Walker extends MicroCBaseListener {
 	@Override public void enterProgram(MicroCParser.ProgramContext ctx) {
 		Node programNode = new ProgramNode(null);
 		currentNode = (Node) programNode;
-		System.out.println("Enter Program Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -442,7 +405,6 @@ public class Walker extends MicroCBaseListener {
 		Node variableNode = new VariableNode(currentNode);
 		currentNode.addChild(variableNode);
 		currentNode = (Node) variableNode;
-		System.out.println("Enter Variable Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -452,7 +414,6 @@ public class Walker extends MicroCBaseListener {
 	@Override public void exitIdentifier(MicroCParser.IdentifierContext ctx) {
 		((VariableNode) currentNode).setName(ctx.getChild(0).getText());
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Variable Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -463,7 +424,6 @@ public class Walker extends MicroCBaseListener {
 		Node constantNode = new ConstantNode(currentNode);
 		currentNode.addChild(constantNode);
 		currentNode = (Node) constantNode;
-		System.out.println("Enter Constant Current Node: " + currentNode);
 	}
 	/**
 	 * {@inheritDoc}
@@ -473,7 +433,6 @@ public class Walker extends MicroCBaseListener {
 	@Override public void exitInteger(MicroCParser.IntegerContext ctx) {
 		((ConstantNode) currentNode).setNumber(Integer.parseInt(ctx.getChild(0).getText()));
 		currentNode = currentNode.getParent();
-		System.out.println("Exit Constant Current Node: " + currentNode);
 	}
 
 	/**
@@ -495,7 +454,6 @@ public class Walker extends MicroCBaseListener {
 	 */
 	@Override public void visitTerminal(TerminalNode node) {
 
-		//System.out.println("-------------- TerminalNODE: " + node.getText());
 
 		String text = node.getText();
 		if (text.equals("+") || text.equals("-") || text.equals("|") || text.equals("*") || text.equals("/") || text.equals("&")) {
