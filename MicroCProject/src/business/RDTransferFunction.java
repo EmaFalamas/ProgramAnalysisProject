@@ -7,6 +7,8 @@ public class RDTransferFunction extends TransferFunction {
 
     private Map<String, ArrayList<Tuple>> rdKills;
 
+
+
     public RDTransferFunction(FlowGraph _fg) {
         super(_fg);
         this.rdKills = new HashMap<String, ArrayList<Tuple>>();
@@ -26,7 +28,7 @@ public class RDTransferFunction extends TransferFunction {
                 for (String var : variables) {
                     in.addGen(new Tuple(var, "?"));
                 }
-                inEquations.put(b.getId(), in);
+                putInEquation(b.getId(), in);
             }
 
             switch (b.getInstructionType()) {
@@ -41,8 +43,8 @@ public class RDTransferFunction extends TransferFunction {
 
             }
 
-            inEquations.put(b.getId(), in);
-            outEquations.put(b.getId(), out);
+            putInEquation(b.getId(), in);
+            putOutEquation(b.getId(), out);
         }
 
         printKillsAndGens();
@@ -78,7 +80,7 @@ public class RDTransferFunction extends TransferFunction {
 
     private void printKillsAndGens() {
         System.out.println("____ ENTRY ____");
-        Iterator it1 = inEquations.entrySet().iterator();
+        Iterator it1 = getInEquations().entrySet().iterator();
         while (it1.hasNext()) {
             Map.Entry pair = (Map.Entry) it1.next();
             Analysis a = (Analysis) pair.getValue();
@@ -95,7 +97,7 @@ public class RDTransferFunction extends TransferFunction {
             it1.remove();
         }
         System.out.println("____ EXIT ____");
-        Iterator it2 = outEquations.entrySet().iterator();
+        Iterator it2 = getOutEquations().entrySet().iterator();
         while (it2.hasNext()) {
             Map.Entry pair = (Map.Entry) it2.next();
             Analysis a = (Analysis) pair.getValue();

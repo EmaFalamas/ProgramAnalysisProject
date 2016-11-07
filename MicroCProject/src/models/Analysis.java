@@ -9,7 +9,6 @@ public class Analysis {
     private ArrayList<Tuple> gens;
 
 
-
     public Analysis() {
         this.analyses = new ArrayList<Analysis>();
         this.kills = new ArrayList<Tuple>();
@@ -29,5 +28,7 @@ public class Analysis {
     public void addGen(Tuple gen) { this.gens.add(gen); }
 
     public ArrayList<Tuple> getGens() { return gens; }
+
+
 
 }

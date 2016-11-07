@@ -13,14 +13,18 @@ public class EquationBuilder {
 
     private FlowGraph fg;
 
-    public enum AnalysisType { REACHING_DEFINITIONS, SIGN_ANALYSIS }
+    public enum AnalysisType
+
+    {
+        REACHING_DEFINITIONS, SIGN_ANALYSIS
+    }
 
     public EquationBuilder(FlowGraph _fg) {
         this.fg = _fg;
     }
 
-    public void buildEquation(AnalysisType at) {
-
+    public Equation buildEquation(AnalysisType at) {
+        Equation eq = new Equation();
         TransferFunction tf;
 
         switch (at) {
@@ -29,6 +33,7 @@ public class EquationBuilder {
                 tf = new RDTransferFunction(fg);
                 tf.transferFunctions();
                 //buildReachingDefinitionsEquations();
+                eq.setTransferFunction(tf);
                 break;
             case SIGN_ANALYSIS:
 
@@ -36,11 +41,7 @@ public class EquationBuilder {
             default:
 
         }
-
+        return eq;
     }
-
-
-
-
 
 }

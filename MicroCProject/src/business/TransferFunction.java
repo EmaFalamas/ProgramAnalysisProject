@@ -5,8 +5,8 @@ import models.*;
 
 public abstract class TransferFunction {
 
-    Map<Integer, Analysis> inEquations;
-    Map<Integer, Analysis> outEquations;
+    private Map<Integer, Analysis> inEquations;
+    private Map<Integer, Analysis> outEquations;
     FlowGraph fg;
 
     public TransferFunction(FlowGraph _fg) {
@@ -17,6 +17,22 @@ public abstract class TransferFunction {
 
     public void transferFunctions(){
 
+    }
+
+    public Map<Integer, Analysis> getInEquations() {
+        return inEquations;
+    }
+
+    public Map<Integer, Analysis> getOutEquations() {
+        return outEquations;
+    }
+
+    public void putInEquation(Integer i, Analysis a) {
+        this.inEquations.put(i, a);
+    }
+
+    public void putOutEquation(Integer i, Analysis a) {
+        this.outEquations.put(i, a);
     }
 
 }
