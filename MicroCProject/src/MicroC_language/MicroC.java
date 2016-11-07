@@ -19,6 +19,8 @@ public class MicroC {
 	static Stack<Block> conditionStack;
 	static Stack<Node> whileStack;
     static Stack<Block> ifLastBlockStack;
+	static Stack<Block> breakStack;
+	static Stack<Block> continueStack;
 	static Block lastBreakContinueBlock = null;
     static Block lastBlockCreated = null;
 	static EquationBuilder eqBuilder;
@@ -55,6 +57,8 @@ public class MicroC {
 		conditionStack = new Stack<Block>();
 		whileStack = new Stack<Node>();
         ifLastBlockStack = new Stack<Block>();
+		breakStack = new Stack<Block>();
+		continueStack = new Stack<Block>();
 		outFlows = new Hashtable<Integer, ArrayList<Integer>>();
 		searchCondition = false;
         searchElse = false;
@@ -88,6 +92,8 @@ public class MicroC {
 
 		switch (label) {
 			case "IfNode":
+				searchCondition = true;
+				break;
 			case "WhileNode":
 				searchCondition = true;
 				whileStack.push(currentNode);
@@ -102,7 +108,9 @@ public class MicroC {
                     foundElse = true;
                     exitStandardBlock = false;
                     exitIfBlockIfElse = true;
-                    ifLastBlockStack.push(lastBlockCreated);
+					if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK && lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
+						ifLastBlockStack.push(lastBlockCreated);
+					}
                 }
 		}
 
@@ -146,6 +154,9 @@ public class MicroC {
 				case "IfElseNode":
 					exitIfElse = true;
 					exitStandardBlock = false;
+					if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK && lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
+						ifLastBlockStack.push(lastBlockCreated);
+					}
 					break;
 			}
 
@@ -157,13 +168,14 @@ public class MicroC {
 				b.addInFlow(currentBlockId);
 				exitStandardBlock = false;
 			}
-            if (exitBreak && exitWhile && lastBreakContinueBlock != null) {
-				b.addInFlow(lastBreakContinueBlock.getId());
+            if (exitBreak && exitWhile && !breakStack.empty()) {
+				System.out.println("happens once - prev id = " + lastBlockCreated.getId());
+				b.addInFlow(breakStack.pop().getId());
 				lastBreakContinueBlock = null;
 				exitBreak = false;
 			}
-			if (exitContinue && lastBreakContinueBlock != null && !whileStack.empty()) {
-                whileStack.peek().getBlocks().get(0).addInFlow(lastBreakContinueBlock.getId());
+			if (exitContinue && !continueStack.empty() && !whileStack.empty()) {
+                whileStack.peek().getBlocks().get(0).addInFlow(continueStack.pop().getId());
                 lastBreakContinueBlock = null;
                 exitContinue = false;
             }
@@ -206,17 +218,21 @@ public class MicroC {
 				currentNode.addBlock(b);
 			}
 
-            switch (label) {
+			exitStandardBlock = true;
+
+			switch (label) {
                 case "BreakNode":
                     exitBreak = true;
                     exitStandardBlock = false;
                     lastBreakContinueBlock = lastBlockCreated;
+					breakStack.push(lastBlockCreated);
 					b.setInstructionType(Block.InstructionType.BREAK);
                     break;
                 case "ContinueNode":
                     exitContinue = true;
                     exitStandardBlock = false;
                     lastBreakContinueBlock = lastBlockCreated;
+					continueStack.push(lastBlockCreated);
 					b.setInstructionType(Block.InstructionType.CONTINUE);
 					break;
 				case "AssignmentNode":
