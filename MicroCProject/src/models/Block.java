@@ -10,7 +10,7 @@ public class Block {
     private ArrayList<Integer> inFlows;
     private ArrayList<Integer> outFlows;
     private String instruction;
-    private ArrayList<String> leftVar;
+    private String leftVar;
     private ArrayList<String> rightVar;
     private InstructionType it;
 
@@ -20,7 +20,7 @@ public class Block {
     {
         this.inFlows = new ArrayList<Integer>();
         this.outFlows = new ArrayList<Integer>();
-        this.leftVar = new ArrayList<String>();
+        this.leftVar = "";
         this.rightVar = new ArrayList<String>();
     }
 
@@ -68,11 +68,11 @@ public class Block {
         this.instruction = instruction;
     }
 
-    public void addLeftVar(String var) { this.leftVar.add(var); }
+    public void setLeftVar(String var) { this.leftVar = var; }
 
     public void addRightVar(String var) { this.rightVar.add(var); }
 
-    public ArrayList<String> getLeftVar() { return leftVar; }
+    public String getLeftVar() { return leftVar; }
 
     public ArrayList<String> getRightVar() { return rightVar; }
 

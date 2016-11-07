@@ -36,6 +36,7 @@ public class MicroC {
 	static boolean exitStandardBlock;
     static boolean exitIfBlockIfElse;
 	static boolean assignmentFound;
+	static boolean searchIndex;
 
 	public static void main(String args[]) throws Exception {
 		if (args.length == 0) {
@@ -70,10 +71,11 @@ public class MicroC {
         exitContinue = false;
         exitIfBlockIfElse = false;
 		assignmentFound = false;
+		searchIndex = false;
 		constructFlowGraph(abstractSyntaxTree);
 		eqBuilder = new EquationBuilder(flowGraph);
-		eqBuilder.buildReachingDefinitionsEquations();
-
+		//eqBuilder.buildReachingDefinitionsEquations();
+		eqBuilder.buildEquation(EquationBuilder.AnalysisType.REACHING_DEFINITIONS);
 	}
 
 	public static void constructFlowGraph(Node abstractSyntaxTree) {
@@ -276,6 +278,13 @@ public class MicroC {
 								break;
 							case ASSIGN:
 								assignmentFound = true;
+								break;
+							case LBRACKET:
+								searchIndex = true;
+								break;
+							case RBRACKET:
+								searchIndex = false;
+								break;
 						}
 						break;
 					case "TypeNode":
@@ -298,9 +307,9 @@ public class MicroC {
 					break;
 				case "VariableNode":
 					txt += ((VariableNode) currentNode).getName();
-					if (!assignmentFound) {
-						b.addLeftVar(txt);
-					} else {
+					if (!assignmentFound && !searchIndex) {
+						b.setLeftVar(txt);
+					} else if (!searchIndex) {
 						b.addRightVar(txt);
 					}
 					break;
