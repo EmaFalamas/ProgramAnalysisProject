@@ -1,0 +1,22 @@
+{
+	int a[10];
+	int b;
+	int i;
+	while (i < 7) {
+		if (b == 3) {
+		    continue;
+		}
+		read x[i];
+		b = b + x[i];
+	}
+	while (i < 10) { 
+		write a[i];
+		if (i == 7) {
+		    break;
+		}
+		else {      
+		    b = b + 1;
+		}
+		i = i + 1;
+	}
+}

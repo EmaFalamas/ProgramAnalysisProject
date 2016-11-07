@@ -2,8 +2,7 @@
 	int a[10];
 	int b; 
 	int i;
-	while ( i < 10 )
-	{
+	while ( i < 10 ) {
 		a[i] = b + i;
 		if ( i == 7 ) {
 			break ;
