@@ -13,6 +13,7 @@ public class Block {
     private String leftVar;
     private ArrayList<String> rightVar;
     private InstructionType it;
+    private Node instructionNode;
 
     public enum InstructionType { ASSIGNMENT, READ, WRITE, CONDITION, CONTINUE, BREAK, DECLARATION }
 
@@ -34,6 +35,14 @@ public class Block {
 
     public ArrayList<Integer> getInFlows() {
         return inFlows;
+    }
+
+    public Node getInstructionNode() {
+        return instructionNode;
+    }
+
+    public void setInstructionNode(Node instructionNode) {
+        this.instructionNode = instructionNode;
     }
 
     public void setInFlows(ArrayList<Integer> inFlows) {

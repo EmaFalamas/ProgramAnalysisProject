@@ -19,7 +19,7 @@ public class EquationBuilder {
 
     public enum EquationType
     {
-        REACHING_DEFINITIONS, SIGN_Equation
+        REACHING_DEFINITIONS, SIGN_ANALYSIS
     }
 
     public EquationBuilder(FlowGraph _fg) {
@@ -36,11 +36,10 @@ public class EquationBuilder {
         switch (at) {
 
             case REACHING_DEFINITIONS:
-                transferFunctions();
-                //buildReachingDefinitionsEquations()
+                setRDEquations();
                 break;
-            case SIGN_Equation:
-
+            case SIGN_ANALYSIS:
+                setSignEquations();
                 break;
             default:
 
@@ -48,16 +47,16 @@ public class EquationBuilder {
         return eq;
     }
 
-    public void transferFunctions() {
+    public void setRDEquations() {
 
         HashSet<String> variables = getAllVariables();
 
-        for (int i=0; i<fg.getBlocks().size(); i++) {
-            Block b = fg.getBlocks().get(i);
+        int i = 0;
+        for (Block b : fg.getBlocks()) {
             Equation in = new Equation();
             Equation out = new Equation();
-            RDTransferFunction inTransferFunction = new RDTransferFunction(fg);
-            RDTransferFunction outTransferFunction = new RDTransferFunction(fg);
+            RDTransferFunction inTransferFunction = new RDTransferFunction();
+            RDTransferFunction outTransferFunction = new RDTransferFunction();
             in.setTransferFunction(inTransferFunction);
             out.setTransferFunction(outTransferFunction);
 
@@ -82,6 +81,7 @@ public class EquationBuilder {
 
             putInEquation(b.getId(), in);
             putOutEquation(b.getId(), out);
+            i++;
         }
         setInflowingEquations();
         setOutflowingEquations();
@@ -179,6 +179,29 @@ public class EquationBuilder {
             it2.remove();
         }
     }
+
+    private void setSignEquations() {
+        initSAEquations();
+        for(Block b : fg.getBlocks()) {
+            SATransferFunction tf = new SATransferFunction();
+            tf.setInstructionNode(b.getInstructionNode());
+            outEquations.get(b.getId()).setTransferFunction(tf);
+            System.out.println(b.getInstruction());
+        }
+        setInflowingEquations();
+    }
+
+    public void initSAEquations() {
+
+        for (Block b : fg.getBlocks()) {
+            Equation in = new Equation();
+            Equation out = new Equation();
+
+            putInEquation(b.getId(), in);
+            putOutEquation(b.getId(), out);
+        }
+    }
+
 
 
     public Map<Integer, Equation> getInEquations() {

@@ -5,15 +5,12 @@ import models.*;
 
 public class RDTransferFunction extends TransferFunction {
 
-    private Map<String, ArrayList<Tuple>> rdKills;
     private ArrayList<Tuple> kills;
     private ArrayList<Tuple> gens;
 
 
 
-    public RDTransferFunction(FlowGraph _fg) {
-        super(_fg);
-        this.rdKills = new HashMap<String, ArrayList<Tuple>>();
+    public RDTransferFunction() {
         this.kills = new ArrayList<Tuple>();
         this.gens = new ArrayList<Tuple>();
     }
@@ -28,11 +25,4 @@ public class RDTransferFunction extends TransferFunction {
 
     public ArrayList<Tuple> getGens() { return gens; }
 
-    public Map<String, ArrayList<Tuple>> getRdKills() {
-        return rdKills;
-    }
-
-    public void setRdKills(Map<String, ArrayList<Tuple>> rdKills) {
-        this.rdKills = rdKills;
-    }
 }

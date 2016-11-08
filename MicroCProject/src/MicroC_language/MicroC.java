@@ -76,6 +76,7 @@ public class MicroC {
 		eqBuilder = new EquationBuilder(flowGraph);
 		//eqBuilder.buildReachingDefinitionsEquations();
 		eqBuilder.buildEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS);
+		eqBuilder.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
 	}
 
 	public static void constructFlowGraph(Node abstractSyntaxTree) {
@@ -144,9 +145,9 @@ public class MicroC {
 				case "WhileNode":
 					exitWhile = true;
 					exitStandardBlock = false;
-					if (!whileStack.empty()) {
+					/*if (!whileStack.empty()) {
 						whileStack.pop();
-					}
+					}*/
 					ArrayList<Block> whileBlocks = currentNode.getBlocks();
 					int numWhileBlocks = whileBlocks.size();
                     if (numWhileBlocks > 1) {
@@ -181,10 +182,23 @@ public class MicroC {
                 lastBreakContinueBlock = null;
                 exitContinue = false;
             }
-			if ((exitSingleIf || exitWhile) && !conditionStack.empty()) {
+			if (exitWhile && !conditionStack.empty()) {
+				Node whileNode = null;
+				if (!whileStack.empty()) {
+					whileNode = whileStack.pop();
+				}
+				if (whileNode != null) {
+					ArrayList<Block> whileBlocks = whileNode.getBlocks();
+					int numWhileBlocks = whileBlocks.size();
+					if (numWhileBlocks > 1) {
+						b.addInFlow(whileBlocks.get(0).getId());
+					}
+				}
+				exitWhile = false;
+			}
+			if (exitSingleIf && !conditionStack.empty()) {
 				b.addInFlow(conditionStack.pop().getId());
 				exitSingleIf = false;
-				exitWhile = false;
 			}
             if (exitIfElse && exitIfBlockIfElse && !ifLastBlockStack.empty()) {
                 b.addInFlow(ifLastBlockStack.pop().getId());
@@ -219,7 +233,7 @@ public class MicroC {
 			if (!blockFoundInNode) {
 				currentNode.addBlock(b);
 			}
-
+			b.setInstructionNode(currentNode);
 			exitStandardBlock = true;
 
 			switch (label) {

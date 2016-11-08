@@ -5,14 +5,17 @@ import models.*;
 
 public class SATransferFunction extends TransferFunction {
 
-    public SATransferFunction {
+    private Node instructionNode;
+
+    public SATransferFunction() {
 
     }
 
-    @Override
-    public void transferFunctions() {
-
+    public Node getInstructionNode() {
+        return instructionNode;
     }
 
-
+    public void setInstructionNode(Node instructionNode) {
+        this.instructionNode = instructionNode;
+    }
 }
