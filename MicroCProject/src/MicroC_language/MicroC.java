@@ -75,7 +75,7 @@ public class MicroC {
 		constructFlowGraph(abstractSyntaxTree);
 		eqBuilder = new EquationBuilder(flowGraph);
 		//eqBuilder.buildReachingDefinitionsEquations();
-		eqBuilder.buildEquation(EquationBuilder.AnalysisType.REACHING_DEFINITIONS);
+		eqBuilder.buildEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS);
 	}
 
 	public static void constructFlowGraph(Node abstractSyntaxTree) {

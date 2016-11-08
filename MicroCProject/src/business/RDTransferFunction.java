@@ -6,113 +6,33 @@ import models.*;
 public class RDTransferFunction extends TransferFunction {
 
     private Map<String, ArrayList<Tuple>> rdKills;
+    private ArrayList<Tuple> kills;
+    private ArrayList<Tuple> gens;
 
 
 
     public RDTransferFunction(FlowGraph _fg) {
         super(_fg);
         this.rdKills = new HashMap<String, ArrayList<Tuple>>();
+        this.kills = new ArrayList<Tuple>();
+        this.gens = new ArrayList<Tuple>();
     }
 
-    @Override
-    public void transferFunctions() {
+    public void addKill(Tuple kill) { this.kills.add(kill); }
 
-        HashSet<String> variables = getAllVariables();
+    public void addKills(ArrayList<Tuple> _kills) { this.kills.addAll(_kills); }
 
-        for (int i=0; i<fg.getBlocks().size(); i++) {
-            Block b = fg.getBlocks().get(i);
-            Analysis in = new Analysis();
-            Analysis out = new Analysis();
+    public ArrayList<Tuple> getKills() { return kills; }
 
-            if (i == 0) {
-                for (String var : variables) {
-                    in.addGen(new Tuple(var, "?"));
-                }
-                putInEquation(b.getId(), in);
-            }
+    public void addGen(Tuple gen) { this.gens.add(gen); }
 
-            switch (b.getInstructionType()) {
-                case ASSIGNMENT:
-                case READ:
-                case DECLARATION:
-                    String var = b.getLeftVar();
-                    out.addKills(rdKills.get(var));
-                    out.addGen(new Tuple(var, b.getId().toString()));
-                    break;
-                default:
+    public ArrayList<Tuple> getGens() { return gens; }
 
-            }
-
-            putInEquation(b.getId(), in);
-            putOutEquation(b.getId(), out);
-        }
-
-        printKillsAndGens();
-
+    public Map<String, ArrayList<Tuple>> getRdKills() {
+        return rdKills;
     }
 
-    private HashSet<String> getAllVariables() {
-        HashSet<String> set = new HashSet<String>();
-        for (Block b : fg.getBlocks()) {
-            String lv = b.getLeftVar();
-            set.add(lv);
-            for (String rv : b.getRightVar()) {
-                set.add(rv);
-            }
-
-            switch (b.getInstructionType()) {
-                case READ:
-                case ASSIGNMENT:
-                case DECLARATION:
-                    String var = b.getLeftVar();
-                    if (!rdKills.containsKey(var)) {
-                        rdKills.put(var, new ArrayList<Tuple>());
-                    }
-                    rdKills.get(var).add(new Tuple(var, b.getId().toString()));
-                    break;
-                default:
-
-            }
-
-        }
-        return set;
+    public void setRdKills(Map<String, ArrayList<Tuple>> rdKills) {
+        this.rdKills = rdKills;
     }
-
-    private void printKillsAndGens() {
-        System.out.println("____ ENTRY ____");
-        Iterator it1 = getInEquations().entrySet().iterator();
-        while (it1.hasNext()) {
-            Map.Entry pair = (Map.Entry) it1.next();
-            Analysis a = (Analysis) pair.getValue();
-            System.out.print(((Integer) pair.getKey()).toString() + "-gen: ");
-            for (Tuple t : a.getGens()) {
-                System.out.print(t.toString() + "; ");
-            }
-            System.out.println();
-            System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
-            for (Tuple t : a.getKills()) {
-                System.out.print(t.toString() + "; ");
-            }
-            System.out.println();
-            it1.remove();
-        }
-        System.out.println("____ EXIT ____");
-        Iterator it2 = getOutEquations().entrySet().iterator();
-        while (it2.hasNext()) {
-            Map.Entry pair = (Map.Entry) it2.next();
-            Analysis a = (Analysis) pair.getValue();
-            System.out.print(((Integer) pair.getKey()).toString() + "-gen: ");
-            for (Tuple t : a.getGens()) {
-                System.out.print(t.toString() + "; ");
-            }
-            System.out.println();
-            System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
-            for (Tuple t : a.getKills()) {
-                System.out.print(t.toString() + "; ");
-            }
-            System.out.println();
-            it2.remove();
-        }
-    }
-
 }

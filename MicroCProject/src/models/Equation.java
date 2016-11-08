@@ -25,8 +25,12 @@ public class Equation {
         return tf;
     }
 
+    public void setEquations(ArrayList<Equation> eqs) { this.equations = eqs; }
+
     public void setTransferFunction(TransferFunction _tf) {
         this.tf = _tf;
     }
+
+
 
 }
