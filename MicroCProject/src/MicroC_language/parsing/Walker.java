@@ -120,24 +120,7 @@ public class Walker extends MicroCBaseListener {
 	@Override public void exitExprnegate(MicroCParser.ExprnegateContext ctx) {
 		currentNode = currentNode.getParent();
 	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExpr3(MicroCParser.Expr3Context ctx) {
-		Node expressionNode = new ExpressionNode(currentNode);		
-		currentNode.addChild(expressionNode);
-		currentNode = (Node) expressionNode;
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExpr3(MicroCParser.Expr3Context ctx) {
-		currentNode = currentNode.getParent();
-	}
+	
 	/**
 	 * {@inheritDoc}
 	 *

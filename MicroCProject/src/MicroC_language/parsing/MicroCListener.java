@@ -7,15 +7,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface MicroCListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link MicroCParser#expr}.
+	 * Enter a parse tree produced by {@link MicroCParser#aexpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterExpr(MicroCParser.ExprContext ctx);
+	void enterAexpr(MicroCParser.AexprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MicroCParser#expr}.
+	 * Exit a parse tree produced by {@link MicroCParser#aexpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitExpr(MicroCParser.ExprContext ctx);
+	void exitAexpr(MicroCParser.AexprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MicroCParser#expr1}.
 	 * @param ctx the parse tree
@@ -37,6 +37,36 @@ public interface MicroCListener extends ParseTreeListener {
 	 */
 	void exitExpr2(MicroCParser.Expr2Context ctx);
 	/**
+	 * Enter a parse tree produced by {@link MicroCParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr(MicroCParser.ExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MicroCParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr(MicroCParser.ExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MicroCParser#bexpr1}.
+	 * @param ctx the parse tree
+	 */
+	void enterBexpr1(MicroCParser.Bexpr1Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link MicroCParser#bexpr1}.
+	 * @param ctx the parse tree
+	 */
+	void exitBexpr1(MicroCParser.Bexpr1Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link MicroCParser#bexpr2}.
+	 * @param ctx the parse tree
+	 */
+	void enterBexpr2(MicroCParser.Bexpr2Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link MicroCParser#bexpr2}.
+	 * @param ctx the parse tree
+	 */
+	void exitBexpr2(MicroCParser.Bexpr2Context ctx);
+	/**
 	 * Enter a parse tree produced by {@link MicroCParser#exprnegate}.
 	 * @param ctx the parse tree
 	 */
@@ -46,16 +76,6 @@ public interface MicroCListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExprnegate(MicroCParser.ExprnegateContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MicroCParser#expr3}.
-	 * @param ctx the parse tree
-	 */
-	void enterExpr3(MicroCParser.Expr3Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link MicroCParser#expr3}.
-	 * @param ctx the parse tree
-	 */
-	void exitExpr3(MicroCParser.Expr3Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link MicroCParser#opr}.
 	 * @param ctx the parse tree

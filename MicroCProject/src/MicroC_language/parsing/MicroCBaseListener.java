@@ -15,13 +15,13 @@ public class MicroCBaseListener implements MicroCListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(MicroCParser.ExprContext ctx) { }
+	@Override public void enterAexpr(MicroCParser.AexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(MicroCParser.ExprContext ctx) { }
+	@Override public void exitAexpr(MicroCParser.AexprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -51,6 +51,42 @@ public class MicroCBaseListener implements MicroCListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExpr(MicroCParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpr(MicroCParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBexpr1(MicroCParser.Bexpr1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBexpr1(MicroCParser.Bexpr1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBexpr2(MicroCParser.Bexpr2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBexpr2(MicroCParser.Bexpr2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExprnegate(MicroCParser.ExprnegateContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -58,18 +94,6 @@ public class MicroCBaseListener implements MicroCListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExprnegate(MicroCParser.ExprnegateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterExpr3(MicroCParser.Expr3Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitExpr3(MicroCParser.Expr3Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
