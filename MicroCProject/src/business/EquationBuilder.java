@@ -15,7 +15,7 @@ public class EquationBuilder {
     private Map<Integer, Equation> inEquations;
     private Map<Integer, Equation> outEquations;
     private Map<String, ArrayList<Tuple>> killsMap;
-
+    private HashSet<String> variables;
 
     public enum EquationType
     {
@@ -27,6 +27,7 @@ public class EquationBuilder {
         this.inEquations = new HashMap<Integer, Equation>();
         this.outEquations = new HashMap<Integer, Equation>();
         this.killsMap = new HashMap<String, ArrayList<Tuple>>();
+        this.variables = getAllVariables();
     }
 
     public Equation buildEquation(EquationType at) {
@@ -49,8 +50,6 @@ public class EquationBuilder {
 
     public void setRDEquations() {
 
-        HashSet<String> variables = getAllVariables();
-
         int i = 0;
         for (Block b : fg.getBlocks()) {
             Equation in = new Equation();
@@ -62,7 +61,8 @@ public class EquationBuilder {
 
             if (i == 0) {
                 for (String var : variables) {
-                    inTransferFunction.addGen(new Tuple(var, "?"));
+                    in.addResult(new Tuple(var, "?"));
+                    System.out.println("RDvar = " + var);
                 }
                 putInEquation(b.getId(), in);
             }
@@ -73,7 +73,7 @@ public class EquationBuilder {
                 case DECLARATION:
                     String var = b.getLeftVar();
                     outTransferFunction.addKills(killsMap.get(var));
-                    outTransferFunction.addGen(new Tuple(var, b.getId().toString()));
+                    outTransferFunction.setGen(new Tuple(var, b.getId().toString()));
                     break;
                 default:
 
@@ -83,9 +83,11 @@ public class EquationBuilder {
             putOutEquation(b.getId(), out);
             i++;
         }
+
         setInflowingEquations();
         setOutflowingEquations();
         printKillsAndGens();
+        System.out.println("buildEquation end - inEquations size = " + inEquations.size());
 
     }
 
@@ -118,7 +120,9 @@ public class EquationBuilder {
         HashSet<String> set = new HashSet<String>();
         for (Block b : fg.getBlocks()) {
             String lv = b.getLeftVar();
-            set.add(lv);
+            if (lv != null) {
+                set.add(lv);
+            }
             for (String rv : b.getRightVar()) {
                 set.add(rv);
             }
@@ -149,8 +153,8 @@ public class EquationBuilder {
             Equation eq = (Equation) pair.getValue();
             RDTransferFunction tf = (RDTransferFunction) eq.getTransferFunction();
             System.out.print(((Integer) pair.getKey()).toString() + "-gen: ");
-            for (Tuple t : tf.getGens()) {
-                System.out.print(t.toString() + "; ");
+            if(tf.getGen() != null) {
+                System.out.print(tf.getGen().toString() + "; ");
             }
             System.out.println();
             System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
@@ -158,7 +162,7 @@ public class EquationBuilder {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
-            it1.remove();
+            //it1.remove();
         }
         System.out.println("____ EXIT ____");
         Iterator it2 = getOutEquations().entrySet().iterator();
@@ -167,8 +171,8 @@ public class EquationBuilder {
             Equation eq = (Equation) pair.getValue();
             RDTransferFunction tf = (RDTransferFunction) eq.getTransferFunction();
             System.out.print(((Integer) pair.getKey()).toString() + "-gen: ");
-            for (Tuple t : tf.getGens()) {
-                System.out.print(t.toString() + "; ");
+            if(tf.getGen() != null) {
+                System.out.print(tf.getGen().toString() + "; ");
             }
             System.out.println();
             System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
@@ -176,7 +180,7 @@ public class EquationBuilder {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
-            it2.remove();
+            //it2.remove();
         }
     }
 
@@ -193,6 +197,7 @@ public class EquationBuilder {
 
     public void initSAEquations() {
 
+
         for (Block b : fg.getBlocks()) {
             Equation in = new Equation();
             Equation out = new Equation();
@@ -200,12 +205,19 @@ public class EquationBuilder {
             putInEquation(b.getId(), in);
             putOutEquation(b.getId(), out);
         }
+
+        Integer firstBlockId = fg.getBlocks().get(0).getId();
+        for (String var : variables) {
+            inEquations.get(firstBlockId).addResult(new Tuple(var, "+"));
+            inEquations.get(firstBlockId).addResult(new Tuple(var, "0"));
+            inEquations.get(firstBlockId).addResult(new Tuple(var, "-"));
+            System.out.println("var = " + var + "; + 0 -");
+        }
     }
 
-
-
     public Map<Integer, Equation> getInEquations() {
-        return inEquations;
+        System.out.println("getInEquations() called - size = " + inEquations.size());
+        return this.inEquations;
     }
 
     public Map<Integer, Equation> getOutEquations() {
@@ -214,6 +226,7 @@ public class EquationBuilder {
 
     public void putInEquation(Integer i, Equation a) {
         this.inEquations.put(i, a);
+        System.out.println("putInEquations called - size = " + inEquations.size());
     }
 
     public void putOutEquation(Integer i, Equation a) {

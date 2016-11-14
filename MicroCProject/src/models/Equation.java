@@ -7,10 +7,11 @@ public class Equation {
 
     private ArrayList<Equation> equations;
     private TransferFunction tf;
-
+    private ArrayList<Tuple> result;
 
     public Equation() {
         this.equations = new ArrayList<Equation>();
+        this.result = new ArrayList<Tuple>();
     }
 
     public ArrayList<Equation> getEquations() {
@@ -31,6 +32,17 @@ public class Equation {
         this.tf = _tf;
     }
 
+    public ArrayList<Tuple> getResult() {
+        return result;
+    }
 
+    public void setResult(ArrayList<Tuple> result) {
+        this.result = result;
+    }
+
+
+    public void addResult(Tuple t) {
+        this.result.add(t);
+    }
 
 }

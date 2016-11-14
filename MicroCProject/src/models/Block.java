@@ -21,7 +21,7 @@ public class Block {
     {
         this.inFlows = new ArrayList<Integer>();
         this.outFlows = new ArrayList<Integer>();
-        this.leftVar = "";
+        //this.leftVar = "";
         this.rightVar = new ArrayList<String>();
     }
 

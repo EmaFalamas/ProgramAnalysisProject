@@ -6,13 +6,11 @@ import models.*;
 public class RDTransferFunction extends TransferFunction {
 
     private ArrayList<Tuple> kills;
-    private ArrayList<Tuple> gens;
-
-
+    private Tuple gen;
 
     public RDTransferFunction() {
         this.kills = new ArrayList<Tuple>();
-        this.gens = new ArrayList<Tuple>();
+        //this.gen = new Tuple();
     }
 
     public void addKill(Tuple kill) { this.kills.add(kill); }
@@ -21,8 +19,8 @@ public class RDTransferFunction extends TransferFunction {
 
     public ArrayList<Tuple> getKills() { return kills; }
 
-    public void addGen(Tuple gen) { this.gens.add(gen); }
+    public void setGen(Tuple gen) { this.gen = gen; }
 
-    public ArrayList<Tuple> getGens() { return gens; }
+    public Tuple getGen() { return gen; }
 
 }

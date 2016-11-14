@@ -30,4 +30,13 @@ public class Tuple {
     public String toString() {
         return "(" + leftString + ", " + rightString + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Tuple) {
+            Tuple t = (Tuple) o;
+            return this.leftString.equals(t.getLeftString()) && this.rightString.equals(t.getRightString());
+        }
+        return false;
+    }
 }
