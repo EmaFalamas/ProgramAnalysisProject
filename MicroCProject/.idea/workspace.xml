@@ -26,8 +26,8 @@
       <file leaf-file-name="EquationSolver.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/business/EquationSolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.569378">
-              <caret line="72" column="9" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
+            <state vertical-scroll-proportion="-0.3014354">
+              <caret line="86" column="29" selection-start-line="86" selection-start-column="29" selection-end-line="86" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -722,12 +722,12 @@
       <updated>1474894489605</updated>
       <workItem from="1475479588654" duration="3794000" />
       <workItem from="1477728253943" duration="4000" />
-      <workItem from="1479569640116" duration="6596000" />
+      <workItem from="1479569640116" duration="8235000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10394000" />
+    <option name="totallyTimeSpent" value="12033000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
@@ -1043,8 +1043,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/business/EquationSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.569378">
-          <caret line="72" column="9" selection-start-line="72" selection-start-column="9" selection-end-line="72" selection-end-column="9" />
+        <state vertical-scroll-proportion="-0.3014354">
+          <caret line="86" column="29" selection-start-line="86" selection-start-column="29" selection-end-line="86" selection-end-column="29" />
           <folding />
         </state>
       </provider>

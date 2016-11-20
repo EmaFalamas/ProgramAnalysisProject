@@ -52,26 +52,6 @@ public class EquationSolver {
     private void solveEquationRD(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         System.out.println("inEquations size = " + inEquations.size());
 
-        System.out.println("IN EQUATION RESULTS");
-        for(int i = 0; i < inEquations.size(); i++){
-            if(inEquations.get(i) == null)
-            {
-                System.out.println("null: " + i);
-            }
-            for(Tuple t : inEquations.get(i).getResult())
-            {
-                System.out.println(t.getLeftString() + " " + t.getRightString());
-            }
-        }
-
-        System.out.println("OUT EQUATION RESULTS");
-        for(int i = 0; i < outEquations.size(); i++){
-            for(Tuple t : outEquations.get(i).getResult())
-            {
-                System.out.println(t.getLeftString() + " " + t.getRightString());
-            }
-        }
-
         ListIterator<Tuple> iterator = workList.listIterator();
 
 
@@ -127,17 +107,19 @@ public class EquationSolver {
         for (Tuple t : entry) {
             if (!kills.contains(t)) {
                 exit.add(t);
-                System.out.println("Label: "  + t.getLeftString() );
-                System.out.println(" result: " + t.getRightString());
+                //System.out.println("Label: "  + t.getLeftString() );
+                //System.out.println(" result: " + t.getRightString());
             }
         }
-        if (!exit.contains(gen)) {
-            exit.add(gen);
+        if(gen != null) {
+            if (!exit.contains(gen)) {
+                exit.add(gen);
+            }
         }
 
         for(Tuple t : exit) {
-            System.out.println("Label: "  + t.getLeftString());
-            System.out.println(" result: " + t.getRightString());
+            //System.out.println("Label: "  + t.getLeftString());
+            //System.out.println(" result: " + t.getRightString());
         }
 
         return exit;
