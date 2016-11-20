@@ -5,17 +5,26 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Iterator;
-import java.util.ListIterator;
+import java.util.Iterator;
 
 public class EquationSolver {
 
     FlowGraph fg;
-    LinkedList<Tuple> workList;
-    LinkedList<Tuple> workListCopy;
+    Worklist workList;
+    Worklist workListCopy;
 
-    public EquationSolver(FlowGraph _fg) {
+    public EquationSolver(FlowGraph _fg, Worklist.WorklistType _wType) {
         this.fg = _fg;
-        this.workList = new LinkedList<Tuple>();
+        switch(_wType) {
+            case FIFO:
+                workList = new FIFOWorklist();
+                workListCopy = new FIFOWorklist();
+                break;
+            case LIFO:
+                workList = new LIFOWorklist();
+                workListCopy = new LIFOWorklist();
+                break;
+        }
     }
 
     private void buildWorkList() {
@@ -25,11 +34,12 @@ public class EquationSolver {
             for (Integer out : outFlows) {
                 Tuple t = new Tuple(blockId.toString(), out.toString());
                 workList.add(t);
+                workListCopy.add(t);
                 System.out.println("workList = "  + t.toString());
             }
         }
-        workListCopy = new LinkedList<Tuple>(workList);
     }
+
 
     public void solveEquation(EquationBuilder.EquationType eqType,
                               Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
@@ -49,9 +59,8 @@ public class EquationSolver {
 
     private void solveEquationRD(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         System.out.println("inEquations size = " + inEquations.size());
-
-        ListIterator<Tuple> iterator = workList.listIterator();
-
+        Iterator<Tuple> iterator = workList.iterator();
+        Iterator<Tuple> iteratorCopy = workListCopy.iterator();
 
         while (iterator.hasNext()) {
             Tuple t = iterator.next();
@@ -68,11 +77,13 @@ public class EquationSolver {
             {
                 outEquations.get(lprime).setResult(combineLists(exit, outEquations.get(lprime).getResult()));
 
-                for (Tuple t2 : workListCopy) {
+                while (iteratorCopy.hasNext()) {
+                    Tuple t2 = iteratorCopy.next();
                     if (t2.getLeftString().equals(lprime.toString()) && !workList.contains(t2)) {
-                        iterator.add(t2);
+                        workList.add(t2);
                     }
                 }
+
             }
 
             System.out.println("solveEquationRD - tuple = " + t.toString());

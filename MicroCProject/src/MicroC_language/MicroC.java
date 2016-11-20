@@ -38,7 +38,7 @@ public class MicroC {
 		eqBuilderRD.buildEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS);
 		//eqBuilder.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
 
-		EquationSolver eqSolver = new EquationSolver(flowGraph);
+		EquationSolver eqSolver = new EquationSolver(flowGraph, Worklist.WorklistType.LIFO);
 		eqSolver.solveEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS,
 				eqBuilderRD.getInEquations(), eqBuilderRD.getOutEquations());
 	}
