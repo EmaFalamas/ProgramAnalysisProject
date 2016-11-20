@@ -28,8 +28,6 @@ public class EquationSolver {
                 System.out.println("workList = "  + t.toString());
             }
         }
-
-    //    workListCopy = (LinkedList<Tuple>) workList.clone();
         workListCopy = new LinkedList<Tuple>(workList);
     }
 
@@ -72,7 +70,6 @@ public class EquationSolver {
 
                 for (Tuple t2 : workListCopy) {
                     if (t2.getLeftString().equals(lprime.toString()) && !workList.contains(t2)) {
-                        //workList.addLast(t2);
                         iterator.add(t2);
                     }
                 }
@@ -84,15 +81,6 @@ public class EquationSolver {
 
         for (Integer i : outEquations.keySet()) {
             for (Tuple t2 : outEquations.get(i).getResult()) {
-                if(i == null)
-                {
-                    System.out.println("Label is null");
-                }
-                if(t2 == null)
-                {
-                    System.out.println("Result is null");
-                    System.out.println(i);
-                }
                 System.out.println("OutEquations - Label = " + i.toString() + "; result = " + t2.toString());
             }
         }
@@ -107,19 +95,12 @@ public class EquationSolver {
         for (Tuple t : entry) {
             if (!kills.contains(t)) {
                 exit.add(t);
-                //System.out.println("Label: "  + t.getLeftString() );
-                //System.out.println(" result: " + t.getRightString());
             }
         }
         if(gen != null) {
             if (!exit.contains(gen)) {
                 exit.add(gen);
             }
-        }
-
-        for(Tuple t : exit) {
-            //System.out.println("Label: "  + t.getLeftString());
-            //System.out.println(" result: " + t.getRightString());
         }
 
         return exit;
