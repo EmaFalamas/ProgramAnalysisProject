@@ -1,4 +1,4 @@
-//Sign analysis: is the analysis going to detect that x is {0, +} after the while, and {-, 0, +} in the end of the program?
+/*Sign analysis: is the analysis going to detect that x is {0, +} after the while, and {-, 0, +} in the end of the program?*/
 
 {
 	int x;

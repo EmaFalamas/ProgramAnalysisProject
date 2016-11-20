@@ -1,4 +1,4 @@
-// For detection of sign, can the analysis detect that x is 0 after the while loop?
+/* For detection of sign, can the analysis detect that x is 0 after the while loop?*/
 {
     int x; int z;
     x = 10;
