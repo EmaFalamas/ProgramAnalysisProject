@@ -5,14 +5,14 @@ import java.util.Iterator;
 
 public class LIFOWorklist extends Worklist {
 
-    Stack<Tuple> worklist;
+    Stack<Tuple<String, String>> worklist;
 
     public LIFOWorklist() {
-        this.worklist = new Stack<Tuple>();
+        this.worklist = new Stack<Tuple<String, String>>();
     }
 
     @Override
-    public void add(Tuple t) {
+    public void add(Tuple<String, String> t) {
         worklist.push(t);
     }
 
@@ -22,12 +22,12 @@ public class LIFOWorklist extends Worklist {
     }
 
     @Override
-    public boolean contains(Tuple t) {
+    public boolean contains(Tuple<String, String> t) {
         return worklist.contains(t);
     }
 
     @Override
-    public Iterator<Tuple> iterator() {
+    public Iterator<Tuple<String, String>> iterator() {
         return worklist.iterator();
     }
 

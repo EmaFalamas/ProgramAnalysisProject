@@ -5,22 +5,22 @@ import models.*;
 
 public class RDTransferFunction extends TransferFunction {
 
-    private ArrayList<Tuple> kills;
-    private Tuple gen;
+    private ArrayList<Tuple<String, String>> kills;
+    private Tuple<String, String> gen;
 
     public RDTransferFunction() {
-        this.kills = new ArrayList<Tuple>();
-        //this.gen = new Tuple();
+        this.kills = new ArrayList<Tuple<String, String>>();
+        //this.gen = new Tuple<String, String>();
     }
 
-    public void addKill(Tuple kill) { this.kills.add(kill); }
+    public void addKill(Tuple<String, String> kill) { this.kills.add(kill); }
 
-    public void addKills(ArrayList<Tuple> _kills) { this.kills.addAll(_kills); }
+    public void addKills(ArrayList<Tuple<String, String>> _kills) { this.kills.addAll(_kills); }
 
-    public ArrayList<Tuple> getKills() { return kills; }
+    public ArrayList<Tuple<String, String>> getKills() { return kills; }
 
-    public void setGen(Tuple gen) { this.gen = gen; }
+    public void setGen(Tuple<String, String> gen) { this.gen = gen; }
 
-    public Tuple getGen() { return gen; }
+    public Tuple<String, String> getGen() { return gen; }
 
 }

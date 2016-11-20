@@ -61,7 +61,7 @@ public class FlowGraphBuilder {
 
 
     public FlowGraph constructFlowGraph() {
-        System.out.println("_____________ Flow graph construction 2 _____________");
+        System.out.println("_____________ Flow graph construction _____________");
         flowGraph = new FlowGraph();
         currentBlockId = 0;
         constructBlock(abstractSyntaxTree);
@@ -291,22 +291,40 @@ public class FlowGraphBuilder {
             switch(label) {
                 case "BinaryOperatorNode":
                     txt += ((BinaryOperatorNode) currentNode).getOpStr(((BinaryOperatorNode) currentNode).getOp());
+                    switch (txt) {
+                        case "+":
+                            b.setOperand(Operand.PLUS);
+                            break;
+                        case "-":
+                            b.setOperand(Operand.MINUS);
+                            break;
+                        case "*":
+                            b.setOperand(Operand.MUL);
+                            break;
+                        case "/":
+                            b.setOperand(Operand.DIV);
+                            break;
+                    }
                     break;
                 case "ConstantNode":
                     txt += Integer.toString(((ConstantNode) currentNode).getNumber());
+                    b.addRightValue(txt);
                     break;
                 case "SymbolNode":
                     txt += ((SymbolNode) currentNode).getOpStr(((SymbolNode) currentNode).getOp());
                     break;
                 case "UnaryOperatorNode":
                     txt += ((UnaryOperatorNode) currentNode).getOpStr(((UnaryOperatorNode) currentNode).getOp());
+                    if (txt.equals("-")) {
+                        b.setOperand(Operand.UNARY_MINUS);
+                    }
                     break;
                 case "VariableNode":
                     txt += ((VariableNode) currentNode).getName();
                     if (!assignmentFound && !searchIndex) {
                         b.setLeftVar(txt);
                     } else if (!searchIndex) {
-                        b.addRightVar(txt);
+                        b.addRightValue(txt);
                     }
                     break;
             }
@@ -345,7 +363,7 @@ public class FlowGraphBuilder {
             builder.append(b.getOutFlows().toString());
             builder.append("; Instruction = " + b.getInstruction());
             builder.append("; Left variables = " + (b.getLeftVar() != null ? b.getLeftVar().toString() : "null"));
-            builder.append("; Right Variables = " + b.getRightVar().toString());
+            builder.append("; Right Variables = " + b.getRightValues().toString());
             builder.append("; Instruction Type = " + b.getInstructionType());
             System.out.println(builder.toString());
         }

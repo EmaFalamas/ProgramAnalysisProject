@@ -7,18 +7,18 @@ public abstract class Worklist implements Cloneable {
 
     public enum WorklistType { FIFO, LIFO }
 
-    private Iterator<Tuple> iterator;
+    private Iterator<Tuple<String, String>> iterator;
 
     public Worklist() {
 
     }
 
-    public void add(Tuple t) {}
+    public void add(Tuple<String, String> t) {}
 
     public void remove() {}
 
-    public boolean contains(Tuple t) {return false;}
+    public boolean contains(Tuple<String, String> t) {return false;}
 
-    public Iterator<Tuple> iterator() {return null;}
+    public Iterator<Tuple<String, String>> iterator() {return null;}
 
 }

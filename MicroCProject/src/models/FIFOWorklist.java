@@ -5,14 +5,14 @@ import java.util.Iterator;
 
 public class FIFOWorklist extends Worklist {
 
-    private LinkedList<Tuple> worklist;
+    private LinkedList<Tuple<String, String>> worklist;
 
     public FIFOWorklist() {
-        this.worklist = new LinkedList<Tuple>();
+        this.worklist = new LinkedList<Tuple<String, String>>();
     }
 
     @Override
-    public void add(Tuple t) {
+    public void add(Tuple<String, String> t) {
         this.worklist.add(t);
     }
 
@@ -22,12 +22,12 @@ public class FIFOWorklist extends Worklist {
     }
 
     @Override
-    public boolean contains(Tuple t) {
+    public boolean contains(Tuple<String, String> t) {
         return worklist.contains(t);
     }
 
     @Override
-    public Iterator<Tuple> iterator() {
+    public Iterator<Tuple<String, String>> iterator() {
         return worklist.iterator();
     }
 

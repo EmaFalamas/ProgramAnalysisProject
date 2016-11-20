@@ -11,7 +11,8 @@ public class Block {
     private ArrayList<Integer> outFlows;
     private String instruction;
     private String leftVar;
-    private ArrayList<String> rightVar;
+    private ArrayList<String> rightValues;
+    private Operand operand;
     private InstructionType it;
     private Node instructionNode;
 
@@ -22,7 +23,7 @@ public class Block {
         this.inFlows = new ArrayList<Integer>();
         this.outFlows = new ArrayList<Integer>();
         //this.leftVar = "";
-        this.rightVar = new ArrayList<String>();
+        this.rightValues = new ArrayList<String>();
     }
 
     public Integer getId() {
@@ -79,14 +80,19 @@ public class Block {
 
     public void setLeftVar(String var) { this.leftVar = var; }
 
-    public void addRightVar(String var) { this.rightVar.add(var); }
+    public void addRightValue(String val) { this.rightValues.add(val); }
 
     public String getLeftVar() { return leftVar; }
 
-    public ArrayList<String> getRightVar() { return rightVar; }
+    public ArrayList<String> getRightValues() { return rightValues; }
 
     public void setInstructionType(InstructionType _it) { this.it = _it; }
 
     public InstructionType getInstructionType() { return it; }
+
+    public Operand getOperand() { return operand; }
+
+    public void setOperand(Operand operand) { this.operand = operand; }
+
 
 }

@@ -14,7 +14,7 @@ public class EquationBuilder {
     private FlowGraph fg;
     private Map<Integer, Equation> inEquations;
     private Map<Integer, Equation> outEquations;
-    private Map<String, ArrayList<Tuple>> killsMap;
+    private Map<String, ArrayList<Tuple<String, String>>> killsMap;
     private HashSet<String> variables;
 
     public enum EquationType
@@ -26,7 +26,7 @@ public class EquationBuilder {
         this.fg = _fg;
         this.inEquations = new HashMap<Integer, Equation>();
         this.outEquations = new HashMap<Integer, Equation>();
-        this.killsMap = new HashMap<String, ArrayList<Tuple>>();
+        this.killsMap = new HashMap<String, ArrayList<Tuple<String, String>>>();
         this.variables = getAllVariables();
     }
 
@@ -61,7 +61,7 @@ public class EquationBuilder {
 
             if (i == 0) {
                 for (String var : variables) {
-                    in.addResult(new Tuple(var, "?"));
+                    in.addResult(new Tuple<String, String>(var, "?"));
                     System.out.println("RDvar = " + var);
                 }
                 putInEquation(b.getId(), in);
@@ -73,7 +73,7 @@ public class EquationBuilder {
                 case DECLARATION:
                     String var = b.getLeftVar();
                     outTransferFunction.addKills(killsMap.get(var));
-                    outTransferFunction.setGen(new Tuple(var, b.getId().toString()));
+                    outTransferFunction.setGen(new Tuple<String, String>(var, b.getId().toString()));
                     break;
                 default:
 
@@ -123,7 +123,7 @@ public class EquationBuilder {
             if (lv != null) {
                 set.add(lv);
             }
-            for (String rv : b.getRightVar()) {
+            for (String rv : b.getRightValues()) {
                 set.add(rv);
             }
 
@@ -133,9 +133,9 @@ public class EquationBuilder {
                 case DECLARATION:
                     String var = b.getLeftVar();
                     if (!killsMap.containsKey(var)) {
-                        killsMap.put(var, new ArrayList<Tuple>());
+                        killsMap.put(var, new ArrayList<Tuple<String, String>>());
                     }
-                    killsMap.get(var).add(new Tuple(var, b.getId().toString()));
+                    killsMap.get(var).add(new Tuple<String, String>(var, b.getId().toString()));
                     break;
                 default:
 
@@ -158,7 +158,7 @@ public class EquationBuilder {
             }
             System.out.println();
             System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
-            for (Tuple t : tf.getKills()) {
+            for (Tuple<String, String> t : tf.getKills()) {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
@@ -176,7 +176,7 @@ public class EquationBuilder {
             }
             System.out.println();
             System.out.print(((Integer) pair.getKey()).toString() + "-kills: ");
-            for (Tuple t : tf.getKills()) {
+            for (Tuple<String, String> t : tf.getKills()) {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
@@ -208,9 +208,9 @@ public class EquationBuilder {
 
         Integer firstBlockId = fg.getBlocks().get(0).getId();
         for (String var : variables) {
-            inEquations.get(firstBlockId).addResult(new Tuple(var, "+"));
-            inEquations.get(firstBlockId).addResult(new Tuple(var, "0"));
-            inEquations.get(firstBlockId).addResult(new Tuple(var, "-"));
+            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "+"));
+            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "0"));
+            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "-"));
             System.out.println("var = " + var + "; + 0 -");
         }
     }

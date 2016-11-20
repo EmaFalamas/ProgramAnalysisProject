@@ -1,42 +1,42 @@
 package models;
 
-public class Tuple {
+public class Tuple<S,T> {
 
-    private String leftString;
-    private String rightString;
+    private S left;
+    private T right;
 
-    public Tuple(String ls, String rs) {
-        this.leftString = ls;
-        this.rightString = rs;
+    public Tuple(S ls, T rs) {
+        this.left = ls;
+        this.right = rs;
     }
 
-    public String getLeftString() {
-        return leftString;
+    public S getLeft() {
+        return left;
     }
 
-    public void setLeftString(String leftString) {
-        this.leftString = leftString;
+    public void setLeft(S _left) {
+        this.left = _left;
     }
 
-    public String getRightString() {
-        return rightString;
+    public T getRight() {
+        return right;
     }
 
-    public void setRightString(String rightString) {
-        this.rightString = rightString;
+    public void setRight(T _right) {
+        this.right = _right;
     }
 
     @Override
     public String toString() {
-        return "(" + leftString + ", " + rightString + ")";
+        return "(" + left.toString() + ", " + right.toString() + ")";
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Tuple) {
             Tuple t = (Tuple) o;
-            return this.leftString.equals(t.getLeftString()) && (this.rightString.equals(t.getRightString())
-                    || this.rightString.equals("?") || t.getRightString().equals("?"));
+            return this.left.equals(t.getLeft()) && (this.right.equals(t.getRight())
+                    || ((this.right instanceof String) && this.right.equals("?") || t.getRight().equals("?")));
         }
         return false;
     }
