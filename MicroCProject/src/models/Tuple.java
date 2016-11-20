@@ -35,7 +35,8 @@ public class Tuple {
     public boolean equals(Object o) {
         if (o instanceof Tuple) {
             Tuple t = (Tuple) o;
-            return this.leftString.equals(t.getLeftString()) && this.rightString.equals(t.getRightString());
+            return this.leftString.equals(t.getLeftString()) && (this.rightString.equals(t.getRightString())
+                    || this.rightString.equals("?") || t.getRightString().equals("?"));
         }
         return false;
     }

@@ -1,0 +1,24 @@
+//Sign analysis: is the analysis going to detect that x is {0, +} after the while, and {-, 0, +} in the end of the program?
+
+{
+	int x;
+	int y;
+	int z;
+
+	while(x < 10)
+	{
+		y = x * z;
+		z = y - x;
+		x = x + 2;
+		
+		if(y == -8)
+		{
+			break;
+		}
+	}
+	
+	x = z / x;
+	
+	while ()
+
+}

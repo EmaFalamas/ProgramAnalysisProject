@@ -51,6 +51,27 @@ public class EquationSolver {
 
     private void solveEquationRD(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         System.out.println("inEquations size = " + inEquations.size());
+
+        System.out.println("IN EQUATION RESULTS");
+        for(int i = 0; i < inEquations.size(); i++){
+            if(inEquations.get(i) == null)
+            {
+                System.out.println("null: " + i);
+            }
+            for(Tuple t : inEquations.get(i).getResult())
+            {
+                System.out.println(t.getLeftString() + " " + t.getRightString());
+            }
+        }
+
+        System.out.println("OUT EQUATION RESULTS");
+        for(int i = 0; i < outEquations.size(); i++){
+            for(Tuple t : outEquations.get(i).getResult())
+            {
+                System.out.println(t.getLeftString() + " " + t.getRightString());
+            }
+        }
+
         ListIterator<Tuple> iterator = workList.listIterator();
 
 
@@ -61,6 +82,7 @@ public class EquationSolver {
             Integer l = Integer.parseInt(t.getLeftString());
             RDTransferFunction rdTF = (RDTransferFunction) outEquations.get(l).getTransferFunction();
             ArrayList<Tuple> exit = computeExit(inEquations.get(l).getResult(), rdTF.getKills(), rdTF.getGen());
+            inEquations = ripleChanges(l, exit, inEquations);
 
             outEquations.get(l).setResult(exit);
             Integer lprime = Integer.parseInt(t.getRightString());
@@ -82,6 +104,15 @@ public class EquationSolver {
 
         for (Integer i : outEquations.keySet()) {
             for (Tuple t2 : outEquations.get(i).getResult()) {
+                if(i == null)
+                {
+                    System.out.println("Label is null");
+                }
+                if(t2 == null)
+                {
+                    System.out.println("Result is null");
+                    System.out.println(i);
+                }
                 System.out.println("OutEquations - Label = " + i.toString() + "; result = " + t2.toString());
             }
         }
@@ -93,16 +124,43 @@ public class EquationSolver {
 
     private ArrayList<Tuple> computeExit(ArrayList<Tuple> entry, ArrayList<Tuple> kills, Tuple gen) {
         ArrayList<Tuple> exit = new ArrayList<Tuple>();
-        for (Tuple t : kills) {
-            if (entry.contains(t)) {
-                exit.remove(t);
+        for (Tuple t : entry) {
+            if (!kills.contains(t)) {
+                exit.add(t);
+                System.out.println("Label: "  + t.getLeftString() );
+                System.out.println(" result: " + t.getRightString());
             }
         }
         if (!exit.contains(gen)) {
             exit.add(gen);
         }
 
+        for(Tuple t : exit) {
+            System.out.println("Label: "  + t.getLeftString());
+            System.out.println(" result: " + t.getRightString());
+        }
+
         return exit;
+    }
+
+    private Map<Integer, Equation> ripleChanges(int label, ArrayList<Tuple> changes, Map<Integer, Equation> inEquations)
+    {
+        for (Block b : fg.getBlocks()) {
+            if(b.getId() == label) {
+                ArrayList<Integer> outFlows = b.getOutFlows();
+                for(int i : outFlows){
+                    ArrayList<Tuple> currentResult = inEquations.get(i).getResult();
+
+                    for(Tuple change : changes){
+                        if(!currentResult.contains(change)){
+                            inEquations.get(i).addResult(change);
+                        }
+                    }
+                }
+            }
+        }
+
+        return inEquations;
     }
 
     private ArrayList<Tuple> combineLists(ArrayList<Tuple> l1, ArrayList<Tuple> l2) {
