@@ -100,57 +100,8 @@ public class EquationSolver {
         }
     }
 
-    private void solveEquationSA(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
-        Iterator<Tuple<String, String>> iterator = workList.iterator();
-        Iterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
-        Map<String, ArrayList<SignType>> entry= new HashMap <String, ArrayList<SignType>>();
-
-        for( Tuple<String,String> t : inEquations.get(0).getResult() ){
-            if(!entry.containsKey(t.getLeft())) {
-                entry.put(t.getLeft(),new ArrayList<SignType>());
-            }
-            switch (t.getRight()) {
-                case "+":
-                    entry.get(t.getLeft()).add(SignType.PLUS);
-                    break;
-                case "0":
-                    entry.get(t.getLeft()).add(SignType.ZERO);
-                    break;
-                case "-":
-                    entry.get(t.getLeft()).add(SignType.MINUS);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        while (iterator.hasNext()) {
-            Tuple<String, String> t = iterator.next();
-            iterator.remove();
-
-            Integer l = Integer.parseInt(t.getLeft());
-            SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
-            Map<String, ArrayList<SignType>> exit = computeExitSA(inEquations.get(l), l, entry);
-            /*inEquations = ripleChanges(l, exit, inEquations);
-
-            outEquations.get(l).setResult(exit);
-            Integer lprime = Integer.parseInt(t.getRight());
-            if(!outEquations.get(lprime).getResult().containsAll(exit))
-            {
-                outEquations.get(lprime).setResult(combineLists(exit, outEquations.get(lprime).getResult()));
-
-                while (iteratorCopy.hasNext()) {
-                    Tuple<String, String> t2 = iteratorCopy.next();
-                    if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
-                        workList.add(t2);
-                    }
-                }
-
-            }*/
-        }
-    }
-
-    private ArrayList<Tuple<String, String>> computeExitRD(ArrayList<Tuple<String, String>> entry, ArrayList<Tuple<String, String>> kills, Tuple<String, String> gen) {
+    private ArrayList<Tuple<String, String>> computeExitRD(ArrayList<Tuple<String, String>> entry,
+                                                           ArrayList<Tuple<String, String>> kills, Tuple<String, String> gen) {
         ArrayList<Tuple<String, String>> exit = new ArrayList<Tuple<String, String>>();
         for (Tuple<String, String> t : entry) {
             if (!kills.contains(t)) {
@@ -166,11 +117,51 @@ public class EquationSolver {
         return exit;
     }
 
-    private Map<String, ArrayList<SignType>> computeExitSA(Equation eq, int equationLabel,
-                                                             Map<String, ArrayList<SignType>> variableSigns) {
-        //ArrayList<Tuple<String, SignType>> exit = new ArrayList<Tuple<String, SignType>>();
+    private void solveEquationSA(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
+        Iterator<Tuple<String, String>> iterator = workList.iterator();
+        Iterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
 
-        if (eq.getTransferFunction().getInstructionNode().getLabel().equals("AssignmentNode")) {
+        while (iterator.hasNext()) {
+            Tuple<String, String> t = iterator.next();
+            iterator.remove();
+
+            Integer l = Integer.parseInt(t.getLeft());
+            SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
+
+            ArrayList<Tuple<String, String>> exit = computeExitSA(inEquations.get(l), outEquations.get(l), l);
+
+            outEquations.get(l).setResult(exit);
+
+            inEquations = ripleChanges(l, exit, inEquations);
+
+            Integer lprime = Integer.parseInt(t.getRight());
+            if(!outEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult()))
+            {
+                outEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), outEquations.get(lprime).getResult()));
+
+                while (iteratorCopy.hasNext()) {
+                    Tuple<String, String> t2 = iteratorCopy.next();
+                    if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
+                        workList.add(t2);
+                    }
+                }
+            }
+        }
+
+        printSignAnalysisResults(inEquations, outEquations);
+    }
+
+
+
+    private ArrayList<Tuple<String, String>> computeExitSA(Equation eq, Equation outEq, int equationLabel) {
+        ArrayList<Tuple<String, String>> exit = eq.getResult();
+        if(exit == null) {
+            exit = new ArrayList<Tuple<String, String>>();
+        }
+
+        Tuple<String, String> t;
+
+        if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("AssignmentNode")) {
             for (Block b : fg.getBlocks())
             {
                 if (b.getId() == equationLabel)
@@ -179,64 +170,175 @@ public class EquationSolver {
                     ArrayList<String> rightVariables = b.getRightValues();
                     Operand operand = b.getOperand();
 
+                    ArrayList<String> leftSigns;
+                    ArrayList<String> rightSigns;
+
                     switch (operand)
                     {
                         case BLANK:
-                            try {
-                                // we have a constant
-                                int constant = Integer.parseInt(rightVariables.get(0));
-                                if (constant == 0){
-                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
+                            ArrayList<String> signsOfValue = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+                            System.out.println("BLANK" + leftVariable);
+                            for(String signOfValue : signsOfValue)
+                            {
+                                t = new Tuple<String, String> (leftVariable, signOfValue);
+                                if(!exit.contains(t))
+                                {
+                                    exit.add(t);
                                 }
-                                else {
-                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListPlus());
-                                }
-                            }
-                            catch (NumberFormatException ex){
-                                //we have a variable
-
-                                variableSigns.get(leftVariable).addAll(variableSigns.get(rightVariables.get(0)));
                             }
                             break;
 
                         case UNARY_MINUS:
-                            try {
-                                // we have a constant
-                                int constant = Integer.parseInt(rightVariables.get(0));
-                                if (constant == 0){
-                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
-                                }
-                                else {
-                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListMinus());
+                            ArrayList<String> signs = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+
+                            System.out.println("UNARY_MINUS" + leftVariable);
+                            for (String sign : signs) {
+                                //get the opposite sign type of this sign and add it to the results
+
+                                t = new Tuple<String, String> (leftVariable, SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
+                                if(!exit.contains(t))
+                                {
+                                    exit.add(t);
                                 }
                             }
-                            catch (NumberFormatException ex){
-                                //we have a variable
-                                variableSigns.get(leftVariable).addAll(SAUtils.getUnaryMinusTransferFunction().get(variableSigns.get(rightVariables.get(0))));
+                            break;
+                        case PLUS:
+                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
+                            System.out.println("PLUS" + leftVariable);
+
+                            for(String leftSign : leftSigns)
+                            {
+                                for(String rightSign : rightSigns)
+                                {
+                                    ArrayList<String> s = SAUtils.getPlusTransferFunction().get(leftSign + rightSign);
+                                    for (String sign : s)
+                                    {
+                                        t = new Tuple<String, String>(leftVariable, sign);
+                                        if(!exit.contains(t))
+                                        {
+                                            exit.add(t);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case MINUS:
+                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
+                            System.out.println("MINUS" + leftVariable);
+                            for(String leftSign : leftSigns)
+                            {
+                                for(String rightSign : rightSigns)
+                                {
+                                    ArrayList<String> s = SAUtils.getMinusTransferFunction().get(leftSign + rightSign);
+                                    for (String sign : s)
+                                    {
+                                        t = new Tuple<String, String>(leftVariable, sign);
+                                        if(!exit.contains(t))
+                                        {
+                                            exit.add(t);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case MUL:
+                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
+                            System.out.println("MUL" + leftVariable);
+                            for(String leftSign : leftSigns)
+                            {
+                                for(String rightSign : rightSigns)
+                                {
+                                    ArrayList<String> s = SAUtils.getProductTransferFunction().get(leftSign + rightSign);
+                                    for (String sign : s)
+                                    {
+                                        t = new Tuple<String, String>(leftVariable, sign);
+                                        if(!exit.contains(t))
+                                        {
+                                            exit.add(t);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case DIV:
+                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
+                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
+                            System.out.println("DIV" + leftVariable);
+                            for(String leftSign : leftSigns)
+                            {
+                                for(String rightSign : rightSigns)
+                                {
+                                    ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
+                                    for (String sign : s)
+                                    {
+                                        t = new Tuple<String, String>(leftVariable, sign);
+                                        if(!exit.contains(t))
+                                        {
+                                            exit.add(t);
+                                        }
+                                    }
+                                }
                             }
                             break;
                     }
-
-                    break;
                 }
             }
         }
-        if (eq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
+
+        else if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
             for(Block b : fg.getBlocks())
             {
                 String leftVariable = b.getLeftVar();
                 if(b.getId() == equationLabel)
                 {
+                    System.out.println("DECLARATION" + leftVariable);
                     String declaredVariable = b.getLeftVar();
-                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
+
+                    ArrayList<String> s = SAUtils.getArrayListZero();
+                    for(String sign : s) {
+                        t = new Tuple<String, String>(leftVariable, sign);
+                        if(!exit.contains(t))
+                        {
+                            exit.add(t);
+                        }
+                    }
                     break;
                 }
             }
         }
 
-        return variableSigns;
+        return exit;
     }
 
+    private ArrayList<String> getSignsOfValue(ArrayList<Tuple<String, String>> variableSigns, String value)
+    {
+        try {
+            // we have a constant
+            int constant = Integer.parseInt(value);
+            if (constant == 0){
+                return SAUtils.getArrayListZero();
+            }
+            else {
+                return SAUtils.getArrayListPlus();
+            }
+        }
+        catch (NumberFormatException ex){
+            //we have a variable
+            ArrayList<String> signs = new ArrayList<String>();
+
+            for(Tuple<String, String> variableSign : variableSigns)
+            {
+                if(variableSign.getLeft().equals(value)){
+                    signs.add(variableSign.getRight());
+                }
+            }
+
+            return signs;
+        }
+    }
 
 
     private Map<Integer, Equation> ripleChanges(int label, ArrayList<Tuple<String, String>> changes, Map<Integer, Equation> inEquations)
@@ -269,7 +371,26 @@ public class EquationSolver {
         return l3;
     }
 
+    private ArrayList<Tuple<String, String>> combineStringLists(ArrayList<Tuple<String, String>> l1, ArrayList<Tuple<String, String>> l2) {
+        ArrayList<Tuple<String, String>> l3 = new ArrayList<Tuple<String, String>>(l1);
+        for (Tuple<String, String> t : l2) {
+            if (!l1.contains(t)) {
+                l3.add(t);
+            }
+        }
+        return l3;
+    }
 
+    private void printSignAnalysisResults(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations)
+    {
+        for(Integer i : inEquations.keySet())
+        {
+            System.out.println("In equation " + i);
+            System.out.println(inEquations.get(i).getResult().toString());
 
+            System.out.println("Out equation " + i);
+            System.out.println(outEquations.get(i).getResult().toString());
+        }
+    }
 }
 

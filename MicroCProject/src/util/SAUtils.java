@@ -6,98 +6,98 @@ import business.*;
 
 public class SAUtils {
 
-    private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> plusTransferFunction;
-    private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> minusTransferFunction;
-    private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> productTransferFunction;
-    private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> divisionTransferFunction;
-    private static Map<SignType, ArrayList<SignType>> unaryMinusTransferFunction;
+    private static Map<String, ArrayList<String>> plusTransferFunction;
+    private static Map<String, ArrayList<String>> minusTransferFunction;
+    private static Map<String, ArrayList<String>> productTransferFunction;
+    private static Map<String, ArrayList<String>> divisionTransferFunction;
+    private static Map<String, ArrayList<String>> unaryMinusTransferFunction;
 
-    private static ArrayList<SignType> arrayListPlus;
-    private static ArrayList<SignType> arrayListMinus;
-    private static ArrayList<SignType> arrayListZero;
-    private static ArrayList<SignType> arrayListIllegal;
-    private static ArrayList<SignType> arrayListPlusMinusZero;
+    private static ArrayList<String> arrayListPlus;
+    private static ArrayList<String> arrayListMinus;
+    private static ArrayList<String> arrayListZero;
+    private static ArrayList<String> arrayListIllegal;
+    private static ArrayList<String> arrayListPlusMinusZero;
 
     private static void createSignArrayLists() {
-        arrayListPlus = new ArrayList<SignType>();
-        arrayListPlus.add(SignType.PLUS);
+        arrayListPlus = new ArrayList<String>();
+        arrayListPlus.add("+");
 
-        arrayListMinus = new ArrayList<SignType>();
-        arrayListMinus.add(SignType.MINUS);
+        arrayListMinus = new ArrayList<String>();
+        arrayListMinus.add("-");
 
-        arrayListZero = new ArrayList<SignType>();
-        arrayListZero.add(SignType.ZERO);
+        arrayListZero = new ArrayList<String>();
+        arrayListZero.add("0");
 
-        arrayListIllegal = new ArrayList<SignType>();
-        arrayListIllegal.add(SignType.ILLEGAL);
+        arrayListIllegal = new ArrayList<String>();
+        arrayListIllegal.add("illegal");
 
-        arrayListPlusMinusZero = new ArrayList<SignType>();
-        arrayListPlusMinusZero.add(SignType.PLUS);
-        arrayListPlusMinusZero.add(SignType.ZERO);
-        arrayListPlusMinusZero.add(SignType.MINUS);
+        arrayListPlusMinusZero = new ArrayList<String>();
+        arrayListPlusMinusZero.add("+");
+        arrayListPlusMinusZero.add("0");
+        arrayListPlusMinusZero.add("-");
     }
 
     private static void initializePlusTransferFunction()
     {
-        plusTransferFunction = new HashMap<Tuple<SignType, SignType>, ArrayList<SignType>>();
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.PLUS), arrayListPlus);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.ZERO), arrayListPlus);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.MINUS), arrayListPlusMinusZero);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.PLUS), arrayListPlus);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.ZERO), arrayListZero);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.MINUS), arrayListMinus);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.PLUS), arrayListPlusMinusZero);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.ZERO), arrayListMinus);
-        plusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.MINUS), arrayListMinus);
+        plusTransferFunction = new HashMap<String, ArrayList<String>>();
+        plusTransferFunction.put("++", arrayListPlus);
+        plusTransferFunction.put("+0", arrayListPlus);
+        plusTransferFunction.put("+-", arrayListPlusMinusZero);
+        plusTransferFunction.put("0+", arrayListPlus);
+        plusTransferFunction.put("00", arrayListZero);
+        plusTransferFunction.put("0-", arrayListMinus);
+        plusTransferFunction.put("-+", arrayListPlusMinusZero);
+        plusTransferFunction.put("-0", arrayListMinus);
+        plusTransferFunction.put("--", arrayListMinus);
     }
 
     private static void initializeMinusTransferFunction()
     {
-        minusTransferFunction = new HashMap<Tuple<SignType, SignType>, ArrayList<SignType>>();
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.PLUS), arrayListPlusMinusZero);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.ZERO), arrayListPlus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.MINUS), arrayListPlus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.PLUS), arrayListMinus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.ZERO), arrayListZero);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.MINUS), arrayListPlus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.PLUS), arrayListMinus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.ZERO), arrayListMinus);
-        minusTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.MINUS), arrayListPlusMinusZero);
+        minusTransferFunction = new HashMap<String, ArrayList<String>>();
+        minusTransferFunction.put("++", arrayListPlusMinusZero);
+        minusTransferFunction.put("+0", arrayListPlus);
+        minusTransferFunction.put("+-", arrayListPlus);
+        minusTransferFunction.put("0+", arrayListMinus);
+        minusTransferFunction.put("00", arrayListZero);
+        minusTransferFunction.put("0-", arrayListPlus);
+        minusTransferFunction.put("-+", arrayListMinus);
+        minusTransferFunction.put("-0", arrayListMinus);
+        minusTransferFunction.put("--", arrayListPlusMinusZero);
     }
 
     private static void initializeProductTransferFunction()
     {
-        productTransferFunction = new HashMap<Tuple<SignType, SignType>, ArrayList<SignType>>();
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.PLUS), arrayListPlus);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.ZERO), arrayListZero);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.MINUS), arrayListMinus);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.PLUS), arrayListZero);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.ZERO), arrayListZero);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.MINUS), arrayListZero);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.PLUS), arrayListMinus);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.ZERO), arrayListZero);
-        productTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.MINUS), arrayListPlus);
+        productTransferFunction = new HashMap<String, ArrayList<String>>();
+        productTransferFunction.put("++", arrayListPlus);
+        productTransferFunction.put("+0", arrayListZero);
+        productTransferFunction.put("+-", arrayListMinus);
+        productTransferFunction.put("0+", arrayListZero);
+        productTransferFunction.put("00", arrayListZero);
+        productTransferFunction.put("0-", arrayListZero);
+        productTransferFunction.put("-+", arrayListMinus);
+        productTransferFunction.put("-0", arrayListZero);
+        productTransferFunction.put("--", arrayListPlus);
     }
 
     private static void initializeDivisionTransferFunction()
     {
-        divisionTransferFunction = new HashMap<Tuple<SignType, SignType>, ArrayList<SignType>>();
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.PLUS), arrayListPlus);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.ZERO), arrayListIllegal);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.PLUS, SignType.MINUS), arrayListMinus);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.PLUS), arrayListZero);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.ZERO), arrayListIllegal);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.ZERO, SignType.MINUS), arrayListZero);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.PLUS), arrayListMinus);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.ZERO), arrayListIllegal);
-        divisionTransferFunction.put(new Tuple<SignType, SignType>(SignType.MINUS, SignType.MINUS), arrayListPlus);
+        divisionTransferFunction = new HashMap<String, ArrayList<String>>();
+        divisionTransferFunction.put("++", arrayListPlus);
+        divisionTransferFunction.put("+0", arrayListIllegal);
+        divisionTransferFunction.put("+-", arrayListMinus);
+        divisionTransferFunction.put("0+", arrayListZero);
+        divisionTransferFunction.put("00", arrayListIllegal);
+        divisionTransferFunction.put("0-", arrayListZero);
+        divisionTransferFunction.put("-+", arrayListMinus);
+        divisionTransferFunction.put("-0", arrayListIllegal);
+        divisionTransferFunction.put("--", arrayListPlus);
     }
 
     private static void initializeUnaryMinusTransferFunction() {
-        unaryMinusTransferFunction = new HashMap<SignType, ArrayList<SignType>>();
-        unaryMinusTransferFunction.put(SignType.PLUS, arrayListMinus);
-        unaryMinusTransferFunction.put(SignType.ZERO, arrayListZero);
-        unaryMinusTransferFunction.put(SignType.MINUS, arrayListPlus);
+        unaryMinusTransferFunction = new HashMap<String, ArrayList<String>>();
+        unaryMinusTransferFunction.put("+", arrayListMinus);
+        unaryMinusTransferFunction.put("0", arrayListZero);
+        unaryMinusTransferFunction.put("-", arrayListPlus);
     }
 
     public static void initializeTransferFunctions() {
@@ -109,44 +109,43 @@ public class SAUtils {
         initializeUnaryMinusTransferFunction();
     }
 
-    public static Map<Tuple<SignType, SignType>, ArrayList<SignType>> getPlusTransferFunction() {
+    public static Map<String, ArrayList<String>> getPlusTransferFunction() {
         return plusTransferFunction;
     }
 
-    public static Map<Tuple<SignType, SignType>, ArrayList<SignType>> getMinusTransferFunction() {
+    public static Map<String, ArrayList<String>> getMinusTransferFunction() {
         return minusTransferFunction;
     }
 
-    public static Map<Tuple<SignType, SignType>, ArrayList<SignType>> getProductTransferFunction() {
+    public static Map<String, ArrayList<String>> getProductTransferFunction() {
         return productTransferFunction;
     }
 
-    public static Map<Tuple<SignType, SignType>, ArrayList<SignType>> getDivisionTransferFunction() {
+    public static Map<String, ArrayList<String>> getDivisionTransferFunction() {
         return divisionTransferFunction;
     }
 
-    public static Map<SignType, ArrayList<SignType>> getUnaryMinusTransferFunction() {
+    public static Map<String, ArrayList<String>> getUnaryMinusTransferFunction() {
         return unaryMinusTransferFunction;
     }
 
-    public static ArrayList<SignType> getArrayListPlus() {
+    public static ArrayList<String> getArrayListPlus() {
         return arrayListPlus;
     }
 
-    public static ArrayList<SignType> getArrayListMinus() {
+    public static ArrayList<String> getArrayListMinus() {
         return arrayListMinus;
     }
 
-    public static ArrayList<SignType> getArrayListZero() {
+    public static ArrayList<String> getArrayListZero() {
         return arrayListZero;
     }
 
-    public static ArrayList<SignType> getArrayListIllegal() {
+    public static ArrayList<String> getArrayListIllegal() {
         return arrayListIllegal;
     }
 
-    public static ArrayList<SignType> getArrayListPlusMinusZero() {
+    public static ArrayList<String> getArrayListPlusMinusZero() {
         return arrayListPlusMinusZero;
     }
-
 }

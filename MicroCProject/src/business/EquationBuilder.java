@@ -205,14 +205,6 @@ public class EquationBuilder {
             putInEquation(b.getId(), in);
             putOutEquation(b.getId(), out);
         }
-
-        Integer firstBlockId = fg.getBlocks().get(0).getId();
-        for (String var : variables) {
-            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "+"));
-            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "0"));
-            inEquations.get(firstBlockId).addResult(new Tuple<String, String>(var, "-"));
-            System.out.println("var = " + var + "; + 0 -");
-        }
     }
 
     public Map<Integer, Equation> getInEquations() {

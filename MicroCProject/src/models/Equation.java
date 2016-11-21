@@ -45,4 +45,8 @@ public class Equation {
         this.result.add(t);
     }
 
+    public void addAllResults(ArrayList<Tuple<String, String>> allResults) {
+        result.addAll(allResults);
+    }
+
 }

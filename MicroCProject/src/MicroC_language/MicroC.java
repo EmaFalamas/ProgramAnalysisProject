@@ -15,6 +15,7 @@ public class MicroC {
     static FlowGraph flowGraph;
 	static FlowGraphBuilder fgBuilder;
 	static EquationBuilder eqBuilderRD;
+	static EquationBuilder eqBuilderSA;
 
 	public static void main(String args[]) throws Exception {
 		if (args.length == 0) {
@@ -34,13 +35,14 @@ public class MicroC {
 		fgBuilder = new FlowGraphBuilder(abstractSyntaxTree);
 		flowGraph = fgBuilder.constructFlowGraph();
 		eqBuilderRD = new EquationBuilder(flowGraph);
+		eqBuilderSA = new EquationBuilder(flowGraph);
 
 		eqBuilderRD.buildEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS);
-		//eqBuilder.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
+		eqBuilderSA.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
 
 		EquationSolver eqSolver = new EquationSolver(flowGraph, Worklist.WorklistType.LIFO);
-		eqSolver.solveEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS,
-				eqBuilderRD.getInEquations(), eqBuilderRD.getOutEquations());
+		eqSolver.solveEquation(EquationBuilder.EquationType.SIGN_ANALYSIS,
+				eqBuilderSA.getInEquations(), eqBuilderSA.getOutEquations());
 	}
 
 }
