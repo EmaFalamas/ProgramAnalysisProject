@@ -154,10 +154,7 @@ public class EquationSolver {
 
 
     private ArrayList<Tuple<String, String>> computeExitSA(Equation eq, Equation outEq, int equationLabel) {
-        ArrayList<Tuple<String, String>> exit = eq.getResult();
-        if(exit == null) {
-            exit = new ArrayList<Tuple<String, String>>();
-        }
+        ArrayList<Tuple<String, String>> exit = new ArrayList<Tuple<String, String>>(eq.getResult());
 
         Tuple<String, String> t;
 
