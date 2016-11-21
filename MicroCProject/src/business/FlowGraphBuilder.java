@@ -5,6 +5,7 @@ import models.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Stack;
+import java.util.HashSet;
 
 
 public class FlowGraphBuilder {
@@ -93,9 +94,7 @@ public class FlowGraphBuilder {
                     foundElse = true;
                     exitStandardBlock = false;
                     exitIfBlockIfElse = true;
-                    if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK && lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
-                        ifLastBlockStack.push(lastBlockCreated);
-                    }
+                    ifLastBlockStack.push(lastBlockCreated);
                 }
         }
 
@@ -133,15 +132,32 @@ public class FlowGraphBuilder {
                     ArrayList<Block> whileBlocks = currentNode.getBlocks();
                     int numWhileBlocks = whileBlocks.size();
                     if (numWhileBlocks > 1) {
-                        whileBlocks.get(0).addInFlow(whileBlocks.get(numWhileBlocks-1).getId());
+                        if (checkParent(lastBlockCreated.getInstructionNode(), "IfNode", "WhileNode")) {
+                            if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK) {
+                                whileBlocks.get(0).addInFlow(lastBlockCreated.getId());
+                            }
+                            whileBlocks.get(0).addInFlow(conditionStack.pop().getId());
+                        } else if (checkParent(lastBlockCreated.getInstructionNode(), "IfElseNode", "WhileNode")) {
+                            Block lastBlockIf = ifLastBlockStack.pop();
+                            if (lastBlockIf.getInstructionType() != Block.InstructionType.BREAK) {
+                                System.out.println("LastBlock if: "+lastBlockIf.getInstruction());
+                                whileBlocks.get(0).addInFlow(lastBlockIf.getId());
+                            }
+                            if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK) {
+                                System.out.println("LastBlock Created: "+lastBlockCreated.getInstruction());
+                                whileBlocks.get(0).addInFlow(lastBlockCreated.getId());
+                            }
+                        } else {
+                            whileBlocks.get(0).addInFlow(lastBlockCreated.getId());
+                        }
                     }
+                    exitSingleIf = false;
+                    exitIfElse = false;
+                    //conditionStack.clear();
                     break;
                 case "IfElseNode":
                     exitIfElse = true;
                     exitStandardBlock = false;
-                    if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK && lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
-                        ifLastBlockStack.push(lastBlockCreated);
-                    }
                     break;
             }
 
@@ -154,7 +170,6 @@ public class FlowGraphBuilder {
                 exitStandardBlock = false;
             }
             if (exitBreak && exitWhile && !breakStack.empty()) {
-                System.out.println("happens once - prev id = " + lastBlockCreated.getId());
                 b.addInFlow(breakStack.pop().getId());
                 lastBreakContinueBlock = null;
                 exitBreak = false;
@@ -180,10 +195,22 @@ public class FlowGraphBuilder {
             }
             if (exitSingleIf && !conditionStack.empty()) {
                 b.addInFlow(conditionStack.pop().getId());
+                if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK &&
+                        lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
+                    b.addInFlow(lastBlockCreated.getId());
+                }
                 exitSingleIf = false;
             }
             if (exitIfElse && exitIfBlockIfElse && !ifLastBlockStack.empty()) {
-                b.addInFlow(ifLastBlockStack.pop().getId());
+                Block lastBlockIf = ifLastBlockStack.pop();
+                if (lastBlockIf.getInstructionType() != Block.InstructionType.BREAK &&
+                        lastBlockIf.getInstructionType() != Block.InstructionType.CONTINUE) {
+                    b.addInFlow(lastBlockIf.getId());
+                }
+                if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK &&
+                        lastBlockCreated.getInstructionType() != Block.InstructionType.CONTINUE) {
+                    b.addInFlow(lastBlockCreated.getId());
+                }
                 exitIfBlockIfElse = false;
             }
             currentBlockId++;
@@ -358,14 +385,25 @@ public class FlowGraphBuilder {
             builder = new StringBuilder();
             builder.append("ID = " + b.getId());
             builder.append("; In-flows = ");
-            builder.append(b.getInFlows().toString());
+            builder.append((new HashSet<Integer>(b.getInFlows())).toString());
             builder.append("; Out-flows = ");
-            builder.append(b.getOutFlows().toString());
+            builder.append((new HashSet<Integer>(b.getOutFlows())).toString());
             builder.append("; Instruction = " + b.getInstruction());
             builder.append("; Left variables = " + (b.getLeftVar() != null ? b.getLeftVar().toString() : "null"));
             builder.append("; Right Variables = " + b.getRightValues().toString());
             builder.append("; Instruction Type = " + b.getInstructionType());
             System.out.println(builder.toString());
+        }
+    }
+
+
+    private boolean checkParent(Node n, String targetLabel, String stopLabel) {
+        if (n.getLabel().equals("ProgramNode") || n.getLabel().equals(stopLabel)) {
+            return false;
+        } else if (n.getLabel().equals(targetLabel)) {
+            return true;
+        } else {
+            return checkParent(n.getParent(), targetLabel, stopLabel);
         }
     }
 

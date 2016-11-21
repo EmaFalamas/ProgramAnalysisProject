@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Iterator;
 import java.lang.NumberFormatException;
+import java.util.HashMap;
 
 public class EquationSolver {
 
@@ -102,6 +103,26 @@ public class EquationSolver {
     private void solveEquationSA(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         Iterator<Tuple<String, String>> iterator = workList.iterator();
         Iterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
+        Map<String, ArrayList<SignType>> entry= new HashMap <String, ArrayList<SignType>>();
+
+        for( Tuple<String,String> t : inEquations.get(0).getResult() ){
+            if(!entry.containsKey(t.getLeft())) {
+                entry.put(t.getLeft(),new ArrayList<SignType>());
+            }
+            switch (t.getRight()) {
+                case "+":
+                    entry.get(t.getLeft()).add(SignType.PLUS);
+                    break;
+                case "0":
+                    entry.get(t.getLeft()).add(SignType.ZERO);
+                    break;
+                case "-":
+                    entry.get(t.getLeft()).add(SignType.MINUS);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
@@ -109,8 +130,8 @@ public class EquationSolver {
 
             Integer l = Integer.parseInt(t.getLeft());
             SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
-            ArrayList<Tuple<String, String>> exit = computeExitSA(inEquations.get(l), l, saTF.getKills(), saTF.getGen());
-            inEquations = ripleChanges(l, exit, inEquations);
+            Map<String, ArrayList<SignType>> exit = computeExitSA(inEquations.get(l), l, entry);
+            /*inEquations = ripleChanges(l, exit, inEquations);
 
             outEquations.get(l).setResult(exit);
             Integer lprime = Integer.parseInt(t.getRight());
@@ -125,7 +146,7 @@ public class EquationSolver {
                     }
                 }
 
-            }
+            }*/
         }
     }
 
@@ -149,7 +170,7 @@ public class EquationSolver {
                                                              Map<String, ArrayList<SignType>> variableSigns) {
         //ArrayList<Tuple<String, SignType>> exit = new ArrayList<Tuple<String, SignType>>();
 
-        if (eq.getInstructionNode().getLabel().equals("AssignmentNode")) {
+        if (eq.getTransferFunction().getInstructionNode().getLabel().equals("AssignmentNode")) {
             for (Block b : fg.getBlocks())
             {
                 if (b.getId() == equationLabel)
@@ -165,16 +186,16 @@ public class EquationSolver {
                                 // we have a constant
                                 int constant = Integer.parseInt(rightVariables.get(0));
                                 if (constant == 0){
-                                    variableSigns.get(leftVariable).put(SAUtils.getArrayListZero());
+                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
                                 }
                                 else {
-                                    variableSigns.get(leftVariable).put(SAUtils.getArrayListPlus());
+                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListPlus());
                                 }
                             }
                             catch (NumberFormatException ex){
                                 //we have a variable
 
-                                variableSigns.get(leftVariable).put(variableSigns.get(rightVariables.get(0))));
+                                variableSigns.get(leftVariable).addAll(variableSigns.get(rightVariables.get(0)));
                             }
                             break;
 
@@ -183,15 +204,15 @@ public class EquationSolver {
                                 // we have a constant
                                 int constant = Integer.parseInt(rightVariables.get(0));
                                 if (constant == 0){
-                                    variableSigns.get(leftVariable).put(SAUtils.getArrayListZero());
+                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
                                 }
                                 else {
-                                    variableSigns.get(leftVariable).put(SAUtils.getArrayListMinus());
+                                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListMinus());
                                 }
                             }
                             catch (NumberFormatException ex){
                                 //we have a variable
-                                variableSigns.get(leftVariable).put(SAUtils.getUnaryMinusTransferFunction().get(variableSigns.get(rightVariables.get(0))));
+                                variableSigns.get(leftVariable).addAll(SAUtils.getUnaryMinusTransferFunction().get(variableSigns.get(rightVariables.get(0))));
                             }
                             break;
                     }
@@ -200,14 +221,14 @@ public class EquationSolver {
                 }
             }
         }
-        if (instructionNode.getLabel().equals("DeclarationNode")) {
+        if (eq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
             for(Block b : fg.getBlocks())
             {
                 String leftVariable = b.getLeftVar();
                 if(b.getId() == equationLabel)
                 {
                     String declaredVariable = b.getLeftVar();
-                    variableSigns.get(leftVariable).put(SAUtils.getArrayListZero());
+                    variableSigns.get(leftVariable).addAll(SAUtils.getArrayListZero());
                     break;
                 }
             }

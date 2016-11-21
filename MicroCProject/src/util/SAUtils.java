@@ -4,7 +4,7 @@ import java.util.*;
 import models.*;
 import business.*;
 
-public static class SAUtils {
+public class SAUtils {
 
     private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> plusTransferFunction;
     private static Map<Tuple<SignType, SignType>, ArrayList<SignType>> minusTransferFunction;
@@ -96,8 +96,8 @@ public static class SAUtils {
     private static void initializeUnaryMinusTransferFunction() {
         unaryMinusTransferFunction = new HashMap<SignType, ArrayList<SignType>>();
         unaryMinusTransferFunction.put(SignType.PLUS, arrayListMinus);
-        divisionTransferFunction.put(SignType.ZERO, arrayListZero);
-        divisionTransferFunction.put(SignType.MINUS, arrayListPlus);
+        unaryMinusTransferFunction.put(SignType.ZERO, arrayListZero);
+        unaryMinusTransferFunction.put(SignType.MINUS, arrayListPlus);
     }
 
     public static void initializeTransferFunctions() {
