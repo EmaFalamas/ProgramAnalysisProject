@@ -14,9 +14,11 @@ public class EquationSolver {
     FlowGraph fg;
     Worklist workList;
     Worklist workListCopy;
+    ArrayList<Tuple<String, String>> workArray;
 
     public EquationSolver(FlowGraph _fg, Worklist.WorklistType _wType) {
         this.fg = _fg;
+        this.workArray = new ArrayList<Tuple<String, String>>();
         switch(_wType) {
             case FIFO:
                 workList = new FIFOWorklist();
@@ -37,6 +39,7 @@ public class EquationSolver {
                 Tuple<String, String> t = new Tuple<String, String>(blockId.toString(), out.toString());
                 workList.add(t);
                 workListCopy.add(t);
+                workArray.add(t);
                 System.out.println("workList = "  + t.toString());
             }
         }
@@ -119,10 +122,13 @@ public class EquationSolver {
     private void solveEquationSA(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         ListIterator<Tuple<String, String>> iterator = workList.iterator();
         ListIterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
+
+        workArray.remove(0);
         Integer lastProcessedLabel = 0;
 
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
+
             iterator.remove();
 
             Integer l = Integer.parseInt(t.getLeft());
@@ -144,8 +150,9 @@ public class EquationSolver {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
                         System.out.println("ADDED!" + t2.toString());
-                        iterator.add(t2);
-                        changed = true;
+                        //iterator.add(t2);
+                        workArray.add(t2);
+                        iterator = workArray.listIterator();
                     }
                 }
 

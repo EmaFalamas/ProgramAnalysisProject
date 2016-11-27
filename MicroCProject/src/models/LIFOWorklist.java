@@ -3,7 +3,7 @@ package models;
 import java.util.Stack;
 import java.util.ListIterator;
 
-public class LIFOWorklist extends Worklist {
+public class LIFOWorklist extends Worklist implements Cloneable {
 
     Stack<Tuple<String, String>> worklist;
 

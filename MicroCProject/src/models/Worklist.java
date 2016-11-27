@@ -3,7 +3,7 @@ package models;
 import java.util.ListIterator;
 import java.lang.Cloneable;
 
-public abstract class Worklist implements Cloneable {
+public class Worklist implements Cloneable {
 
     public enum WorklistType { FIFO, LIFO }
 
@@ -12,6 +12,7 @@ public abstract class Worklist implements Cloneable {
     public Worklist() {
 
     }
+
 
     public void add(Tuple<String, String> t) {}
 
@@ -22,5 +23,6 @@ public abstract class Worklist implements Cloneable {
     public Tuple<String, String> getLast() { return null; }
 
     public ListIterator<Tuple<String, String>> iterator() {return null;}
+
 
 }

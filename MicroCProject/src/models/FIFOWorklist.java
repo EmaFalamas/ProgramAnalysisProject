@@ -3,7 +3,7 @@ package models;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-public class FIFOWorklist extends Worklist {
+public class FIFOWorklist extends Worklist implements Cloneable {
 
     private LinkedList<Tuple<String, String>> worklist;
 
