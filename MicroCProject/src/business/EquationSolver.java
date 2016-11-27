@@ -121,20 +121,33 @@ public class EquationSolver {
         Iterator<Tuple<String, String>> iterator = workList.iterator();
         Iterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
 
+        System.out.println("OUT EQUATIONS ");
+
+        for(Integer eq : outEquations.keySet())
+        {
+            System.out.println(eq);
+        }
+
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
             iterator.remove();
 
             Integer l = Integer.parseInt(t.getLeft());
+            Integer lprime = Integer.parseInt(t.getRight());
+
+            System.out.println("Worklist " + l + " " + lprime);
             SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
 
             ArrayList<Tuple<String, String>> exit = computeExitSA(inEquations.get(l), outEquations.get(l), l);
 
             outEquations.get(l).setResult(exit);
 
-            inEquations = ripleChanges(l, exit, inEquations);
+            for(Tuple<String, String> change : exit){
+                if(!inEquations.get(lprime).getResult().contains(change)){
+                    inEquations.get(lprime).addResult(change);
+                }
+            }
 
-            Integer lprime = Integer.parseInt(t.getRight());
             if(!outEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult()))
             {
                 outEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), outEquations.get(lprime).getResult()));
