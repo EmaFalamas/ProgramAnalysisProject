@@ -134,7 +134,9 @@ public class EquationSolver {
             Integer l = Integer.parseInt(t.getLeft());
             Integer lprime = Integer.parseInt(t.getRight());
 
-            lastProcessedLabel = lprime;
+            if(lprime > lastProcessedLabel) {
+                lastProcessedLabel = lprime;
+            }
 
             SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
 
@@ -150,7 +152,6 @@ public class EquationSolver {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
                         System.out.println("ADDED!" + t2.toString());
-                        //iterator.add(t2);
                         workArray.add(t2);
                         iterator = workArray.listIterator();
                     }
@@ -158,10 +159,10 @@ public class EquationSolver {
 
                 iteratorCopy = workListCopy.iterator();
             }
-
-            //iterator.add(new Tuple<String, String>("0", "0"));
         }
 
+
+        System.out.println("The last out: " + lastProcessedLabel);
         outEquations.get(lastProcessedLabel).setResult(
                 computeExitSA(inEquations.get(lastProcessedLabel), outEquations.get(lastProcessedLabel), lastProcessedLabel));
 
@@ -174,10 +175,8 @@ public class EquationSolver {
         Tuple<String, String> t;
 
         if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("AssignmentNode")) {
-            for (Block b : fg.getBlocks())
-            {
-                if (b.getId() == equationLabel)
-                {
+            for (Block b : fg.getBlocks()) {
+                if (b.getId() == equationLabel) {
                     String leftVariable = b.getLeftVar();
                     ArrayList<String> rightVariables = b.getRightValues();
                     Operand operand = b.getOperand();
@@ -185,16 +184,13 @@ public class EquationSolver {
                     ArrayList<String> leftSigns;
                     ArrayList<String> rightSigns;
 
-                    switch (operand)
-                    {
+                    switch (operand) {
                         case BLANK:
                             ArrayList<String> signsOfValue = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             System.out.println("BLANK" + leftVariable);
-                            for(String signOfValue : signsOfValue)
-                            {
-                                t = new Tuple<String, String> (leftVariable, signOfValue);
-                                if(!exit.contains(t))
-                                {
+                            for (String signOfValue : signsOfValue) {
+                                t = new Tuple<String, String>(leftVariable, signOfValue);
+                                if (!exit.contains(t)) {
                                     exit.add(t);
                                 }
                             }
@@ -207,9 +203,8 @@ public class EquationSolver {
                             for (String sign : signs) {
                                 //get the opposite sign type of this sign and add it to the results
 
-                                t = new Tuple<String, String> (leftVariable, SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
-                                if(!exit.contains(t))
-                                {
+                                t = new Tuple<String, String>(leftVariable, SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
+                                if (!exit.contains(t)) {
                                     exit.add(t);
                                 }
                             }
@@ -219,17 +214,15 @@ public class EquationSolver {
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
                             System.out.println("PLUS" + leftVariable);
 
-                            for(String leftSign : leftSigns)
-                            {
-                                for(String rightSign : rightSigns)
-                                {
+                            for (String leftSign : leftSigns) {
+                                for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getPlusTransferFunction().get(leftSign + rightSign);
-                                    for (String sign : s)
-                                    {
-                                        t = new Tuple<String, String>(leftVariable, sign);
-                                        if(!exit.contains(t))
-                                        {
-                                            exit.add(t);
+                                    if (s != null) {
+                                        for (String sign : s) {
+                                            t = new Tuple<String, String>(leftVariable, sign);
+                                            if (!exit.contains(t)) {
+                                                exit.add(t);
+                                            }
                                         }
                                     }
                                 }
@@ -239,17 +232,15 @@ public class EquationSolver {
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
                             System.out.println("MINUS" + leftVariable);
-                            for(String leftSign : leftSigns)
-                            {
-                                for(String rightSign : rightSigns)
-                                {
+                            for (String leftSign : leftSigns) {
+                                for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getMinusTransferFunction().get(leftSign + rightSign);
-                                    for (String sign : s)
-                                    {
-                                        t = new Tuple<String, String>(leftVariable, sign);
-                                        if(!exit.contains(t))
-                                        {
-                                            exit.add(t);
+                                    if (s != null) {
+                                        for (String sign : s) {
+                                            t = new Tuple<String, String>(leftVariable, sign);
+                                            if (!exit.contains(t)) {
+                                                exit.add(t);
+                                            }
                                         }
                                     }
                                 }
@@ -259,17 +250,15 @@ public class EquationSolver {
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
                             System.out.println("MUL" + leftVariable);
-                            for(String leftSign : leftSigns)
-                            {
-                                for(String rightSign : rightSigns)
-                                {
+                            for (String leftSign : leftSigns) {
+                                for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getProductTransferFunction().get(leftSign + rightSign);
-                                    for (String sign : s)
-                                    {
-                                        t = new Tuple<String, String>(leftVariable, sign);
-                                        if(!exit.contains(t))
-                                        {
-                                            exit.add(t);
+                                    if (s != null) {
+                                        for (String sign : s) {
+                                            t = new Tuple<String, String>(leftVariable, sign);
+                                            if (!exit.contains(t)) {
+                                                exit.add(t);
+                                            }
                                         }
                                     }
                                 }
@@ -279,17 +268,15 @@ public class EquationSolver {
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
                             System.out.println("DIV" + leftVariable);
-                            for(String leftSign : leftSigns)
-                            {
-                                for(String rightSign : rightSigns)
-                                {
+                            for (String leftSign : leftSigns) {
+                                for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
-                                    for (String sign : s)
-                                    {
-                                        t = new Tuple<String, String>(leftVariable, sign);
-                                        if(!exit.contains(t))
-                                        {
-                                            exit.add(t);
+                                    if (s != null) {
+                                        for (String sign : s) {
+                                            t = new Tuple<String, String>(leftVariable, sign);
+                                            if (!exit.contains(t)) {
+                                                exit.add(t);
+                                            }
                                         }
                                     }
                                 }
@@ -298,22 +285,17 @@ public class EquationSolver {
                     }
                 }
             }
-        }
-
-        else if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
-            for(Block b : fg.getBlocks())
-            {
+        } else if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
+            for (Block b : fg.getBlocks()) {
                 String leftVariable = b.getLeftVar();
-                if(b.getId() == equationLabel)
-                {
+                if (b.getId() == equationLabel) {
                     System.out.println("DECLARATION" + leftVariable);
                     String declaredVariable = b.getLeftVar();
 
                     ArrayList<String> s = SAUtils.getArrayListZero();
-                    for(String sign : s) {
+                    for (String sign : s) {
                         t = new Tuple<String, String>(leftVariable, sign);
-                        if(!exit.contains(t))
-                        {
+                        if (!exit.contains(t)) {
                             exit.add(t);
                         }
                     }
