@@ -1,7 +1,7 @@
 package models;
 
 import java.util.LinkedList;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 public class FIFOWorklist extends Worklist {
 
@@ -27,23 +27,13 @@ public class FIFOWorklist extends Worklist {
     }
 
     @Override
-    public Iterator<Tuple<String, String>> iterator() {
-        return worklist.iterator();
+    public ListIterator<Tuple<String, String>> iterator() {
+        return worklist.listIterator();
     }
 
     @Override
     public Tuple<String, String> getLast()
     {
         return worklist.getLast();
-    }
-
-    @Override
-    public void printWorklist()
-    {
-        Iterator iterator = worklist.iterator();
-        while (iterator.hasNext()) {
-            Tuple<String, String> object = (Tuple<String, String>)iterator.next();
-            System.out.println("Left: " + object.getLeft() + " right: " + object.getRight());
-        }
     }
 }

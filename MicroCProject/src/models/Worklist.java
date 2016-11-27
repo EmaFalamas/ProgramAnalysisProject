@@ -1,13 +1,13 @@
 package models;
 
-import java.util.Iterator;
+import java.util.ListIterator;
 import java.lang.Cloneable;
 
 public abstract class Worklist implements Cloneable {
 
     public enum WorklistType { FIFO, LIFO }
 
-    private Iterator<Tuple<String, String>> iterator;
+    private ListIterator<Tuple<String, String>> iterator;
 
     public Worklist() {
 
@@ -21,11 +21,6 @@ public abstract class Worklist implements Cloneable {
 
     public Tuple<String, String> getLast() { return null; }
 
-    public Iterator<Tuple<String, String>> iterator() {return null;}
-
-    public void printWorklist()
-    {
-
-    }
+    public ListIterator<Tuple<String, String>> iterator() {return null;}
 
 }

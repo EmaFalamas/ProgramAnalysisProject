@@ -1,7 +1,7 @@
 package models;
 
 import java.util.Stack;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 public class LIFOWorklist extends Worklist {
 
@@ -27,23 +27,13 @@ public class LIFOWorklist extends Worklist {
     }
 
     @Override
-    public Iterator<Tuple<String, String>> iterator() {
-        return worklist.iterator();
+    public ListIterator<Tuple<String, String>> iterator() {
+        return worklist.listIterator();
     }
 
     @Override
     public Tuple<String, String> getLast()
     {
         return worklist.lastElement();
-    }
-
-    @Override
-    public void printWorklist()
-    {
-        Iterator iterator = worklist.iterator();
-        while (iterator.hasNext()) {
-            Tuple<String, String> object = (Tuple<String, String>)iterator.next();
-            System.out.println("Left: " + object.getLeft() + " right: " + object.getRight());
-        }
     }
 }
