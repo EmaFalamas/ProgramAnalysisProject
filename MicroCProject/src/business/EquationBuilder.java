@@ -35,7 +35,6 @@ public class EquationBuilder {
         TransferFunction tf;
 
         switch (at) {
-
             case REACHING_DEFINITIONS:
                 setRDEquations();
                 break;
@@ -116,15 +115,28 @@ public class EquationBuilder {
         }
     }
 
+    public boolean isNumeric(String s)
+    {
+        try {
+            int constant = Integer.parseInt(s);
+            return true;
+        }
+        catch (NumberFormatException ex){
+            return false;
+        }
+    }
+
     private HashSet<String> getAllVariables() {
         HashSet<String> set = new HashSet<String>();
         for (Block b : fg.getBlocks()) {
             String lv = b.getLeftVar();
-            if (lv != null) {
+            if (lv != null && !isNumeric(lv)) {
                 set.add(lv);
             }
             for (String rv : b.getRightValues()) {
-                set.add(rv);
+                if(!isNumeric(rv)) {
+                    set.add(rv);
+                }
             }
 
             switch (b.getInstructionType()) {

@@ -1,0 +1,15 @@
+/* Will your Interval Analysis infer that x[0] has the interval [0,0] and x[1] has the interval [1,1] at the end of the program? */
+{ int x[2];
+  read x[0];
+  while (x[0] < 0) {
+    read x[1];
+    x[0] = x[1];
+  }
+  if (x[0] <= 0) {
+    x[x[0]+1] = x[0]+1;
+  } else {
+    x[0] = 0;
+    x[1] = 1;
+  }
+}
+

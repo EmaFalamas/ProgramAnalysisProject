@@ -1,0 +1,23 @@
+{/*Reaching definitions*/
+	int x;
+	int A[10];
+	read x;
+	while (x < 10)
+	{
+		if (x < 0)
+		{
+			break;
+		}
+		if (x == 5)
+		{
+			x = x + 1;
+			continue;
+		}
+		else
+		{
+			A[x] = x;
+		}
+		x = x + 1;
+	}
+	write x;
+}

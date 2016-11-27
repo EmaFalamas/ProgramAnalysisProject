@@ -40,7 +40,6 @@ public class EquationSolver {
                 workList.add(t);
                 workListCopy.add(t);
                 workArray.add(t);
-                System.out.println("workList = "  + t.toString());
             }
         }
     }
@@ -63,37 +62,49 @@ public class EquationSolver {
     }
 
     private void solveEquationRD(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
-        System.out.println("inEquations size = " + inEquations.size());
         ListIterator<Tuple<String, String>> iterator = workList.iterator();
         ListIterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
+
+        workArray.remove(0);
+        Integer lastProcessedLabel = 0;
 
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
             iterator.remove();
+            System.out.println("Solving for " + t.toString());
 
             Integer l = Integer.parseInt(t.getLeft());
+            Integer lprime = Integer.parseInt(t.getRight());
+
+            if (lprime > lastProcessedLabel) {
+                lastProcessedLabel = lprime;
+            }
+
             RDTransferFunction rdTF = (RDTransferFunction) outEquations.get(l).getTransferFunction();
             ArrayList<Tuple<String, String>> exit = computeExitRD(inEquations.get(l).getResult(), rdTF.getKills(), rdTF.getGen());
-            inEquations = ripleChanges(l, exit, inEquations);
-
             outEquations.get(l).setResult(exit);
-            Integer lprime = Integer.parseInt(t.getRight());
-            if(!outEquations.get(lprime).getResult().containsAll(exit))
-            {
-                outEquations.get(lprime).setResult(combineLists(exit, outEquations.get(lprime).getResult()));
+
+            if (!outEquations.get(lprime).getResult().containsAll(exit)) {
+                inEquations.get(lprime).setResult(combineLists(outEquations.get(l).getResult(), inEquations.get(lprime).getResult()));
 
                 while (iteratorCopy.hasNext()) {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
-                        workList.add(t2);
+                        System.out.println("ADDED!" + t2.toString());
+                        workArray.add(t2);
+                        iterator = workArray.listIterator();
                     }
                 }
-
+                iteratorCopy = workListCopy.iterator();
             }
-
-            System.out.println("solveEquationRD - Tuple<String, String> = " + t.toString());
         }
 
+        System.out.println("The last out: " + lastProcessedLabel);
+
+        RDTransferFunction rdTF = (RDTransferFunction) outEquations.get(lastProcessedLabel).getTransferFunction();
+        ArrayList<Tuple<String, String>> exit = computeExitRD(inEquations.get(lastProcessedLabel).getResult(), rdTF.getKills(), rdTF.getGen());
+
+        outEquations.get(lastProcessedLabel).setResult(exit);
 
         for (Integer i : outEquations.keySet()) {
             for (Tuple<String, String> t2 : outEquations.get(i).getResult()) {
@@ -110,7 +121,7 @@ public class EquationSolver {
                 exit.add(t);
             }
         }
-        if(gen != null) {
+        if (gen != null) {
             if (!exit.contains(gen)) {
                 exit.add(gen);
             }
