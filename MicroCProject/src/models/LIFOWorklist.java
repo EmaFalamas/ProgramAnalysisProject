@@ -31,4 +31,19 @@ public class LIFOWorklist extends Worklist {
         return worklist.iterator();
     }
 
+    @Override
+    public Tuple<String, String> getLast()
+    {
+        return worklist.lastElement();
+    }
+
+    @Override
+    public void printWorklist()
+    {
+        Iterator iterator = worklist.iterator();
+        while (iterator.hasNext()) {
+            Tuple<String, String> object = (Tuple<String, String>)iterator.next();
+            System.out.println("Left: " + object.getLeft() + " right: " + object.getRight());
+        }
+    }
 }

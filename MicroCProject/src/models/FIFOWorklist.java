@@ -31,5 +31,19 @@ public class FIFOWorklist extends Worklist {
         return worklist.iterator();
     }
 
+    @Override
+    public Tuple<String, String> getLast()
+    {
+        return worklist.getLast();
+    }
 
+    @Override
+    public void printWorklist()
+    {
+        Iterator iterator = worklist.iterator();
+        while (iterator.hasNext()) {
+            Tuple<String, String> object = (Tuple<String, String>)iterator.next();
+            System.out.println("Left: " + object.getLeft() + " right: " + object.getRight());
+        }
+    }
 }

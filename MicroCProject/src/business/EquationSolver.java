@@ -120,46 +120,42 @@ public class EquationSolver {
     private void solveEquationSA(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
         Iterator<Tuple<String, String>> iterator = workList.iterator();
         Iterator<Tuple<String, String>> iteratorCopy = workListCopy.iterator();
-
-        System.out.println("OUT EQUATIONS ");
-
-        for(Integer eq : outEquations.keySet())
-        {
-            System.out.println(eq);
-        }
+        Integer lastProcessedLabel = 0;
 
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
             iterator.remove();
 
+            //System.out.println("The elements in the worklist");
+            //workList.printWorklist();
+
             Integer l = Integer.parseInt(t.getLeft());
             Integer lprime = Integer.parseInt(t.getRight());
 
-            System.out.println("Worklist " + l + " " + lprime);
+            lastProcessedLabel = lprime;
+
             SATransferFunction saTF = (SATransferFunction) outEquations.get(l).getTransferFunction();
 
             ArrayList<Tuple<String, String>> exit = computeExitSA(inEquations.get(l), outEquations.get(l), l);
-
             outEquations.get(l).setResult(exit);
 
-            for(Tuple<String, String> change : exit){
-                if(!inEquations.get(lprime).getResult().contains(change)){
-                    inEquations.get(lprime).addResult(change);
-                }
-            }
+            if (!inEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult())) {
+                System.out.println("Entered with lprime: " + lprime);
 
-            if(!outEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult()))
-            {
-                outEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), outEquations.get(lprime).getResult()));
+                inEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), inEquations.get(lprime).getResult()));
 
                 while (iteratorCopy.hasNext()) {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
+                        System.out.println("ADDED!");
                         workList.add(t2);
                     }
                 }
             }
         }
+
+        outEquations.get(lastProcessedLabel).setResult(
+                computeExitSA(inEquations.get(lastProcessedLabel), outEquations.get(lastProcessedLabel), lastProcessedLabel));
 
         printSignAnalysisResults(inEquations, outEquations);
     }

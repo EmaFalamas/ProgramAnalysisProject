@@ -19,6 +19,13 @@ public abstract class Worklist implements Cloneable {
 
     public boolean contains(Tuple<String, String> t) {return false;}
 
+    public Tuple<String, String> getLast() { return null; }
+
     public Iterator<Tuple<String, String>> iterator() {return null;}
+
+    public void printWorklist()
+    {
+
+    }
 
 }
