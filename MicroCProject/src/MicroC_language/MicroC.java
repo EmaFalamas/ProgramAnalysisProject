@@ -14,10 +14,10 @@ public class MicroC {
 
     static FlowGraph flowGraph;
 	static FlowGraphBuilder fgBuilder;
-	static EquationBuilder eqBuilderRD;
-	static EquationBuilder eqBuilderSA;
+	static EquationBuilder eqBuilder;
 
 	public static void main(String args[]) throws Exception {
+		long startTime = System.nanoTime();
 		if (args.length == 0) {
 			System.out.println("Error: No program specified.");
 			return;
@@ -34,15 +34,17 @@ public class MicroC {
 		Node abstractSyntaxTree = w.currentNode;
 		fgBuilder = new FlowGraphBuilder(abstractSyntaxTree);
 		flowGraph = fgBuilder.constructFlowGraph();
-		eqBuilderRD = new EquationBuilder(flowGraph);
-		eqBuilderSA = new EquationBuilder(flowGraph);
 
-		eqBuilderRD.buildEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS);
-		eqBuilderSA.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
-
+		eqBuilder = new EquationBuilder(flowGraph);
+		EquationBuilder.EquationType et = EquationBuilder.EquationType.SIGN_ANALYSIS;
+		eqBuilder.buildEquation(et);
 		EquationSolver eqSolver = new EquationSolver(flowGraph, Worklist.WorklistType.LIFO);
-		eqSolver.solveEquation(EquationBuilder.EquationType.SIGN_ANALYSIS,
-				eqBuilderSA.getInEquations(), eqBuilderSA.getOutEquations());
+		System.out.println("-- Solving " + et + " using a " + eqSolver.getWorklistType() + " data structure");
+		eqSolver.solveEquation(et, eqBuilder);
+
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime)/1000000;
+		System.out.println("_____________ Execution time: " + duration + " milliseconds _____________");
 	}
 
 }

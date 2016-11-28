@@ -111,7 +111,6 @@ public class Walker extends MicroCBaseListener {
 		Node unaryOperatorNode = new UnaryOperatorNode(currentNode);
 		((UnaryOperatorNode)unaryOperatorNode).setOp(ctx.getChild(0).getText());
 		currentNode.addChild(unaryOperatorNode);
-		System.out.println("enterExprnegate - txt = " + ctx.getChild(0).getText());
 	}
 	/**
 	 * {@inheritDoc}

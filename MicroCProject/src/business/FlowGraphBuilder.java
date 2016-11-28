@@ -126,9 +126,6 @@ public class FlowGraphBuilder {
                 case "WhileNode":
                     exitWhile = true;
                     exitStandardBlock = false;
-					/*if (!whileStack.empty()) {
-						whileStack.pop();
-					}*/
                     ArrayList<Block> whileBlocks = currentNode.getBlocks();
                     int numWhileBlocks = whileBlocks.size();
                     if (numWhileBlocks > 1) {
@@ -140,11 +137,9 @@ public class FlowGraphBuilder {
                         } else if (checkParent(lastBlockCreated.getInstructionNode(), "IfElseNode", "WhileNode")) {
                             Block lastBlockIf = ifLastBlockStack.pop();
                             if (lastBlockIf.getInstructionType() != Block.InstructionType.BREAK) {
-                                System.out.println("LastBlock if: "+lastBlockIf.getInstruction());
                                 whileBlocks.get(0).addInFlow(lastBlockIf.getId());
                             }
                             if (lastBlockCreated.getInstructionType() != Block.InstructionType.BREAK) {
-                                System.out.println("LastBlock Created: "+lastBlockCreated.getInstruction());
                                 whileBlocks.get(0).addInFlow(lastBlockCreated.getId());
                             }
                         } else {
@@ -153,7 +148,6 @@ public class FlowGraphBuilder {
                     }
                     exitSingleIf = false;
                     exitIfElse = false;
-                    //conditionStack.clear();
                     break;
                 case "IfElseNode":
                     exitIfElse = true;
@@ -323,7 +317,9 @@ public class FlowGraphBuilder {
                             b.setOperand(Operand.PLUS);
                             break;
                         case "-":
-                            b.setOperand(Operand.MINUS);
+                            if (b.getOperand() != Operand.UNARY_MINUS) {
+                                b.setOperand(Operand.MINUS);
+                            }
                             break;
                         case "*":
                             b.setOperand(Operand.MUL);
@@ -358,18 +354,10 @@ public class FlowGraphBuilder {
                     if (txt.equals("-")) {
                         b.setOperand(Operand.UNARY_MINUS);
                         txt = "";
-                        System.out.println("We enter here");
-                    } else {
-                        System.out.println("We do not enter here");
                     }
                     break;
                 case "VariableNode":
                     txt += ((VariableNode) currentNode).getName();
-                    /*if (!assignmentFound && !searchIndex) {
-                        b.setLeftVar(txt);
-                    } else if (!searchIndex) {
-                        b.addRightValue(txt);
-                    }*/
                     if (!searchIndex) {
                         if (!assignmentFound) {
                             b.setLeftVar(new Tuple<String, String>(txt, ""));
@@ -420,8 +408,6 @@ public class FlowGraphBuilder {
             builder.append("; Out-flows = ");
             builder.append((new HashSet<Integer>(b.getOutFlows())).toString());
             builder.append("; Instruction = " + b.getInstruction());
-            builder.append("; Left variables = " + (b.getLeftVar() != null ? b.getLeftVar().toString() : "null"));
-            builder.append("; Right Variables = " + b.getRightValues().toString());
             builder.append("; Instruction Type = " + b.getInstructionType());
             System.out.println(builder.toString());
         }

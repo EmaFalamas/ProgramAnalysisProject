@@ -61,7 +61,6 @@ public class EquationBuilder {
             if (i == 0) {
                 for (String var : variables) {
                     in.addResult(new Tuple<String, String>(var, "?"));
-                    System.out.println("RDvar = " + var);
                 }
                 putInEquation(b.getId(), in);
             }
@@ -85,22 +84,19 @@ public class EquationBuilder {
 
         setInflowingEquations();
         setOutflowingEquations();
-        printKillsAndGens();
-        System.out.println("buildEquation end - inEquations size = " + inEquations.size());
+        //printKillsAndGens();
 
     }
 
     private void setInflowingEquations() {
 
         for (Integer k : inEquations.keySet()) {
-            System.out.println("Equations for "+k);
             for (Block b : fg.getBlocks()) {
                 if (b.getId() == k) {
                     ArrayList<Integer> inFlows = b.getInFlows();
                     ArrayList<Equation> outEQ = new ArrayList<Equation>();
                     for(Integer i : inFlows) {
                         outEQ.add(outEquations.get(i));
-                        System.out.println(i.toString());
                     }
                     inEquations.get(k).setEquations(outEQ);
                     break;
@@ -176,7 +172,6 @@ public class EquationBuilder {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
-            //it1.remove();
         }
         System.out.println("____ EXIT ____");
         Iterator it2 = getOutEquations().entrySet().iterator();
@@ -194,7 +189,6 @@ public class EquationBuilder {
                 System.out.print(t.toString() + "; ");
             }
             System.out.println();
-            //it2.remove();
         }
     }
 
@@ -204,14 +198,11 @@ public class EquationBuilder {
             SATransferFunction tf = new SATransferFunction();
             tf.setInstructionNode(b.getInstructionNode());
             outEquations.get(b.getId()).setTransferFunction(tf);
-            System.out.println(b.getInstruction());
         }
         setInflowingEquations();
     }
 
     public void initSAEquations() {
-
-
         for (Block b : fg.getBlocks()) {
             Equation in = new Equation();
             Equation out = new Equation();
@@ -222,7 +213,6 @@ public class EquationBuilder {
     }
 
     public Map<Integer, Equation> getInEquations() {
-        System.out.println("getInEquations() called - size = " + inEquations.size());
         return this.inEquations;
     }
 
@@ -232,7 +222,6 @@ public class EquationBuilder {
 
     public void putInEquation(Integer i, Equation a) {
         this.inEquations.put(i, a);
-        System.out.println("putInEquations called - size = " + inEquations.size());
     }
 
     public void putOutEquation(Integer i, Equation a) {

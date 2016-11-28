@@ -6,7 +6,7 @@
   i=0;
   while (!i)
         { if (A[i]+1>=0)
-             { x=A[i]; i=i+1;}
+             { i=-1; x=A[i]; i=i+1;}
           else { i=i+1; continue; } /* this is a comment */
           y=y+1;
         }

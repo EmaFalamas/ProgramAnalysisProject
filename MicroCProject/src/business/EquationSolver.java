@@ -11,14 +11,16 @@ import java.util.HashMap;
 
 public class EquationSolver {
 
-    FlowGraph fg;
-    Worklist workList;
-    Worklist workListCopy;
-    ArrayList<Tuple<String, String>> workArray;
+    private FlowGraph fg;
+    private Worklist workList;
+    private Worklist workListCopy;
+    private ArrayList<Tuple<String, String>> workArray;
+    private Worklist.WorklistType wType;
 
     public EquationSolver(FlowGraph _fg, Worklist.WorklistType _wType) {
         this.fg = _fg;
         this.workArray = new ArrayList<Tuple<String, String>>();
+        this.wType = _wType;
         switch(_wType) {
             case FIFO:
                 workList = new FIFOWorklist();
@@ -46,14 +48,14 @@ public class EquationSolver {
 
 
     public void solveEquation(EquationBuilder.EquationType eqType,
-                              Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
+                              EquationBuilder eb) {
         buildWorkList();
         switch(eqType) {
             case REACHING_DEFINITIONS:
-                solveEquationRD(inEquations, outEquations);
+                solveEquationRD(eb.getInEquations(), eb.getOutEquations());
                 break;
             case SIGN_ANALYSIS:
-                solveEquationSA(inEquations, outEquations);
+                solveEquationSA(eb.getInEquations(), eb.getOutEquations());
                 break;
             default:
         }
@@ -69,7 +71,6 @@ public class EquationSolver {
         while (iterator.hasNext()) {
             Tuple<String, String> t = iterator.next();
             iterator.remove();
-            System.out.println("Solving for " + t.toString());
 
             Integer l = Integer.parseInt(t.getLeft());
             Integer lprime = Integer.parseInt(t.getRight());
@@ -88,7 +89,6 @@ public class EquationSolver {
                 while (iteratorCopy.hasNext()) {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
-                        System.out.println("ADDED!" + t2.toString());
                         workArray.add(t2);
                         iterator = workArray.listIterator();
                     }
@@ -97,18 +97,11 @@ public class EquationSolver {
             }
         }
 
-        System.out.println("The last out: " + lastProcessedLabel);
 
         RDTransferFunction rdTF = (RDTransferFunction) outEquations.get(lastProcessedLabel).getTransferFunction();
         ArrayList<Tuple<String, String>> exit = computeExitRD(inEquations.get(lastProcessedLabel).getResult(), rdTF.getKills(), rdTF.getGen());
-
         outEquations.get(lastProcessedLabel).setResult(exit);
-
-        for (Integer i : outEquations.keySet()) {
-            for (Tuple<String, String> t2 : outEquations.get(i).getResult()) {
-                System.out.println("OutEquations - Label = " + i.toString() + "; result = " + t2.toString());
-            }
-        }
+        printResults(inEquations, outEquations);
     }
 
     private ArrayList<Tuple<String, String>> computeExitRD(ArrayList<Tuple<String, String>> entry,
@@ -153,16 +146,11 @@ public class EquationSolver {
             outEquations.get(l).setResult(exit);
 
             if (!inEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult())) {
-                System.out.println("Entered with l: " + l + "; lprime: " + lprime);
-
                 inEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), inEquations.get(lprime).getResult()));
-
                 while (iteratorCopy.hasNext()) {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
-                        System.out.println("ADDED!" + t2.toString());
                         workArray.add(0, t2);
-                        //workArray.add(t2);
                         iterator = workArray.listIterator();
                     }
                 }
@@ -171,12 +159,9 @@ public class EquationSolver {
             }
         }
 
-
-        System.out.println("The last out: " + lastProcessedLabel);
         outEquations.get(lastProcessedLabel).setResult(
                 computeExitSA(inEquations.get(lastProcessedLabel), outEquations.get(lastProcessedLabel), lastProcessedLabel));
-
-        printSignAnalysisResults(inEquations, outEquations);
+        printResults(inEquations, outEquations);
     }
 
     private ArrayList<Tuple<String, String>> computeExitSA(Equation eq, Equation outEq, int equationLabel) {
@@ -195,34 +180,19 @@ public class EquationSolver {
                         ArrayList<String> leftSigns;
                         ArrayList<String> rightSigns;
 
-                        System.out.println("operand = " + operand + "; instr = " + b.getInstruction());
-
                         switch (operand) {
-                            case BLANK:
-                                ArrayList<String> signsOfValue = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
-                                if(signsOfValue.contains("illegal")) {
-                                    exit = new ArrayList<Tuple<String, String>>();
-                                }
-                                else {
-                                    System.out.println("BLANK" + leftVariable.toString());
-                                    for (String signOfValue : signsOfValue) {
-                                        t = new Tuple<String, String>(leftVariable.getLeft(), signOfValue);
-                                        if (!exit.contains(t)) {
-                                            exit.add(t);
-                                        }
-                                    }
-                                }
-                                break;
-
                             case UNARY_MINUS:
                                 ArrayList<String> signs = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
                                 if(signs.contains("illegal")) {
                                     exit = new ArrayList<Tuple<String, String>>();
                                 }
                                 else {
-                                    System.out.println("UNARY_MINUS" + leftVariable.toString());
+                                    for (Tuple<String, String> t2 : eq.getResult()) {
+                                        if (t2.getLeft().equals(leftVariable.getLeft())) {
+                                            exit.remove(t2);
+                                        }
+                                    }
                                     for (String sign : signs) {
-                                        //get the opposite sign type of this sign and add it to the results
                                         t = new Tuple<String, String>(leftVariable.getLeft(), SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
                                         if (!exit.contains(t)) {
                                             exit.add(t);
@@ -323,6 +293,24 @@ public class EquationSolver {
                                 }
                                 break;
                         }
+                    } else {
+                        ArrayList<String> signsOfValue = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                        if(signsOfValue.contains("illegal")) {
+                            exit = new ArrayList<Tuple<String, String>>();
+                        }
+                        else {
+                            for (Tuple<String, String> t2 : eq.getResult()) {
+                                if (t2.getLeft().equals(leftVariable.getLeft())) {
+                                    exit.remove(t2);
+                                }
+                            }
+                            for (String signOfValue : signsOfValue) {
+                                t = new Tuple<String, String>(leftVariable.getLeft(), signOfValue);
+                                if (!exit.contains(t)) {
+                                    exit.add(t);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -330,7 +318,6 @@ public class EquationSolver {
             for (Block b : fg.getBlocks()) {
                 Tuple<String, String> leftVariable = b.getLeftVar();
                 if (b.getId() == equationLabel) {
-                    System.out.println("DECLARATION " + leftVariable.toString() + " EQUATION " + equationLabel);
                     ArrayList<String> s = SAUtils.getArrayListZero();
                     for (String sign : s) {
                         t = new Tuple<String, String>(leftVariable.getLeft(), sign);
@@ -341,10 +328,6 @@ public class EquationSolver {
                     break;
                 }
             }
-        }
-
-        if(equationLabel == 11) {
-            System.out.println("THE SIZE OF 11'S EXIT IS: " + exit.size());
         }
 
         return exit;
@@ -435,16 +418,22 @@ public class EquationSolver {
         return l3;
     }
 
-    private void printSignAnalysisResults(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations)
+    private void printResults(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations)
     {
+        System.out.println("_____________ Solution of the equation _____________");
         for(Integer i : inEquations.keySet())
         {
-            System.out.println("In equation " + i);
-            System.out.println(inEquations.get(i).getResult().toString());
+            String in = "In equation " + i + ": " + inEquations.get(i).getResult().toString();
+            System.out.println(in);
 
-            System.out.println("Out equation " + i);
-            System.out.println(outEquations.get(i).getResult().toString());
+            String out = "Out equation " + i + ": " + outEquations.get(i).getResult().toString();
+            System.out.println(out);
         }
     }
+
+    public Worklist.WorklistType getWorklistType() {
+        return wType;
+    }
+
 }
 
