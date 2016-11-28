@@ -153,7 +153,7 @@ public class EquationSolver {
             outEquations.get(l).setResult(exit);
 
             if (!inEquations.get(lprime).getResult().containsAll(outEquations.get(l).getResult())) {
-                System.out.println("Entered with lprime: " + lprime);
+                System.out.println("Entered with l: " + l + "; lprime: " + lprime);
 
                 inEquations.get(lprime).setResult(combineStringLists(outEquations.get(l).getResult(), inEquations.get(lprime).getResult()));
 
@@ -161,7 +161,8 @@ public class EquationSolver {
                     Tuple<String, String> t2 = iteratorCopy.next();
                     if (t2.getLeft().equals(lprime.toString()) && !workList.contains(t2)) {
                         System.out.println("ADDED!" + t2.toString());
-                        workArray.add(t2);
+                        workArray.add(0, t2);
+                        //workArray.add(t2);
                         iterator = workArray.listIterator();
                     }
                 }
@@ -211,7 +212,6 @@ public class EquationSolver {
                             System.out.println("UNARY_MINUS" + leftVariable);
                             for (String sign : signs) {
                                 //get the opposite sign type of this sign and add it to the results
-
                                 t = new Tuple<String, String>(leftVariable, SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
                                 if (!exit.contains(t)) {
                                     exit.add(t);
@@ -274,7 +274,11 @@ public class EquationSolver {
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
 
-                            if(!rightSigns.contains("0")) {
+
+                            if(rightSigns.contains("0")) {
+                                exit = new ArrayList<Tuple<String, String>>();
+                            }
+                            else {
                                 for (String leftSign : leftSigns) {
                                     for (String rightSign : rightSigns) {
                                         ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
@@ -297,7 +301,7 @@ public class EquationSolver {
             for (Block b : fg.getBlocks()) {
                 String leftVariable = b.getLeftVar();
                 if (b.getId() == equationLabel) {
-                    System.out.println("DECLARATION" + leftVariable);
+                    System.out.println("DECLARATION " + leftVariable + " EQUATION " + equationLabel);
                     String declaredVariable = b.getLeftVar();
 
                     ArrayList<String> s = SAUtils.getArrayListZero();
@@ -310,6 +314,10 @@ public class EquationSolver {
                     break;
                 }
             }
+        }
+
+        if(equationLabel == 11) {
+            System.out.println("THE SIZE OF 11'S EXIT IS: " + exit.size());
         }
 
         return exit;
