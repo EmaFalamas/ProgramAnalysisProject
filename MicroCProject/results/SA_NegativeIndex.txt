@@ -1,0 +1,61 @@
+_____________ Flow graph construction _____________
+ID = 1; In-flows = []; Out-flows = [2]; Instruction = int i;; Instruction Type = DECLARATION
+ID = 2; In-flows = [1]; Out-flows = [3]; Instruction = int x;; Instruction Type = DECLARATION
+ID = 3; In-flows = [2]; Out-flows = [4]; Instruction = int y;; Instruction Type = DECLARATION
+ID = 4; In-flows = [3]; Out-flows = [5]; Instruction = int z;; Instruction Type = DECLARATION
+ID = 5; In-flows = [4]; Out-flows = [6]; Instruction = int A[10];; Instruction Type = DECLARATION
+ID = 6; In-flows = [5, 8]; Out-flows = [7, 9]; Instruction = i<10; Instruction Type = CONDITION
+ID = 7; In-flows = [6]; Out-flows = [8]; Instruction = read A[i];; Instruction Type = READ
+ID = 8; In-flows = [7]; Out-flows = [6]; Instruction = i=i+1;; Instruction Type = ASSIGNMENT
+ID = 9; In-flows = [6]; Out-flows = [10]; Instruction = i=0;; Instruction Type = ASSIGNMENT
+ID = 10; In-flows = [17, 16, 9]; Out-flows = [18, 11]; Instruction = !i; Instruction Type = CONDITION
+ID = 11; In-flows = [10]; Out-flows = [12, 15]; Instruction = A[i]+1>=0; Instruction Type = CONDITION
+ID = 12; In-flows = [11]; Out-flows = [13]; Instruction = i=-1;; Instruction Type = ASSIGNMENT
+ID = 13; In-flows = [12]; Out-flows = [14]; Instruction = x=A[i];; Instruction Type = ASSIGNMENT
+ID = 14; In-flows = [13]; Out-flows = [17]; Instruction = i=i+1;; Instruction Type = ASSIGNMENT
+ID = 15; In-flows = [11]; Out-flows = [16]; Instruction = i=i+1;; Instruction Type = ASSIGNMENT
+ID = 16; In-flows = [15]; Out-flows = [10]; Instruction = continue;; Instruction Type = CONTINUE
+ID = 17; In-flows = [14]; Out-flows = [10]; Instruction = y=y+1;; Instruction Type = ASSIGNMENT
+ID = 18; In-flows = [10]; Out-flows = [19]; Instruction = write x/y;; Instruction Type = WRITE
+ID = 19; In-flows = [18]; Out-flows = []; Instruction = read z;; Instruction Type = READ
+-- Solving SIGN_ANALYSIS using a LIFO data structure
+_____________ Solution of the equation _____________
+In equation 1: []
+Out equation 1: [(i, 0)]
+In equation 2: [(i, 0)]
+Out equation 2: [(i, 0), (x, 0)]
+In equation 3: [(i, 0), (x, 0)]
+Out equation 3: [(i, 0), (x, 0), (y, 0)]
+In equation 4: [(i, 0), (x, 0), (y, 0)]
+Out equation 4: [(i, 0), (x, 0), (y, 0), (z, 0)]
+In equation 5: [(i, 0), (x, 0), (y, 0), (z, 0)]
+Out equation 5: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0)]
+In equation 6: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+Out equation 6: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+In equation 7: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+Out equation 7: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+In equation 8: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+Out equation 8: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+In equation 9: [(i, 0), (x, 0), (y, 0), (z, 0), (A, 0), (i, +)]
+Out equation 9: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+In equation 10: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0), (i, +)]
+Out equation 10: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+In equation 11: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+Out equation 11: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+In equation 12: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+Out equation 12: [(x, 0), (y, 0), (z, 0), (A, 0), (i, -)]
+In equation 13: [(x, 0), (y, 0), (z, 0), (A, 0), (i, -)]
+Out equation 13: []
+In equation 14: []
+Out equation 14: []
+In equation 15: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+Out equation 15: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0), (i, +)]
+In equation 17: []
+Out equation 17: []
+In equation 16: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0), (i, +)]
+Out equation 16: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0), (i, +)]
+In equation 19: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+Out equation 19: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+In equation 18: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+Out equation 18: [(x, 0), (y, 0), (z, 0), (A, 0), (i, 0)]
+_____________ Execution time: 1057 milliseconds _____________

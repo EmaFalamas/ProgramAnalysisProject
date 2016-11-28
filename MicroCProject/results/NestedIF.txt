@@ -1,0 +1,34 @@
+Flow graph construction _____________
+ID = 1; In-flows = []; Out-flows = [2]; Instruction = int a;; Instruction Type = DECLARATION
+ID = 2; In-flows = [1]; Out-flows = [3]; Instruction = int b;; Instruction Type = DECLARATION
+ID = 3; In-flows = [2]; Out-flows = [4]; Instruction = int c;; Instruction Type = DECLARATION
+ID = 4; In-flows = [3]; Out-flows = [5, 10]; Instruction = a>30; Instruction Type = CONDITION
+ID = 5; In-flows = [4]; Out-flows = [6, 7]; Instruction = b>15; Instruction Type = CONDITION
+ID = 6; In-flows = [5]; Out-flows = [7]; Instruction = b=b+1;; Instruction Type = ASSIGNMENT
+ID = 7; In-flows = [5, 6]; Out-flows = [8, 9]; Instruction = b==10; Instruction Type = CONDITION
+ID = 8; In-flows = [7]; Out-flows = [10]; Instruction = a=10;; Instruction Type = ASSIGNMENT
+ID = 9; In-flows = [7]; Out-flows = [10]; Instruction = a=5;; Instruction Type = ASSIGNMENT
+ID = 10; In-flows = [4, 8, 9]; Out-flows = []; Instruction = a=b+c;; Instruction Type = ASSIGNMENT
+-- Solving REACHING_DEFINITIONS using a LIFO data structure
+_____________ Solution of the equation _____________
+In equation 1: [(b, ?), (c, ?), (a, ?)]
+Out equation 1: [(b, ?), (c, ?), (a, 1)]
+In equation 2: [(b, ?), (c, ?), (a, 1)]
+Out equation 2: [(c, ?), (a, 1), (b, 2)]
+In equation 3: [(c, ?), (a, 1), (b, 2)]
+Out equation 3: [(a, 1), (b, 2), (c, 3)]
+In equation 4: [(a, 1), (b, 2), (c, 3)]
+Out equation 4: [(a, 1), (b, 2), (c, 3)]
+In equation 5: [(a, 1), (b, 2), (c, 3)]
+Out equation 5: [(a, 1), (b, 2), (c, 3)]
+In equation 6: [(a, 1), (b, 2), (c, 3)]
+Out equation 6: [(a, 1), (c, 3), (b, 6)]
+In equation 7: [(a, 1), (c, 3), (b, 6), (b, 2)]
+Out equation 7: [(a, 1), (c, 3), (b, 6), (b, 2)]
+In equation 8: [(a, 1), (c, 3), (b, 6), (b, 2)]
+Out equation 8: [(c, 3), (b, 6), (b, 2), (a, 8)]
+In equation 9: [(a, 1), (c, 3), (b, 6), (b, 2)]
+Out equation 9: [(c, 3), (b, 6), (b, 2), (a, 9)]
+In equation 10: [(c, 3), (b, 6), (b, 2), (a, 9), (a, 8), (a, 1)]
+Out equation 10: [(c, 3), (b, 6), (b, 2), (a, 10)]
+_____________ Execution time: 333 milliseconds _____________

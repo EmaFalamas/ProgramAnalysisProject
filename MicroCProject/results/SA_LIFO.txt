@@ -1,0 +1,40 @@
+_____________ Flow graph construction _____________
+ID = 1; In-flows = []; Out-flows = [2]; Instruction = int x;; Instruction Type = DECLARATION
+ID = 2; In-flows = [1]; Out-flows = [3]; Instruction = int y;; Instruction Type = DECLARATION
+ID = 3; In-flows = [2]; Out-flows = [4]; Instruction = int z;; Instruction Type = DECLARATION
+ID = 4; In-flows = [3, 10]; Out-flows = [5, 11]; Instruction = x<10; Instruction Type = CONDITION
+ID = 5; In-flows = [4]; Out-flows = [6]; Instruction = y=x*z;; Instruction Type = ASSIGNMENT
+ID = 6; In-flows = [5]; Out-flows = [7]; Instruction = z=y-x;; Instruction Type = ASSIGNMENT
+ID = 7; In-flows = [6]; Out-flows = [8]; Instruction = x=x+2;; Instruction Type = ASSIGNMENT
+ID = 8; In-flows = [7]; Out-flows = [9, 10]; Instruction = y==-8; Instruction Type = CONDITION
+ID = 9; In-flows = [8]; Out-flows = [11]; Instruction = break;; Instruction Type = BREAK
+ID = 10; In-flows = [8]; Out-flows = [4]; Instruction = x=z/0;; Instruction Type = ASSIGNMENT
+ID = 11; In-flows = [4, 9]; Out-flows = [12]; Instruction = z=z/0;; Instruction Type = ASSIGNMENT
+ID = 12; In-flows = [11]; Out-flows = []; Instruction = y=y+4;; Instruction Type = ASSIGNMENT
+-- Solving SIGN_ANALYSIS using a LIFO data structure
+_____________ Solution of the equation _____________
+In equation 1: []
+Out equation 1: [(x, 0)]
+In equation 2: [(x, 0)]
+Out equation 2: [(x, 0), (y, 0)]
+In equation 3: [(x, 0), (y, 0)]
+Out equation 3: [(x, 0), (y, 0), (z, 0)]
+In equation 4: [(x, 0), (y, 0), (z, 0)]
+Out equation 4: [(x, 0), (y, 0), (z, 0)]
+In equation 5: [(x, 0), (y, 0), (z, 0)]
+Out equation 5: [(x, 0), (y, 0), (z, 0)]
+In equation 6: [(x, 0), (y, 0), (z, 0)]
+Out equation 6: [(x, 0), (y, 0), (z, 0)]
+In equation 7: [(x, 0), (y, 0), (z, 0)]
+Out equation 7: [(x, 0), (y, 0), (z, 0), (x, +)]
+In equation 8: [(x, 0), (y, 0), (z, 0), (x, +)]
+Out equation 8: [(x, 0), (y, 0), (z, 0), (x, +)]
+In equation 9: [(x, 0), (y, 0), (z, 0), (x, +)]
+Out equation 9: [(x, 0), (y, 0), (z, 0), (x, +)]
+In equation 10: [(x, 0), (y, 0), (z, 0), (x, +)]
+Out equation 10: []
+In equation 11: [(x, 0), (y, 0), (z, 0), (x, +)]
+Out equation 11: []
+In equation 12: []
+Out equation 12: []
+_____________ Execution time: 559 milliseconds _____________

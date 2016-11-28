@@ -1,0 +1,40 @@
+_____________ Flow graph construction _____________
+ID = 1; In-flows = []; Out-flows = [2]; Instruction = int a[10];; Instruction Type = DECLARATION
+ID = 2; In-flows = [1]; Out-flows = [3]; Instruction = int b;; Instruction Type = DECLARATION
+ID = 3; In-flows = [2]; Out-flows = [4]; Instruction = int i;; Instruction Type = DECLARATION
+ID = 4; In-flows = [3, 10, 11]; Out-flows = [5, 12]; Instruction = i<10; Instruction Type = CONDITION
+ID = 5; In-flows = [4]; Out-flows = [6]; Instruction = a[i]=b+i;; Instruction Type = ASSIGNMENT
+ID = 6; In-flows = [5]; Out-flows = [7, 8]; Instruction = i==7; Instruction Type = CONDITION
+ID = 7; In-flows = [6]; Out-flows = [12]; Instruction = break;; Instruction Type = BREAK
+ID = 8; In-flows = [6]; Out-flows = [9]; Instruction = b=b+a[0];; Instruction Type = ASSIGNMENT
+ID = 9; In-flows = [8]; Out-flows = [10, 11]; Instruction = b==3; Instruction Type = CONDITION
+ID = 10; In-flows = [9]; Out-flows = [4]; Instruction = continue;; Instruction Type = CONTINUE
+ID = 11; In-flows = [9]; Out-flows = [4]; Instruction = i=i+1;; Instruction Type = ASSIGNMENT
+ID = 12; In-flows = [4, 7]; Out-flows = []; Instruction = a[9]=8;; Instruction Type = ASSIGNMENT
+-- Solving REACHING_DEFINITIONS using a FIFO data structure
+_____________ Solution of the equation _____________
+In equation 1: [(b, ?), (a, ?), (i, ?)]
+Out equation 1: [(b, ?), (i, ?), (a, 1)]
+In equation 2: [(b, ?), (i, ?), (a, 1)]
+Out equation 2: [(i, ?), (a, 1), (b, 2)]
+In equation 3: [(i, ?), (a, 1), (b, 2)]
+Out equation 3: [(a, 1), (b, 2), (i, 3)]
+In equation 4: [(a, 5), (b, 8), (i, 11), (i, 3), (a, 1), (b, 2)]
+Out equation 4: [(a, 5), (b, 8), (i, 11), (i, 3), (a, 1), (b, 2)]
+In equation 5: [(a, 5), (b, 8), (i, 11), (i, 3), (a, 1), (b, 2)]
+Out equation 5: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+In equation 6: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+Out equation 6: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+In equation 7: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+Out equation 7: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+In equation 8: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5)]
+Out equation 8: [(i, 11), (i, 3), (a, 5), (b, 8)]
+In equation 9: [(i, 11), (i, 3), (a, 5), (b, 8)]
+Out equation 9: [(i, 11), (i, 3), (a, 5), (b, 8)]
+In equation 10: [(i, 11), (i, 3), (a, 5), (b, 8)]
+Out equation 10: [(i, 11), (i, 3), (a, 5), (b, 8)]
+In equation 11: [(i, 11), (i, 3), (a, 5), (b, 8)]
+Out equation 11: [(a, 5), (b, 8), (i, 11)]
+In equation 12: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 5), (a, 1)]
+Out equation 12: [(b, 8), (i, 11), (i, 3), (b, 2), (a, 12)]
+_____________ Execution time: 501 milliseconds _____________
