@@ -335,7 +335,20 @@ public class FlowGraphBuilder {
                     break;
                 case "ConstantNode":
                     txt += Integer.toString(((ConstantNode) currentNode).getNumber());
-                    b.addRightValue(txt);
+                    if (!searchIndex) {
+                        if (!assignmentFound) {
+                            b.setLeftVar(new Tuple<String, String>(txt, ""));
+                        } else {
+                            b.addRightValue(new Tuple<String, String>(txt, ""));
+                        }
+                    } else {
+                        if (!assignmentFound) {
+                            b.getLeftVar().setRight(txt);
+                        } else {
+                            int numRightValues = b.getRightValues().size();
+                            b.getRightValues().get(numRightValues-1).setRight(txt);
+                        }
+                    }
                     break;
                 case "SymbolNode":
                     txt += ((SymbolNode) currentNode).getOpStr(((SymbolNode) currentNode).getOp());
@@ -344,14 +357,32 @@ public class FlowGraphBuilder {
                     txt += ((UnaryOperatorNode) currentNode).getOpStr(((UnaryOperatorNode) currentNode).getOp());
                     if (txt.equals("-")) {
                         b.setOperand(Operand.UNARY_MINUS);
+                        txt = "";
+                        System.out.println("We enter here");
+                    } else {
+                        System.out.println("We do not enter here");
                     }
                     break;
                 case "VariableNode":
                     txt += ((VariableNode) currentNode).getName();
-                    if (!assignmentFound && !searchIndex) {
+                    /*if (!assignmentFound && !searchIndex) {
                         b.setLeftVar(txt);
                     } else if (!searchIndex) {
                         b.addRightValue(txt);
+                    }*/
+                    if (!searchIndex) {
+                        if (!assignmentFound) {
+                            b.setLeftVar(new Tuple<String, String>(txt, ""));
+                        } else {
+                            b.addRightValue(new Tuple<String, String>(txt, ""));
+                        }
+                    } else {
+                        if (!assignmentFound) {
+                            b.getLeftVar().setRight(txt);
+                        } else {
+                            int numRightValues = b.getRightValues().size();
+                            b.getRightValues().get(numRightValues-1).setRight(txt);
+                        }
                     }
                     break;
             }

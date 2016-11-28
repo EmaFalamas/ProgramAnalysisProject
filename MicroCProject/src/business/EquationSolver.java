@@ -187,126 +187,153 @@ public class EquationSolver {
         if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("AssignmentNode")) {
             for (Block b : fg.getBlocks()) {
                 if (b.getId() == equationLabel) {
-                    String leftVariable = b.getLeftVar();
-                    ArrayList<String> rightVariables = b.getRightValues();
+                    Tuple<String, String> leftVariable = b.getLeftVar();
+                    ArrayList<Tuple<String, String>> rightVariables = b.getRightValues();
                     Operand operand = b.getOperand();
 
-                    ArrayList<String> leftSigns;
-                    ArrayList<String> rightSigns;
+                    if (operand != null) {
+                        ArrayList<String> leftSigns;
+                        ArrayList<String> rightSigns;
 
-                    switch (operand) {
-                        case BLANK:
-                            ArrayList<String> signsOfValue = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-                            System.out.println("BLANK" + leftVariable);
-                            for (String signOfValue : signsOfValue) {
-                                t = new Tuple<String, String>(leftVariable, signOfValue);
-                                if (!exit.contains(t)) {
-                                    exit.add(t);
+                        System.out.println("operand = " + operand + "; instr = " + b.getInstruction());
+
+                        switch (operand) {
+                            case BLANK:
+                                ArrayList<String> signsOfValue = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                if(signsOfValue.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
                                 }
-                            }
-                            break;
-
-                        case UNARY_MINUS:
-                            ArrayList<String> signs = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-
-                            System.out.println("UNARY_MINUS" + leftVariable);
-                            for (String sign : signs) {
-                                //get the opposite sign type of this sign and add it to the results
-                                t = new Tuple<String, String>(leftVariable, SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
-                                if (!exit.contains(t)) {
-                                    exit.add(t);
-                                }
-                            }
-                            break;
-                        case PLUS:
-                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-
-                            for (String leftSign : leftSigns) {
-                                for (String rightSign : rightSigns) {
-                                    ArrayList<String> s = SAUtils.getPlusTransferFunction().get(leftSign + rightSign);
-                                    if (s != null) {
-                                        for (String sign : s) {
-                                            t = new Tuple<String, String>(leftVariable, sign);
-                                            if (!exit.contains(t)) {
-                                                exit.add(t);
-                                            }
+                                else {
+                                    System.out.println("BLANK" + leftVariable.toString());
+                                    for (String signOfValue : signsOfValue) {
+                                        t = new Tuple<String, String>(leftVariable.getLeft(), signOfValue);
+                                        if (!exit.contains(t)) {
+                                            exit.add(t);
                                         }
                                     }
                                 }
-                            }
-                            break;
-                        case MINUS:
-                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            for (String leftSign : leftSigns) {
-                                for (String rightSign : rightSigns) {
-                                    ArrayList<String> s = SAUtils.getMinusTransferFunction().get(leftSign + rightSign);
-                                    if (s != null) {
-                                        for (String sign : s) {
-                                            t = new Tuple<String, String>(leftVariable, sign);
-                                            if (!exit.contains(t)) {
-                                                exit.add(t);
-                                            }
+                                break;
+
+                            case UNARY_MINUS:
+                                ArrayList<String> signs = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                if(signs.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
+                                }
+                                else {
+                                    System.out.println("UNARY_MINUS" + leftVariable.toString());
+                                    for (String sign : signs) {
+                                        //get the opposite sign type of this sign and add it to the results
+                                        t = new Tuple<String, String>(leftVariable.getLeft(), SAUtils.getUnaryMinusTransferFunction().get(sign).get(0));
+                                        if (!exit.contains(t)) {
+                                            exit.add(t);
                                         }
                                     }
                                 }
-                            }
-                            break;
-                        case MUL:
-                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            for (String leftSign : leftSigns) {
-                                for (String rightSign : rightSigns) {
-                                    ArrayList<String> s = SAUtils.getProductTransferFunction().get(leftSign + rightSign);
-                                    if (s != null) {
-                                        for (String sign : s) {
-                                            t = new Tuple<String, String>(leftVariable, sign);
-                                            if (!exit.contains(t)) {
-                                                exit.add(t);
-                                            }
-                                        }
-                                    }
+                                break;
+                            case PLUS:
+                                leftSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                rightSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(1));
+
+                                if(leftSigns.contains("illegal") || rightSigns.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
                                 }
-                            }
-                            break;
-                        case DIV:
-                            leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
-                            rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-
-
-                            if(rightSigns.contains("0")) {
-                                exit = new ArrayList<Tuple<String, String>>();
-                            }
-                            else {
-                                for (String leftSign : leftSigns) {
-                                    for (String rightSign : rightSigns) {
-                                        ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
-                                        if (s != null) {
-                                            for (String sign : s) {
-                                                t = new Tuple<String, String>(leftVariable, sign);
-                                                if (!exit.contains(t)) {
-                                                    exit.add(t);
+                                else {
+                                    for (String leftSign : leftSigns) {
+                                        for (String rightSign : rightSigns) {
+                                            ArrayList<String> s = SAUtils.getPlusTransferFunction().get(leftSign + rightSign);
+                                            if (s != null) {
+                                                for (String sign : s) {
+                                                    t = new Tuple<String, String>(leftVariable.getLeft(), sign);
+                                                    if (!exit.contains(t)) {
+                                                        exit.add(t);
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            break;
+                                break;
+                            case MINUS:
+                                leftSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                rightSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(1));
+                                if(leftSigns.contains("illegal") || rightSigns.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
+                                }
+                                else {
+                                    for (String leftSign : leftSigns) {
+                                        for (String rightSign : rightSigns) {
+                                            ArrayList<String> s = SAUtils.getMinusTransferFunction().get(leftSign + rightSign);
+                                            if (s != null) {
+                                                for (String sign : s) {
+                                                    t = new Tuple<String, String>(leftVariable.getLeft(), sign);
+                                                    if (!exit.contains(t)) {
+                                                        exit.add(t);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case MUL:
+                                leftSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                rightSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(1));
+                                if(leftSigns.contains("illegal") || rightSigns.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
+                                }
+                                else {
+                                    for (String leftSign : leftSigns) {
+                                        for (String rightSign : rightSigns) {
+                                            ArrayList<String> s = SAUtils.getProductTransferFunction().get(leftSign + rightSign);
+                                            if (s != null) {
+                                                for (String sign : s) {
+                                                    t = new Tuple<String, String>(leftVariable.getLeft(), sign);
+                                                    if (!exit.contains(t)) {
+                                                        exit.add(t);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case DIV:
+                                leftSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(0));
+                                rightSigns = getSignsOfTuple(eq.getResult(), rightVariables.get(1));
+
+
+                                if(rightSigns.contains("0") || leftSigns.contains("illegal")
+                                        || rightSigns.contains("illegal")) {
+                                    exit = new ArrayList<Tuple<String, String>>();
+                                }
+                                else {
+                                    for (String leftSign : leftSigns) {
+                                        for (String rightSign : rightSigns) {
+                                            ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
+                                            if (s != null) {
+                                                for (String sign : s) {
+                                                    t = new Tuple<String, String>(leftVariable.getLeft(), sign);
+                                                    if (!exit.contains(t)) {
+                                                        exit.add(t);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
                     }
                 }
             }
         } else if (outEq.getTransferFunction().getInstructionNode().getLabel().equals("DeclarationNode")) {
             for (Block b : fg.getBlocks()) {
-                String leftVariable = b.getLeftVar();
+                Tuple<String, String> leftVariable = b.getLeftVar();
                 if (b.getId() == equationLabel) {
-                    System.out.println("DECLARATION " + leftVariable + " EQUATION " + equationLabel);
-                    String declaredVariable = b.getLeftVar();
-
+                    System.out.println("DECLARATION " + leftVariable.toString() + " EQUATION " + equationLabel);
                     ArrayList<String> s = SAUtils.getArrayListZero();
                     for (String sign : s) {
-                        t = new Tuple<String, String>(leftVariable, sign);
+                        t = new Tuple<String, String>(leftVariable.getLeft(), sign);
                         if (!exit.contains(t)) {
                             exit.add(t);
                         }
@@ -323,25 +350,41 @@ public class EquationSolver {
         return exit;
     }
 
-    private ArrayList<String> getSignsOfValue(ArrayList<Tuple<String, String>> variableSigns, String value)
+    private ArrayList<String> getSignsOfTuple(ArrayList<Tuple<String, String>> variableSigns, Tuple<String,String> valueTuple)
     {
+        String value = valueTuple.getLeft();
+        String index = valueTuple.getRight();
+
+        if(index.equals(""))
+        {
+            return getSignsOfValue(variableSigns, value);
+        }
+        else
+        {
+            if(!getSignsOfValue(variableSigns, index).contains("-")) {
+                return getSignsOfValue(variableSigns, value);
+            }
+            else {
+                return SAUtils.getArrayListIllegal();
+            }
+        }
+    }
+
+    private ArrayList<String> getSignsOfValue(ArrayList<Tuple<String, String>> variableSigns, String value) {
         try {
             // we have a constant
             int constant = Integer.parseInt(value);
-            if (constant == 0){
+            if (constant == 0) {
                 return SAUtils.getArrayListZero();
-            }
-            else {
+            } else {
                 return SAUtils.getArrayListPlus();
             }
-        }
-        catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             //we have a variable
             ArrayList<String> signs = new ArrayList<String>();
 
-            for(Tuple<String, String> variableSign : variableSigns)
-            {
-                if(variableSign.getLeft().equals(value)){
+            for (Tuple<String, String> variableSign : variableSigns) {
+                if (variableSign.getLeft().equals(value)) {
                     signs.add(variableSign.getRight());
                 }
             }
@@ -349,6 +392,7 @@ public class EquationSolver {
             return signs;
         }
     }
+
 
 
     private Map<Integer, Equation> ripleChanges(int label, ArrayList<Tuple<String, String>> changes, Map<Integer, Equation> inEquations)

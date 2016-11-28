@@ -70,7 +70,7 @@ public class EquationBuilder {
                 case ASSIGNMENT:
                 case READ:
                 case DECLARATION:
-                    String var = b.getLeftVar();
+                    String var = b.getLeftVar().getLeft();
                     outTransferFunction.addKills(killsMap.get(var));
                     outTransferFunction.setGen(new Tuple<String, String>(var, b.getId().toString()));
                     break;
@@ -129,30 +129,32 @@ public class EquationBuilder {
     private HashSet<String> getAllVariables() {
         HashSet<String> set = new HashSet<String>();
         for (Block b : fg.getBlocks()) {
-            String lv = b.getLeftVar();
-            if (lv != null && !isNumeric(lv)) {
-                set.add(lv);
-            }
-            for (String rv : b.getRightValues()) {
-                if(!isNumeric(rv)) {
-                    set.add(rv);
+            if (b.getLeftVar() != null) {
+                String lv = b.getLeftVar().getLeft();
+                if (lv != null && !isNumeric(lv)) {
+                    set.add(lv);
+                }
+                for (Tuple<String, String> trv : b.getRightValues()) {
+                    String rv = trv.getLeft();
+                    if(!isNumeric(rv)) {
+                        set.add(rv);
+                    }
+                }
+
+                switch (b.getInstructionType()) {
+                    case READ:
+                    case ASSIGNMENT:
+                    case DECLARATION:
+                        String var = b.getLeftVar().getLeft();
+                        if (!killsMap.containsKey(var)) {
+                            killsMap.put(var, new ArrayList<Tuple<String, String>>());
+                        }
+                        killsMap.get(var).add(new Tuple<String, String>(var, b.getId().toString()));
+                        break;
+                    default:
+
                 }
             }
-
-            switch (b.getInstructionType()) {
-                case READ:
-                case ASSIGNMENT:
-                case DECLARATION:
-                    String var = b.getLeftVar();
-                    if (!killsMap.containsKey(var)) {
-                        killsMap.put(var, new ArrayList<Tuple<String, String>>());
-                    }
-                    killsMap.get(var).add(new Tuple<String, String>(var, b.getId().toString()));
-                    break;
-                default:
-
-            }
-
         }
         return set;
     }

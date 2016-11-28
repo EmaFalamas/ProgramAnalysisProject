@@ -10,8 +10,8 @@ public class Block {
     private ArrayList<Integer> inFlows;
     private ArrayList<Integer> outFlows;
     private String instruction;
-    private String leftVar;
-    private ArrayList<String> rightValues;
+    private Tuple<String, String> leftVar;
+    private ArrayList<Tuple<String, String>> rightValues;
     private Operand operand;
     private InstructionType it;
     private Node instructionNode;
@@ -23,7 +23,7 @@ public class Block {
         this.inFlows = new ArrayList<Integer>();
         this.outFlows = new ArrayList<Integer>();
         //this.leftVar = "";
-        this.rightValues = new ArrayList<String>();
+        this.rightValues = new ArrayList<Tuple<String, String>>();
     }
 
     public Integer getId() {
@@ -78,13 +78,13 @@ public class Block {
         this.instruction = instruction;
     }
 
-    public void setLeftVar(String var) { this.leftVar = var; }
+    public void setLeftVar(Tuple<String, String> var) { this.leftVar = var; }
 
-    public void addRightValue(String val) { this.rightValues.add(val); }
+    public void addRightValue(Tuple<String, String> val) { this.rightValues.add(val); }
 
-    public String getLeftVar() { return leftVar; }
+    public Tuple<String, String> getLeftVar() { return leftVar; }
 
-    public ArrayList<String> getRightValues() { return rightValues; }
+    public ArrayList<Tuple<String, String>> getRightValues() { return rightValues; }
 
     public void setInstructionType(InstructionType _it) { this.it = _it; }
 
