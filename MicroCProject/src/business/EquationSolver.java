@@ -56,9 +56,7 @@ public class EquationSolver {
                 solveEquationSA(inEquations, outEquations);
                 break;
             default:
-
         }
-
     }
 
     private void solveEquationRD(Map<Integer, Equation> inEquations, Map<Integer, Equation> outEquations) {
@@ -223,7 +221,6 @@ public class EquationSolver {
                         case PLUS:
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            System.out.println("PLUS" + leftVariable);
 
                             for (String leftSign : leftSigns) {
                                 for (String rightSign : rightSigns) {
@@ -242,7 +239,6 @@ public class EquationSolver {
                         case MINUS:
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            System.out.println("MINUS" + leftVariable);
                             for (String leftSign : leftSigns) {
                                 for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getMinusTransferFunction().get(leftSign + rightSign);
@@ -260,7 +256,6 @@ public class EquationSolver {
                         case MUL:
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            System.out.println("MUL" + leftVariable);
                             for (String leftSign : leftSigns) {
                                 for (String rightSign : rightSigns) {
                                     ArrayList<String> s = SAUtils.getProductTransferFunction().get(leftSign + rightSign);
@@ -278,15 +273,17 @@ public class EquationSolver {
                         case DIV:
                             leftSigns = getSignsOfValue(eq.getResult(), rightVariables.get(0));
                             rightSigns = getSignsOfValue(eq.getResult(), rightVariables.get(1));
-                            System.out.println("DIV" + leftVariable);
-                            for (String leftSign : leftSigns) {
-                                for (String rightSign : rightSigns) {
-                                    ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
-                                    if (s != null) {
-                                        for (String sign : s) {
-                                            t = new Tuple<String, String>(leftVariable, sign);
-                                            if (!exit.contains(t)) {
-                                                exit.add(t);
+
+                            if(!rightSigns.contains("0")) {
+                                for (String leftSign : leftSigns) {
+                                    for (String rightSign : rightSigns) {
+                                        ArrayList<String> s = SAUtils.getDivisionTransferFunction().get(leftSign + rightSign);
+                                        if (s != null) {
+                                            for (String sign : s) {
+                                                t = new Tuple<String, String>(leftVariable, sign);
+                                                if (!exit.contains(t)) {
+                                                    exit.add(t);
+                                                }
                                             }
                                         }
                                     }

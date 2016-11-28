@@ -41,8 +41,8 @@ public class MicroC {
 		eqBuilderSA.buildEquation(EquationBuilder.EquationType.SIGN_ANALYSIS);
 
 		EquationSolver eqSolver = new EquationSolver(flowGraph, Worklist.WorklistType.LIFO);
-		eqSolver.solveEquation(EquationBuilder.EquationType.REACHING_DEFINITIONS,
-				eqBuilderRD.getInEquations(), eqBuilderRD.getOutEquations());
+		eqSolver.solveEquation(EquationBuilder.EquationType.SIGN_ANALYSIS,
+				eqBuilderSA.getInEquations(), eqBuilderSA.getOutEquations());
 	}
 
 }
