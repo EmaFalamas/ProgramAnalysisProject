@@ -26,7 +26,7 @@ public class EquationBuilder {
         this.fg = _fg;
         this.inEquations = new HashMap<Integer, Equation>();
         this.outEquations = new HashMap<Integer, Equation>();
-        this.killsMap = new HashMap<String, ArrayList<Tuple<String, String>>>();
+        this.killsMap = getKillsMap();
         this.variables = getAllVariables();
     }
 
@@ -48,9 +48,11 @@ public class EquationBuilder {
     }
 
     public void setRDEquations() {
-
         int i = 0;
+
+        //for every block in the flow graph
         for (Block b : fg.getBlocks()) {
+            //initialize a new in and out equation, and transfer functions for both of them
             Equation in = new Equation();
             Equation out = new Equation();
             RDTransferFunction inTransferFunction = new RDTransferFunction();
@@ -58,6 +60,8 @@ public class EquationBuilder {
             in.setTransferFunction(inTransferFunction);
             out.setTransferFunction(outTransferFunction);
 
+            //if it's the first equation, add a tuple of the form (var, ?) to the result of the in equation for
+            //every variable var
             if (i == 0) {
                 for (String var : variables) {
                     in.addResult(new Tuple<String, String>(var, "?"));
@@ -65,10 +69,14 @@ public class EquationBuilder {
                 putInEquation(b.getId(), in);
             }
 
+            //in case the current instruction is an assignment, a read or a declaration, set the transfer function of
+            //its equation
             switch (b.getInstructionType()) {
                 case ASSIGNMENT:
                 case READ:
                 case DECLARATION:
+                    //get the variable on the left and set its kills to the entries that correspond to it in the kills
+                    //map; the gen will be the tuple (var, block_label)
                     String var = b.getLeftVar().getLeft();
                     outTransferFunction.addKills(killsMap.get(var));
                     outTransferFunction.setGen(new Tuple<String, String>(var, b.getId().toString()));
@@ -77,6 +85,7 @@ public class EquationBuilder {
 
             }
 
+            //store the in and out equations in their respective maps
             putInEquation(b.getId(), in);
             putOutEquation(b.getId(), out);
             i++;
@@ -89,10 +98,13 @@ public class EquationBuilder {
     }
 
     private void setInflowingEquations() {
-
+        //for all the in equations look for the block corresponding to them
         for (Integer k : inEquations.keySet()) {
             for (Block b : fg.getBlocks()) {
                 if (b.getId() == k) {
+                    //get the in flows of the block corresponding to the equation. For each in flow add the out equation
+                    //corresponding to it to the current in equation's "Equations" attribute (basically set the
+                    //equations that have an out flow to the current in equation)
                     ArrayList<Integer> inFlows = b.getInFlows();
                     ArrayList<Equation> outEQ = new ArrayList<Equation>();
                     for(Integer i : inFlows) {
@@ -106,6 +118,7 @@ public class EquationBuilder {
     }
 
     private void setOutflowingEquations(){
+        //the out equations are only influenced by their corresponding in equations
         for (Integer k : outEquations.keySet()) {
             outEquations.get(k).addEquation(inEquations.get(k));
         }
@@ -124,6 +137,9 @@ public class EquationBuilder {
 
     private HashSet<String> getAllVariables() {
         HashSet<String> set = new HashSet<String>();
+
+        //for each block, get the left and the right side variables of the instruction. If they are not numeric, add
+        //them to the set of all variables
         for (Block b : fg.getBlocks()) {
             if (b.getLeftVar() != null) {
                 String lv = b.getLeftVar().getLeft();
@@ -136,23 +152,33 @@ public class EquationBuilder {
                         set.add(rv);
                     }
                 }
-
-                switch (b.getInstructionType()) {
-                    case READ:
-                    case ASSIGNMENT:
-                    case DECLARATION:
-                        String var = b.getLeftVar().getLeft();
-                        if (!killsMap.containsKey(var)) {
-                            killsMap.put(var, new ArrayList<Tuple<String, String>>());
-                        }
-                        killsMap.get(var).add(new Tuple<String, String>(var, b.getId().toString()));
-                        break;
-                    default:
-
-                }
             }
         }
         return set;
+    }
+
+    private HashMap<String, ArrayList<Tuple<String, String>>> getKillsMap()
+    {
+        HashMap<String, ArrayList<Tuple<String, String>>> kills = new HashMap<String, ArrayList<Tuple<String, String>>>();
+
+        //for every block in the flow graph, if the current instruction is of type read, assignment or declaration
+        //add this block's id to the left side variable's value in the kills map
+        for (Block b : fg.getBlocks()) {
+            switch (b.getInstructionType()) {
+                case READ:
+                case ASSIGNMENT:
+                case DECLARATION:
+                    String var = b.getLeftVar().getLeft();
+                    if (!kills.containsKey(var)) {
+                        kills.put(var, new ArrayList<Tuple<String, String>>());
+                    }
+                    kills.get(var).add(new Tuple<String, String>(var, b.getId().toString()));
+                    break;
+                default:
+            }
+        }
+
+        return kills;
     }
 
     private void printKillsAndGens() {
@@ -194,6 +220,9 @@ public class EquationBuilder {
 
     private void setSignEquations() {
         initSAEquations();
+
+        //for each block, set the transfer function of the out equation corresponding to this block (the out transfer
+        //function of an out equation for sign analysis consists of the instruction itself)
         for(Block b : fg.getBlocks()) {
             SATransferFunction tf = new SATransferFunction();
             tf.setInstructionNode(b.getInstructionNode());

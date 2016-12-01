@@ -14,6 +14,4 @@ public abstract class TransferFunction {
     public void setInstructionNode(Node instructionNode) {
         this.instructionNode = instructionNode;
     }
-
-
 }

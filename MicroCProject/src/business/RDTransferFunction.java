@@ -10,7 +10,6 @@ public class RDTransferFunction extends TransferFunction {
 
     public RDTransferFunction() {
         this.kills = new ArrayList<Tuple<String, String>>();
-        //this.gen = new Tuple<String, String>();
     }
 
     public void addKill(Tuple<String, String> kill) { this.kills.add(kill); }
@@ -22,5 +21,4 @@ public class RDTransferFunction extends TransferFunction {
     public void setGen(Tuple<String, String> gen) { this.gen = gen; }
 
     public Tuple<String, String> getGen() { return gen; }
-
 }
